@@ -1,0 +1,296 @@
+analogue Change Log
+
+Version 0.3-0
+
+   * First version released to CRAN.
+   
+   * Minor documentation fixes prior to release.
+   
+   * Fixed CITATION file, which had old package name. A
+     hang over from version 0.1-5.
+
+Version 0.2-7
+
+   * Added new function bayesF() to calculate Bayes factors,
+     or likelihood ratios from the results of roc().
+     Includes simple print and plot methods, the latter
+     being used in plot.roc to provide a 5th plot of
+     roc results.
+     
+   * Added a new plot to plot.roc() - showing the probability
+     of analogue (A+). This is now the default 4th plot drawn
+     by default, replacing the likelihood ratio plots, which
+     are harder to interpret.
+     
+   * Documentation tweaks to many functions.
+   
+   * Removed attributes from returned objects of functions
+     analog(), cma(), mat(). Former attributes are returned
+     as part of the restured object now. Updated all
+     functions that made use of these attributes.
+     
+   * The analog method of cma() has new argument "prob"; a 
+     vector of probabilities with values in [0,1], for which
+     quantiles of the distribution of training set 
+     dissimilarities will be calculated.
+   
+   * plot.cma() has new arguments; "draw.quant", "col.quant"
+     and "lty.quant". These detrmine whether quantile lines
+     are drawn on the stripchart, and the colour and line
+     type used if they are drawn.
+     
+   * Restored dimnames to some elements of the returned object
+     from bootstrap().
+     
+   * Streamlined print.summary.cma(), which now uses 
+     print.cma() instead of duplicating code.
+     
+   * Fixed print.summary.predict.mat to return the training
+     set assessment.
+     
+   * Fixed print.predict.mat - wasn;t displaying the 
+     bootstrap k.
+     
+   * Altered summary.analog and its print method. Summary no
+     longer uses attributes to store information that is
+     subsequently printed.
+     
+   * Added a package overview help page - access using:
+     package?analogue
+
+Version 0.2-6
+
+   * Added new dissimilarity method "gower", for Gower's
+     coefficient. Note this version does not implement the 
+     mixed version of Gower's coefficient. A future version
+     of distance() will include method "gowerMixed" for the
+     mixed data version (i.e. for mixed +/-, factor and 
+     quantitative data).
+     
+Version 0.2-5
+
+   * Completely rewrote the mat method for roc(). Based on
+     Programmer's Niche article by T. Lumley in R News
+     (Vol. 4(1) 33--36). Uses the optimisations in the
+     article to calculate the ROC curve itself. Now much 
+     faster, and produces a more compact return object than
+     before.
+     
+   * Added a 4th plot to plot.roc(), which draws two 
+     definitions of the slope of the ROC curve as 
+     likelihood ratios.
+   
+   * Added documentation for plot method of roc(), 
+     including descriptions of what each plot shows.
+     
+   * New function reconPlot with default and predict.mat
+     methods. Draws stratigraphic plots of reconstructions,
+     with or without error bars.
+   
+   * mcarlo() and it's 'default' and 'mat' methods have
+     been largely re-written to make them more efficient.
+     mcarlo.mat() now access data from the 'mat' object
+     and calls mcarlo.default(), so only one set of 
+     calculations now needs to be maintained.
+     
+   * New arguments "diag" and "is.dcmat" for mcarlo().
+   
+   * Added new dissimilarity methods "manhattan", and
+     "kendall" to calculate the Manhattan metric and 
+     Kendall's coefficient, respectively, in distance().
+     
+   * 'method = "information"' was not working correctly
+     if p_{ij} or p_{ik} were zero.
+     
+   * Minor fix to distance(), allows 'method = "chi.distance"'
+     to work now. Minor tweaks to documentation to add
+     equation for chi^2 distance metric. Still some 
+     equations need adding in correct notation.
+     
+   * Minor updates to documentation and code for analog(), 
+     mat() and mcarlo() to reflect additional dissimilarity
+     coefficients now available in distance().
+     
+   * Fixed some formatting issues in bootstrap.Rd and updated
+     the documentation of the returned object to match code
+     changes in previous versions.
+   
+   * predict.mat was defaulting to doing bootstrap 
+     predictions, which can be time consuming. Default is
+     now to return normal predictions. Updates to the example
+     for predict.mat to reflect this change.
+     
+   * Updated the documentation for predict.mat of the 
+     returned object to match code changes in previous 
+     versions.
+     
+   * General update of all documentation pages.
+
+Version 0.2-4
+
+   * Reverted the changes to fitted.mat and residuals.mat
+     as these functions no longer worked like similar
+     methods for other classes in R.
+     
+   * Altered plot.mat to use fitted and residuals methods
+     for mat. Simplified extractions to generate one of the
+     plots considerably. Also reverted changes imposed by
+     fiddling with predict/fitted earlier.
+     
+   * Minor tweak to distance() to allow it to calculate
+     dissimilarity between two individual samples only. For
+     use in mcarlo() for simulation/permutation of
+     dissimilarities.
+     
+   * New function mcarlo(), with default and "mat" methods.
+     Experimental functions for simulating dissimilarities
+     in order to determine critical values for various
+     coefficients for use in identifying analogues.
+     
+   * New function roc(), with default and "mat" methods. Fits
+     Receiver Operator Characteristic (ROC) curves following
+     the framework of Wahl (2005) to identify the critical
+     values of dissimilarity values. Also has a plot method
+     for drawing the actual ROC curves.
+
+Version 0.2-3
+     
+   * some issues with predict.mat() and print method
+     associated with fixes for 0.2-2 ironed out. Others
+     remain to be fixed - especially when not 
+     bootstrapping; need a consistent object representation.
+   
+   * fitted.mat now returns fitted values for all possible
+     k-closest analogues. The kth model that minimises the
+     RMSE (Apparent) is returned is user-supplied k not
+     given.
+     
+   * residuals.mat now returns residuals for all possible
+     k-closest analogues. The kth model that minimises the
+     RMSE (Apparent) is returned is user-supplied k not
+     given.
+     
+   * predict.mat and its print and summary methods now work
+     again properly after changes made in 0.2-2.
+     
+   * summary.mat updated to work with new extractor 
+     functions.
+     
+   * plot.mat updated to work with new extractor functions.
+
+Version 0.2-2
+
+   * bootstrap.mat(), predict.mat() and print and summary
+     methods now fixed to return stats for all k-closest 
+     models. Needs docs for bootstrap.mat() updating;
+     currently the reconstructions are commented out.
+   
+   * join() was dropping the rownames of the joined
+     objects. FIXED
+
+Version 0.2-1
+
+	* New function plot.cma() to plot results of a call to
+	  cma(). Uses stripchart() currently. Needs to be made
+	  more robust and adaptable to larger sample sizes.
+
+Version 0.2-0
+
+  * Minor documentation tweaks. Release 0.2-0 ready.
+    
+Version 0.1-9
+
+  * Added new function residuals.bootstrap.mat() and print
+    method.
+    
+  * predict.mat() now doesn't set k to be the model with
+    lowest RMSE. If missing(k) in predict.mat(), k is set
+    to NULL and bootstrap.mat will choose k giving lowest
+    RMSEP assessed by bootstrap. If not using bootstrap
+    resampling in predict.mat(), k is still set to the
+    the model with lowest RMSE if not supplied.
+    
+Version 0.1-8
+
+	* Fixed a little bug in predictions for new samples in
+	  bootstrap.mat() - was dropping the closest analogue.
+	  Uses the newly fixed cumWmean() and cummean() functions
+	  and argument "drop = FALSE".
+	  
+	* Fixed up bootstrap.mat() to have a cleaner return object
+	  that is easier to maintain and IMHO use.
+	  
+	* bootstrap.mat() now uses new code to evaluate predictions
+	  for new samples for all k, to match the previous changes
+	  to bootstrap.mat(). Removed extraneous code from previous
+	  versions.
+	  
+	* summary.bootstrap.mat() and summary.predict.mat() updated
+	  to refer to the new returned object from bootstrap.mat().
+	  
+	* Updated documentation for bootstrap() and predict.mat()
+	  and fixed up examples.
+	  
+	* Removed old file analogy-internal.Rd - hang over from
+	  older package.
+
+Version 0.1-7
+
+	* bootstrap.mat now uses the new code to return all
+	  values. The swap example is taking c. 18 secs to run
+	  on my laptop (1.8 Ghz P3m), with 1000 bootstraps. Not 
+	  too bad. Final code tidy required then release as 
+	  Version 0.2-0.
+	  
+Version 0.1-6
+
+	* Prepared ground work for bootstrap.mat to bootstrap
+	  for all k, not just user supplied k. Allows you to 
+	  choose size of MAT model based on bootstrap RMSEP and 
+	  other stats. Code works in bootstrap.mat() with 
+	  argument 'boot.train = TRUE', just needs resulting
+	  returned object simplifying and removal of old code
+	  that duplicates one set of calcs, and methods written
+	  to display/plot the results of bootstrap on the 
+	  training set.
+	
+	* cumWmean() and cummean() adapted for use in 
+	  bootstrap.mat() for choosing k. New argument 
+	  'drop = TRUE'; controls whether spurious zero distance 
+	  is ignored or not in calcuating cumulative stats. 
+	  Needed for bootstrapping training set for all k.
+
+Version 0.1-5
+
+	* Changed package name to analogue
+
+Version 0.1-4
+
+   * Added new distance/dissimilarity coefficient to 
+     calculate Chi squared distance, sensu Lebart & Fenelon
+     (1971) [Statistique et informatique appliquees. Dunod,
+     Paris, 426 pp], the distance preserved in 
+     correspondence analysis. To use this, use:
+     method = "chi.distance".
+
+Version 0.1-3
+
+	* Data set rlgh was incorrectly saved.
+
+Version 0.1-2
+
+	* Fixed a serious bug in join(), where rows were getting
+	  dropped if they had exactly the same counts in them.
+	  Solution provided by Sundar Dorai-Raj - see source for
+	  join() for further details.
+	
+	* join() now accepts any number of data frames as input,
+	  not just two as originally. This is as a result of the
+	  fix to join() above.
+	  
+	* Updated all examples using join() to match new
+	  arguments of join().
+
+Version 0.1-1
+
+	* First Development Release
