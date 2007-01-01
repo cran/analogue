@@ -21,7 +21,8 @@ analog.default <- function(x, y, method = c("euclidean", "SQeuclidean",
                                    "chord", "SQchord", "bray",
                                    "chi.square", "SQchi.square",
                                    "information", "chi.distance",
-                                   "manhattan", "kendall", "gower"),
+                                   "manhattan", "kendall", "gower",
+                                   "alt.gower", "mixed"),
                            keep.train = TRUE, ...)
   {
     if(!is.matrix(x))

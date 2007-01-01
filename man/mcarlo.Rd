@@ -18,7 +18,7 @@ mcarlo(object, ...)
        method = c("euclidean", "SQeuclidean", "chord", "SQchord",
                   "bray", "chi.square", "SQchi.square",
                   "information", "chi.distance", "manhattan",
-                  "kendall", "gower"),
+                  "kendall", "gower", "alt.gower", "mixed"),
        is.dcmat = FALSE, diag = FALSE, ...)
 
 \method{mcarlo}{mat}(object, nsamp = 10000,

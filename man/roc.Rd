@@ -42,9 +42,10 @@ roc(object, groups, ...)
   
   \item{TPF}{The true positive fraction.}
   \item{FPE}{The false positive error}
-  \item{slope}{The slope of the ROC curve at each evaluated point.}
+  \item{roc.values}{The difference between TPF and FPE at each evaluated
+    point of the ROC curve.}
   \item{optimal}{The optimal dissimilarity value, asessed where
-    \code{slope} is maximal.}
+    \code{roc.values} is maximal.}
   \item{wilcox}{an object of class \code{"htest"}, the result of a call
     to \code{\link{wilcox.test}}. Contains the results of a Wilcoxon
     Rank Sum and Signed Rank test applied to the within and between

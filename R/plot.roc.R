@@ -73,7 +73,7 @@ plot.roc <- function(x,
   }
   if(show[3]) {
     cutpoints <- rev(x$roc.points)
-    plot(cutpoints, x$slope, type = "n",
+    plot(cutpoints, x$roc.values, type = "n",
          ylab = "TPF - (1 - TNF)",
          xlab = paste("Dissimilarity (", x$method, ")", sep = ""))
     abline(h = 0, col = abline.col)

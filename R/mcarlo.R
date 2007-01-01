@@ -18,7 +18,8 @@ mcarlo.default <- function(object, nsamp = 10000,
                            method = c("euclidean", "SQeuclidean",
                              "chord", "SQchord", "bray", "chi.square",
                              "SQchi.square", "information",
-                             "chi.distance", "manhattan", "kendall", "gower"),
+                             "chi.distance", "manhattan", "kendall", "gower",
+                             "alt.gower", "mixed" ),
                            is.dcmat = FALSE, diag = FALSE,
                            ...) {
   if(missing(type))

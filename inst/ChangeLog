@@ -1,5 +1,36 @@
 analogue Change Log
 
+Version 0.3-1 - The New Year edition
+
+   * Added 'stats' and 'graphics' to Depends: in the
+     DESCRIPTION. Requested by the CRAN Maintiners.
+
+	* New generic functions 'k' and 'k<-' for extracting and
+	  replacing the number of analogues stored in models.
+	  Currently for 'mat' objects only.   
+     
+   * New dissimilarity coefficient in distance(), for Gower's
+     general coefficient of similarity (expressed as a
+     distance/dissimilarity) for mixed mode data, including
+     factors. Use method = "mixed". 
+   
+   * Realised that there were a number of different variants
+     on Gower's coefficient out there. To be consistent with
+     package 'vegan', method = "gower" now computes the same
+     coefficient as vegan. The alternative formulation used
+     in Version 0.3-0 and earlier is now available as 
+     method = "alt.gower".
+     
+   * distance() now works with missing values for methods
+     "gower", "alt.gower" and "mixed" only.
+     
+   * Renamed ToDo file to TODO, and updated the information
+     enclosed.
+   
+   * Add acknowledgments file THANKS.
+   
+   * Numerous documentation fixes.
+
 Version 0.3-0
 
    * First version released to CRAN.

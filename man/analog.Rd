@@ -17,7 +17,7 @@ analog(x, \dots)
        method = c("euclidean", "SQeuclidean", "chord", "SQchord",
                   "bray", "chi.square", "SQchi.square",
                   "information", "chi.distance", "manhattan",
-                  "kendall", "gower"),
+                  "kendall", "gower", "alt.gower", "mixed"),
        keep.train = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.

@@ -17,7 +17,7 @@ mat(x, \dots)
     method = c("euclidean", "SQeuclidean", "chord", "SQchord",
                "bray", "chi.square", "SQchi.square",
                "information", "chi.distance", "manhattan",
-               "kendall", "gower"),
+               "kendall", "gower", "alt.gower", "mixed"),
     \dots)
 }
 %- maybe also 'usage' for other objects documented here.
