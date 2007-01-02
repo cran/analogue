@@ -30,16 +30,16 @@ roc.mat <- function(object, groups, ...) {
   TPF <- cumsum(tab[,2]) / sum(tab[,2])
   ## FPE == mspec
   FPE <- cumsum(tab[,1]) / sum(tab[,1])
-  roc.slope <- TPF - FPE
-  optimal <- as.numeric(names(which.max(roc.slope)))
-  names(FPE) <- names(TPF) <- names(roc.slope) <- NULL
+  roc.values <- TPF - FPE
+  optimal <- as.numeric(names(which.max(roc.values)))
+  names(FPE) <- names(TPF) <- names(roc.values) <- NULL
   wilcox <- wilcox.test(dists[grps == FALSE], dists[grps == TRUE],
                         conf.int = TRUE)
   n.within <- sum(grps)
   n.without <- length(dists) - n.within
   AUC <- wilcox$statistic / (n.without * n.within)
   retval <- list(TPF = TPF, FPE = FPE, roc.points = cutpoints,
-                 slope = roc.slope, optimal = optimal,
+                 roc.values = roc.values, optimal = optimal,
                  wilcox = wilcox, AUC = AUC,
                  n.within = n.within, n.without = n.without,
                  group = grps, dissims = dists,

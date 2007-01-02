@@ -5,7 +5,7 @@
 ## Created       : 17-Apr-2006                                           ##
 ## Author        : Gavin Simpson                                         ##
 ## Version       : 0.0-1                                                 ##
-## Last modified : 05-Nov-2006                                           ##
+## Last modified : 19-Dec-2006                                           ##
 ##                                                                       ##
 ## ARGUMENTS:                                                            ##
 ##                                                                       ##
@@ -15,7 +15,8 @@ distance <- function(x, y,
                      method = c("euclidean", "SQeuclidean", "chord",
                        "SQchord", "bray", "chi.square", "SQchi.square",
                        "information", "chi.distance", "manhattan",
-                       "kendall", "gower"))
+                       "kendall", "gower", "alt.gower", "mixed"),
+                     weights = NULL, R = NULL)
   {
     euclidean <- function(x, y)
       {
@@ -70,10 +71,37 @@ distance <- function(x, y,
       }
     gower <- function(x, y, maxi, mini)
       {
-        sqrt( 2 * sum(abs(x - y) / (maxi - mini)))
+        sum(abs(x - y) / (maxi - mini), na.rm = TRUE)
+      }
+    alt.gower <- function(x, y, maxi, mini)
+      {
+        sqrt(2 * sum(abs(x - y) / (maxi - mini), na.rm = TRUE))
+      }
+    mixed <- function(x, y, facs, weights, R)
+      {
+        weights[is.na(x)] <- 0
+        weights[is.na(y)] <- 0
+        if(any(!facs)) {
+          quant <- 1 - (abs(x[!facs] - y[!facs]) / R[!facs])
+          quant <- quant * weights[!facs]
+        }
+        if(any(facs)) {
+          factors <- ifelse(x[facs] == y[facs], 1, 0)
+        factors <- factors * weights[facs]
+        }
+        if(any(!facs)) {
+          if(any(facs))
+            retval <- sum(factors, quant, na.rm = TRUE) / sum(weights)
+          else
+            retval <- sum(quant, na.rm = TRUE) / sum(weights)
+        } else {
+          retval <- sum(factors, na.rm = TRUE) / sum(weights)
+        }
+        return(1- retval)
       }
     Dist <- function(y, x, method, ...)#colsum = NULL)
       {
+        dotargs <- list(...)
         switch(method,
                euclidean = apply(x, 1, euclidean, y),
                SQeuclidean = apply(x, 1, SQeuclidean, y),
@@ -83,16 +111,36 @@ distance <- function(x, y,
                chi.square = apply(x, 1, chi.square, y),
                SQchi.square = apply(x, 1, SQchi.square, y),
                information = apply(x, 1, information, y),
-               chi.distance = apply(x, 1, chi.distance, y, colsum = colsum),
+               chi.distance = apply(x, 1, chi.distance, y,
+                 colsum = dotargs$colsum),
                manhattan = apply(x, 1, manhattan, y),
-               kendall = apply(x, 1, kendall, y, maxi = maxi),
-               gower = apply(x, 1, gower, y, maxi = maxi, mini = mini)
+               kendall = apply(x, 1, kendall, y, maxi = dotargs$maxi),
+               gower = apply(x, 1, gower, y, maxi = dotargs$maxi,
+                 mini = dotargs$mini),
+               alt.gower = apply(x, 1, alt.gower, y, maxi = dotargs$maxi,
+                 mini = dotargs$mini),
+               mixed = apply(x, 1, mixed, y, facs = dotargs$facs,
+                 weights = dotargs$weights, R = dotargs$R)
                )
       }
-    x <- as.matrix(x)
+    if(missing(method))
+      method <- "euclidean"
+    method <- match.arg(method)
+    if(method == "mixed") {
+      ## sanity check: are same columns in x and y factors
+      facs.x <- sapply(as.data.frame(x), is.factor)
+    }
+    #X <- x; Y <- y
+    x <- data.matrix(x)
+    n.vars <- ncol(x)
     x.names <- rownames(x)
+    ## Do we want to remove NAs? Yes if gower, alt.gower and mixed,
+    ## but fail for others
+    NA.RM <- FALSE
+    if(method %in% c("gower", "alt.gower", "mixed"))
+      NA.RM <- TRUE
     if(missing(y)) {
-      colsumx <- colSums(x)
+      colsumx <- colSums(x, na.rm = NA.RM)
       if(any(colsumx <= 0)) {
         x <- x[, colsumx > 0, drop = FALSE]
         warning("some species contain no data and were removed from data matrix x\n")
@@ -100,17 +148,43 @@ distance <- function(x, y,
       y <- x
       y.names <- x.names
     } else {
-      y <- as.matrix(y)
+      if(method == "mixed") {
+        ## sanity check: are same columns in x and y factors
+        facs.y <- sapply(as.data.frame(y), is.factor)
+        if(sum(facs.x - facs.y) > 0)
+          stop("Different columns (species) are coded as factors in 'x' and 'y'")
+      }
+      y <- data.matrix(y)
       y.names <- rownames(y)
     }
-    if(missing(method))
-      method <- "euclidean"
-    method <- match.arg(method)
     if(method == "chi.distance")
       colsum <- colSums(join(as.data.frame(x),as.data.frame(y)))
-    if(method %in% c("kendall", "gower")){
+    if(method == "mixed") {
+      ## sort out the weights used, eg the Kroneker's Deltas
+      ## weights must be NULL or numeric vector of length == ncol(x)
+      if(is.null(weights))
+        weights <- rep(1, n.vars)
+      else {
+        if(length(weights) != n.vars)
+          stop("'weights' must be of length 'ncol(x)'")
+      }
+    }
+    if(method == "kendall") {
       maxi <- apply(join(as.data.frame(x),as.data.frame(y)), 2, max)
-      mini <- apply(join(as.data.frame(x),as.data.frame(y)), 2, min)
+    }
+    if(method %in% c("gower", "alt.gower", "mixed")){
+      ## gower & mixed can handle missing values though, so really,
+      ## want to use the na.rm argument
+      maxi <- apply(join(as.data.frame(x),as.data.frame(y)), 2,
+                    max, na.rm = NA.RM)
+      mini <- apply(join(as.data.frame(x),as.data.frame(y)), 2,
+                    min, na.rm = NA.RM)
+      if(is.null(R))
+        R <- maxi - mini
+      else {
+        if(length(R) != n.vars)
+          stop("'R' must be of length 'ncol(x)'")
+      }
     }
     dimnames(x) <- dimnames(y) <- NULL
     if(method == "chi.distance") {
@@ -119,8 +193,11 @@ distance <- function(x, y,
       res <- apply(y, 1, Dist, x, method, colsum = colsum)
     } else if (method == "kendall") {
       res <- apply(y, 1, Dist, x, method, maxi = maxi)
-    } else if (method == "gower") {
+    } else if (method %in% c("gower", "alt.gower")) {
       res <- apply(y, 1, Dist, x, method, maxi = maxi, mini = mini)
+    } else if (method == "mixed") {
+      res <- apply(y, 1, Dist, x, method, facs = facs.x, weights = weights,
+                   R = R)
     } else{
       res <- apply(y, 1, Dist, x, method)
     }

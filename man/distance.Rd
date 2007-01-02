@@ -1,5 +1,8 @@
 \name{distance}
 \alias{distance}
+\concept{dissimilarity}
+\concept{dissimilarity coefficient}
+\concept{similarity}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Flexibly calculate dissimilarity or distance measures }
 \description{
@@ -12,7 +15,9 @@
 distance(x, y, method = c("euclidean", "SQeuclidean",
          "chord", "SQchord", "bray", "chi.square",
          "SQchi.square", "information", "chi.distance",
-         "manhattan", "kendall", "gower"))
+         "manhattan", "kendall", "gower", "alt.gower",
+         "mixed"),
+         weights = NULL, R = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,7 +25,9 @@ distance(x, y, method = c("euclidean", "SQeuclidean",
   \item{y}{data frame or matrix containing the fossil or test set
     samples.}
   \item{method}{character; which choice of dissimilarity coefficient to
-    use. One of the listed options. See Details below}
+    use. One of the listed options. See Details below.}
+  \item{weights}{numeric; vector of weights for each descriptor.}
+  \item{R}{numeric; vector of ranges for each descriptor.}
 }
 \details{
   A range of dissimilarity coefficients can be used to calculate
@@ -75,11 +82,24 @@ distance(x, y, method = c("euclidean", "SQeuclidean",
       (MAX[i] - min(x[ij]-x[ik]))}
     \cr
     \code{gower}
-    \tab \eqn{d_{jk} = \sqrt{2\sum_i\frac{|p_{ij} -
-	  p_{ik}|}{R_i}}}{sqrt(2 * sum(abs(x[ij] - x[ik]) / R[i]))}
+    \tab \eqn{d_{jk} = \sum_i\frac{|p_{ij} -
+	  p_{ik}|}{R_i}}{d[jk] = sum(abs(x[ij] - x[ik]) / R[i])}
     \cr
-    \tab where \eqn{R_i}{R[i]} is the range of proportions for pollen type
-    \emph{i}
+    \code{alt.gower}
+    \tab \eqn{d_{jk} = \sqrt{2\sum_i\frac{|p_{ij} -
+	  p_{ik}|}{R_i}}}{d[jk] = sqrt(2 * sum(abs(x[ij] - x[ik]) / R[i]))}
+    \cr
+    \tab where \eqn{R_i}{R[i]} is the range of proportions for
+    descriptor (variable) \eqn{i}
+    \cr
+    \code{mixed}
+    \tab \eqn{d_{jk} = \frac{\sum_{i=1}^p w_{i}s_{jki}}{\sum_{i=1}^p
+	w_{i}}}{d[jk] = sum(w[i] * s[jki]) / sum(w[i])}
+    \cr
+    \tab where \eqn{w_i}{w[i]} is the weight for descriptor \eqn{i} and
+    \eqn{s_{jki}}{s[jki]} is the similarity \cr
+    \tab between samples \eqn{j} and \eqn{k} for descriptor (variable)
+    \eqn{i}.
   }
 }
 \value{
@@ -116,6 +136,9 @@ distance(x, y, method = c("euclidean", "SQeuclidean",
   Kendall, D.G. (1970) A mathematical approach to
   seriation. \emph{Philosophical Transactions of the Royal Society of
     London - Series B} \strong{269}, 125--135.
+
+  Legendre, P. and Legendre, L. (1998) \emph{Numerical Ecology}, 2nd
+  English Edition. Elsevier Science BV, The Netherlands.
   
   Overpeck, J.T., Webb III, T. and Prentice I.C. (1985) Quantitative
   interpretation of fossil pollen spectra: dissimilarity coefficients and
@@ -135,10 +158,10 @@ distance(x, y, method = c("euclidean", "SQeuclidean",
   will be faster.} 
 \examples{
 ## simple example using dummy data
-train <- data.frame(matrix(runif(200), ncol = 10))
+train <- data.frame(matrix(abs(runif(200)), ncol = 10))
 rownames(train) <- LETTERS[1:20]
 colnames(train) <- as.character(1:10)
-fossil <- data.frame(matrix(runif(100), ncol = 10))
+fossil <- data.frame(matrix(abs(runif(100)), ncol = 10))
 colnames(fossil) <- as.character(1:10)
 rownames(fossil) <- letters[1:10]
 
@@ -146,11 +169,32 @@ rownames(fossil) <- letters[1:10]
 ## samples
 test <- distance(train, fossil)
 
+## using a different coefficient, chi-square distance
+test <- distance(train, fossil, method = "chi.distance")
+
 ## calculate pairwise distances/dissimilarities for training
 ## set samples
 test2 <- distance(train)
 
-## using a different coefficient, chi-square distance
-test <- distance(train, fossil, method = "chi.distance")
+## calculate Gower's general coefficient for mixed data
+## first, make a couple of variables factors
+fossil[,4] <- factor(sample(rep(1:4, length = 10), 10))
+train[,4] <- factor(sample(rep(1:4, length = 20), 20))
+## now fit the mixed coefficient
+test3 <- distance(train, fossil, "mixed")
+
+## Example from page 260 of Legendre & Legendre (1998)
+x1 <- t(c(2,2,NA,2,2,4,2,6))
+x2 <- t(c(1,3,3,1,2,2,2,5))
+Rj <- c(1,4,2,4,1,3,2,5) # supplied ranges
+
+distance(x1, x2, method = "mixed", R = Rj)
+
+## note this gives 1 - 0.66 (not 0.66 as the answer in
+## Legendre & Legendre) as this is expressed as a
+## distance whereas Legendre & Legendre describe the
+## coefficient as similarity coefficient
+
 }
+
 \keyword{multivariate}% at least one, from doc/KEYWORDS

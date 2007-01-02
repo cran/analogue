@@ -31,7 +31,7 @@
   A plot on the current device.
 }
 \author{Gavin L. Simpson}
-\seealso{\code{\link{bayesF} and \code{\link{roc}}}}
+\seealso{\code{\link{bayesF}} and \code{\link{roc}}}
 \examples{
 ## continue the example from ?roc
 example(roc)

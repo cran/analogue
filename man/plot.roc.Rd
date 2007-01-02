@@ -91,9 +91,9 @@
   dissimilarity coefficient will have density profiles for the two
   assignments that overlap considerably. The point where the two curves
   cross is the optimal dissimilarity or critical value, \emph{d'}. This
-  represents the point where the slope of the ROC curve is maximal. The
-  value of \emph{d} at the point where the slope of the
-  \emph{enumerated} ROC curve is maximal will not neccesarily be the
+  represents the point where the difference between TPF and FPF is
+  maximal. The value of \emph{d} at the point where the difference
+  between TPF and FPF is maximal will not neccesarily be the
   same as the value of \emph{d'} where the density profiles cross. This
   is because the ROC curve has been estimated at discrete points
   \emph{d}, which may not include excatly the optimal \emph{d'}, but

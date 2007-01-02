@@ -35,8 +35,8 @@ dissimilarities         Extract dissimilarity coefficients from models
 distance                Flexibly calculate dissimilarity or distance
                         measures
 fitted.mat              Fitted values of a MAT model
-join                    Merge species data sets on common columns
-                        (species)
+join                    Merge species data sets on common columns (species)
+k                       Extract and set the number of analogues
 mat                     Modern Analogue Technique transfer function
                         models
 mcarlo                  Monte Carlo simulation of dissimilarities

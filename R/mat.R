@@ -18,7 +18,7 @@ mat.default <- function(x, y,
                         method = c("euclidean", "SQeuclidean", "chord",
                           "SQchord", "bray", "chi.square", "SQchi.square",
                           "information", "chi.distance", "manhattan",
-                          "kendall", "gower"),
+                          "kendall", "gower", "alt.gower", "mixed"),
                         ...)
   {
     dims <- dim(x) # the numbers of samples / species
@@ -38,7 +38,9 @@ mat.default <- function(x, y,
         error[, i] <- y[i] - means[, i] # residuals for mean
       }
     WRMSE <- apply(Werror^2, 1, function(x) sqrt(mean(x))) # RMSE
+    k.w <- which.min(WRMSE)
     RMSE <- apply(error^2, 1, function(x) sqrt(mean(x)))
+    k <- which.min(RMSE)
     Wbias <- apply(Werror, 1, mean)  # average bias
     bias <- apply(error, 1, mean)
     Wmax.bias <- apply(Werror, 1, maxBias, y) # maximum bias
@@ -53,10 +55,10 @@ mat.default <- function(x, y,
     ## return results
     structure(list(standard = list(est = means, resid = error,
                      rmse = RMSE, avg.bias = bias, max.bias = max.bias,
-                     r.squared = r2.mean),
+                     r.squared = r2.mean, k = k, auto = TRUE),
                    weighted = list(est = Wmeans, resid = Werror,
                      rmse = WRMSE, avg.bias = Wbias, max.bias = Wmax.bias,
-                     r.squared = r2.Wmean),
+                     r.squared = r2.Wmean, k = k.w, auto = TRUE),
                    Dij = dis,
                    orig.x = x,
                    orig.y = y,
@@ -69,6 +71,8 @@ print.mat <- function(x, k = 10,
                       digits = min(3, getOption("digits") - 4),
                       ...)
   {
+    ##if(is.null(k))
+    ##  k <- k(x)
     cat("\n")
     writeLines(strwrap("Modern Analogue Technique", prefix = "\t"))
     cat("\nCall:\n")
