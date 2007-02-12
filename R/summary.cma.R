@@ -18,7 +18,8 @@ summary.cma <- function(object, ...)
   }
 
 print.summary.cma <- function(x,
-                              digits = min(3, getOption("digits") - 4), ...)
+                              digits = min(3, getOption("digits") - 4), 
+                              ...)
   {
     class(x) <- "cma"
     print(x)

@@ -10,17 +10,21 @@
 ## Last modified : 27-May-2006                                           ##
 ##                                                                       ##
 ###########################################################################
-summary.bootstrap.mat <- function(object, ...)
+#summary.bootstrap.mat <- function(object, ...)
+summary.bootstrap <- function(object, ...)
   {
-    class(object) <- "summary.bootstrap.mat"
+    #class(object) <- "summary.bootstrap.mat"
+    class(object) <- "summary.bootstrap"
     return(object)
   }
 
-print.summary.bootstrap.mat <- function(x,
+#print.summary.bootstrap.mat <- function(x,
+print.summary.bootstrap <- function(x,
                                         digits = max(3, getOption("digits") - 3),
                                         ...)
   {
-    print.bootstrap.mat(x)
+    #print.bootstrap.mat(x)
+    print.bootstrap(x)
     cat("\nBootstrap estimated values for training set:\n")
     with(x$bootstrap, print(estimated[,k], digits = digits))
     if(!is.null(x$predictions)) {

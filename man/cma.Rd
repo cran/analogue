@@ -22,10 +22,12 @@ cma(object, \dots)
     returned. Currently only for objects of class \code{\link{analog}}.}
   \item{cutoff}{numeric; critical value determining level below which
     samples from the modern reference set are defined as close modern
-    analogues.}
+    analogues. May be missing, in which case the 2.5\% quantile of the
+    training set dissimilarities is used unless \code{object$train} is
+    \code{NULL}, in which case \code{"cutoff"} must be supplied.}
   \item{prob}{numeric vector of probabilities with values in [0,1], for
     which quantiles of the distribution of training set dissimilarities
-    will be calculated.}
+    will be calculated. See \code{\link{quantile}}.}
   \item{\dots}{arguments to be passed to other \code{\link{cma}} methods.}
 }
 %\details{
@@ -49,6 +51,8 @@ cma(object, \dots)
   \item{quant}{numeric vector of the requested quantiles.}
   \item{probs}{the probabilities of the requested quantiles.}
   \item{method}{character; the dissimilarity coefficient used}
+  \item{n.analogs}{numeric vector of the number of analogues per fossil
+    sample.}
 }
 \references{
   
@@ -91,7 +95,7 @@ swap.analog
 summary(swap.analog)
 
 ## close modern analogues
-swap.cma <- cma(swap.analog, cutoff = 0.6)
+swap.cma <- cma(swap.analog)
 swap.cma
 summary(swap.cma)
 

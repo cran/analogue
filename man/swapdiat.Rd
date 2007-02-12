@@ -8,11 +8,11 @@
 }
 \usage{data(swapdiat)}
 \format{
-  A data frame of observations on 111 diatom taxa for a 74 lake subset
-  of the SWAP diatom training set.
+  A data frame of observations on 277 diatom taxa for the 167-lake SWAP
+  diatom-pH training set.
 }
 \details{
-  This data set contains a 74-lake subset of the original SWAP diatom
+  This data set contains the original 167-lake SWAP diatom-pH
   training set.
 
   The variable names (\code{\link{colnames}}) are DIATCODE codes for

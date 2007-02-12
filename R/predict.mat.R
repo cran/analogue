@@ -25,7 +25,8 @@
 ##                                                                       ##
 ###########################################################################
 predict.mat <- function(object, newdata, k, weighted = FALSE,
-                        bootstrap = FALSE, n.boot = 1000, ...)
+                        bootstrap = FALSE, n.boot = 1000,
+                        probs = c(0.01, 0.025, 0.05, 0.1), ...)
   {
     ## if no newdata then return the relevant fitted values
     if(missing(newdata))
@@ -43,7 +44,9 @@ predict.mat <- function(object, newdata, k, weighted = FALSE,
             k <- which.min(object$standard$rmse)
         }
       dis <- distance(x = object$orig.x, y = newdata,
-                      method = attr(object, "method"))
+                      method = object$method)
+      minDC <- apply(dis, 2, function(x) {sort(x)[1]})
+      quantiles <- quantile(as.dist(object$Dij), probs = probs)
       if(weighted)
         predicted <- apply(dis, 2, cumWmean, object$orig.y, drop = FALSE)
       else
@@ -67,9 +70,12 @@ predict.mat <- function(object, newdata, k, weighted = FALSE,
                     residuals = resi, r.squared = r2, avg.bias = avg.bias,
                     max.bias = max.bias, rmse = apparent, k = k),
                   weighted = weighted, auto = auto,
+                  method = object$method,
+                  quantiles = quantiles,
                   predictions = list(apparent =
                     list(predicted = predicted,
-                         k = k)))
+                         k = k)),
+                  minDC = minDC)
     } else {
       if(missing(k))
         k <- NULL
@@ -86,6 +92,7 @@ print.predict.mat <- function(x, digits = max(3, getOption("digits") - 3),
     cat("\n")
     writeLines(strwrap("Modern Analogue Technique predictions", prefix = "\t"))
     cat("\n")
+    cat(paste("Dissimilarity:", x$method, "\n"))
     cat(paste("k-closest analogues: ", x$predictions$apparent$k,
               ",\tChosen automatically? ", x$auto, "\n",
               sep = ""))

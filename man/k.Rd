@@ -2,6 +2,7 @@
 \alias{k}
 \alias{k.default}
 \alias{k.mat}
+\alias{k.bootstrap}
 \alias{k<-}
 \alias{k<-.default}
 \alias{k<-.mat}
@@ -17,6 +18,8 @@ k(object, ...)
 
 \method{k}{mat}(object, weighted=FALSE, ...)
 
+\method{k}{bootstrap}(object, ...)
+
 k(object, weighted=FALSE) <- value
 
 \method{k}{mat}(object, weighted=FALSE) <- value
@@ -25,7 +28,7 @@ k(object, weighted=FALSE) <- value
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{an R object; currently only for objects of class
-    \code{\link{mat}}.}
+    \code{\link{mat}} and class \code{\link{bootstrap}}.}
   \item{weighted}{logical; extract/set number of analogues for a
     weighted or un-weighted model?}
   \item{\dots}{further arguments to other methods.}

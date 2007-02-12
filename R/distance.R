@@ -140,11 +140,11 @@ distance <- function(x, y,
     if(method %in% c("gower", "alt.gower", "mixed"))
       NA.RM <- TRUE
     if(missing(y)) {
-      colsumx <- colSums(x, na.rm = NA.RM)
-      if(any(colsumx <= 0)) {
-        x <- x[, colsumx > 0, drop = FALSE]
-        warning("some species contain no data and were removed from data matrix x\n")
-      }
+      #colsumx <- colSums(x, na.rm = NA.RM)
+      #if(any(colsumx <= 0)) {
+      #  x <- x[, colsumx > 0, drop = FALSE]
+      #  warning("some species contain no data and were removed from data matrix x\n")
+      #}
       y <- x
       y.names <- x.names
     } else {

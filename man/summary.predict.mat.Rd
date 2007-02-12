@@ -16,11 +16,11 @@
   \item{\dots}{arguments passed to or from other methods.}
 }
 \details{
-  Currently a simple wrapper for \code{\link{summary.bootstrap.mat}}.
+  Currently a simple wrapper for \code{\link{summary.bootstrap}}.
 }
 \value{
-  An object of class \code{"summary.bootstrap.mat"}, see
-  \code{\link{summary.bootstrap.mat}} for more details.
+  An object of class \code{"summary.bootstrap"}, see
+  \code{\link{summary.bootstrap}} for more details.
 }
 \author{Gavin L. Simpson}
 \seealso{\code{\link{predict.mat}}, \code{\link{mat}},

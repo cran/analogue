@@ -7,7 +7,7 @@
 }
 \usage{data(rlgh)}
 \format{
-  A data frame with 32 observations on 54 diatom species.
+  A data frame with 101 observations on 139 diatom species.
 }
 \details{
   The samples are taken from various depths down a sediment core

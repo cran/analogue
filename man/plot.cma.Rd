@@ -12,7 +12,8 @@
 \method{plot}{cma}(x, method = c("overplot", "jitter", "stack"),
    jitter = 0.1, vertical = FALSE,
    draw.quant = TRUE, xlab = NULL, ylab = "",
-   main = "", ..., col.quant = "red", lty.quant= "dashed")
+   main = "", cex.axis = NULL, ...,
+   col.quant = "red", lty.quant= "dashed")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -28,6 +29,9 @@
     vertically rather than the default horizontal.}
   \item{draw.quant}{logical; should the quantiles be drawn on the stripchart?}
   \item{xlab,ylab,main}{Graphical parameters}
+  \item{cex.axis}{The magnification to be used for axis annotation
+    relative to the current setting of \code{cex}. See
+    \code{\link{par}}.}
   \item{\dots}{additional arguments passed to \code{\link{stripchart}}}
   \item{col.quant,lty.quant}{colour and line type in which to drawn the
     quantile lines.}
@@ -57,9 +61,10 @@ swap.analog
 summary(swap.analog)
 
 ## close modern analogues
-swap.cma <- cma(swap.analog, cutoff = 0.6)
+swap.cma <- cma(swap.analog)
 
 ## plot the results
-plot(swap.cma)
+## many samples so reduce the label and point size
+plot(swap.cma, cex.axis = 0.6, cex = 0.6)
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS

@@ -41,7 +41,7 @@ plot.roc <- function(x,
           #cex = par("cex.main"))
     if(show.stats) {
       txt <- paste("AUC =", round(x$AUC, 3))
-      text(x = 0.9, y = 0, labels = txt, pos = 3)
+      text(x = 0.9, y = 0, labels = txt, pos = 2, cex = 0.8) # was pos 3
     }
   }
   if(show[2]) {
@@ -77,7 +77,7 @@ plot.roc <- function(x,
          ylab = "TPF - (1 - TNF)",
          xlab = paste("Dissimilarity (", x$method, ")", sep = ""))
     abline(h = 0, col = abline.col)
-    lines(cutpoints, x$slope)
+    lines(cutpoints, x$roc.values)
     abline(v = x$optimal, lty = "dotted", col = abline.col)
     mtext(caption[3], side = 3, line = 1.7, font = 2)#,
           #cex = par("cex.main"))
@@ -115,7 +115,9 @@ plot.roc <- function(x,
   if(show[5]) {
     #prob.pos <- l.ratios$posterior$pos / (1 + x$posterior$pos)
     #plot(rev(x$roc.points), prob.pos, type = "l", col = "red")
-    plot(l.ratios, abline.col = abline.col, col = inGroup.col)
+    plot(l.ratios, abline.col = abline.col, col = inGroup.col,
+         ylab = "Pr (A+ | d)",
+         xlab = paste("Dissimilarity (", x$method, ")", sep = ""))
     mtext(caption[5], side = 3, line = 1.7, font = 2)
   }
   invisible()

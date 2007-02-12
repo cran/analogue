@@ -2,7 +2,8 @@
 \alias{bootstrap}
 \alias{bootstrap.default}
 \alias{bootstrap.mat}}
-\alias{print.bootstrap.mat}
+\alias{print.bootstrap}
+%\alias{print.bootstrap.mat}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Bootstrap estimation and errors }
 \description{
@@ -161,12 +162,12 @@ example(join)
 swap.mat <- mat(swapdiat, swappH, method = "SQchord")
 
 ## bootstrap training set
-swap.boot <- bootstrap(swap.mat, n.boot = 1000)
+swap.boot <- bootstrap(swap.mat, n.boot = 100)
 swap.boot
 summary(swap.boot)
 
 ## bootstrap with predictions:
-rlgh.boot <- bootstrap(swap.mat, rlgh, n.boot = 1000)
+rlgh.boot <- bootstrap(swap.mat, rlgh, n.boot = 100)
 
 }
 \keyword{multivariate}% at least one, from doc/KEYWORDS

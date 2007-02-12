@@ -8,7 +8,8 @@
 }
 \usage{
 \method{predict}{mat}(object, newdata, k, weighted = FALSE,
-        bootstrap = FALSE, n.boot = 1000, ...)
+        bootstrap = FALSE, n.boot = 1000,
+        probs = c(0.01, 0.025, 0.05, 0.1), ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -26,6 +27,7 @@
     sample specific errors be calculated-ignored if \code{newdata} is
     missing.}
   \item{n.boot}{numeric; the number of bootstrap samples to take.}
+  \item{probs}{numeric; vector of probabilities with values in [0,1].}
   \item{\dots}{arguments passed to of from other methods.}
 }
 \details{

@@ -30,11 +30,11 @@ analog.default <- function(x, y, method = c("euclidean", "SQeuclidean",
     if(!is.matrix(y))
       y <- as.matrix(y)
     dissim <- distance(x = x, y = y, method = method)
-    retval <- list(analogs = dissim)
+    train <- NULL
     if(keep.train)
-        retval$train <- distance(x = x, method = method)
-    retval$call <- match.call()
-    retval$method <- method
+        train <- distance(x = x, method = method)
+    retval <- list(analogs = dissim, train = train,
+                   call = match.call(), method = method)
     class(retval) <- "analog"
     return(retval)
   }
@@ -45,21 +45,19 @@ print.analog <- function(x, probs = c(0.01, 0.02, 0.05, 0.1, 0.2),
     method <- x$method
     .call <- deparse(x$call)
     cat("\n")
-    writeLines(strwrap("Analogue matching for fossil samples", prefix = "\t"))
+    writeLines(strwrap("Analogue matching for fossil samples",
+                       prefix = "\t"))
     cat(paste("\nCall:", .call, "\n"))
     cat(paste("Dissimilarity:", method, "\n"))
-    minDij <- apply(x$analogs, 2, min)
-    which.minDij <- apply(x$analogs, 2, which.min)
+    minDij <- minDC(x)
     if(!is.null(x$train))
        {
          cat("\nQuantiles of the dissimilarities for the training set:\n\n")
          print(quantile(as.vector(as.dist(x$train)), probs = probs),
                digits = digits)
        }
-    cat("\nClosest modern analogue from training set:\n\n")
-    print(data.frame(ID = rownames(x$analogs)[which.minDij],
-                     minDC = format(minDij, digits = digits)),
-          print.gap = 2)
+    ##cat("\nClosest modern analogue from training set:\n")
+    print(minDij, digits = digits)
     cat("\n")
     invisible(x)
   }

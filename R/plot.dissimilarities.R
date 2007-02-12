@@ -67,7 +67,7 @@ plot.dissimilarities <- function(x,
                        round(ref.quan,3), ")", sep = "")),
                col = rep(c(col, col.ref), 2),
                lty = rep(c(lty, lty.quant), each = 2),
-               cex = 0.8
+               cex = 0.6
                )
       }
     invisible()
