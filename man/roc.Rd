@@ -42,6 +42,8 @@ roc(object, groups, ...)
   
   \item{TPF}{The true positive fraction.}
   \item{FPE}{The false positive error}
+  \item{roc.points}{The unique dissimilarities at which the ROC curve
+    was evaluated}
   \item{roc.values}{The difference between TPF and FPE at each evaluated
     point of the ROC curve.}
   \item{optimal}{The optimal dissimilarity value, asessed where
@@ -55,8 +57,7 @@ roc(object, groups, ...)
   \item{n.without}{numeric; the number of outside of group
     dissimilarities.}
   \item{groups}{numeric; the group membership}
-  \item{dissims}{numeric; vector of dissimilarities, which are the
-    points at which the ROC curve was evaluated.}
+  \item{dissims}{numeric; vector of observed dissimilarities.}
   \item{method}{character; the dissimilarity coefficient used. Taken
     from "\code{object}".}
   \item{call}{the system call.}

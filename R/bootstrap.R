@@ -99,7 +99,8 @@ bootstrap.mat <- function(object, newdata, newenv, k, weighted = FALSE,
     ## set sample when included in the bootstrap test set only 
     boot.train.s1.train <- apply(k.preds, c(2,1), sd, na.rm = TRUE)
     ## s2.train == RMSEP for individual samples across all bootstrap cycles
-    ## this does diff between obs value of x_i and each prediction x_{i,boot} 
+    ## this does diff between obs value of x_i and each
+    ## prediction x_{i,boot} 
     boot.train.s2.train <- sweep(k.preds, c(2,1), object$orig.y, "-")
     boot.train.s2.train <- apply(boot.train.s2.train, c(2,1),
                                  function(x) {sqrt(mean(x^2,
@@ -130,40 +131,17 @@ bootstrap.mat <- function(object, newdata, newenv, k, weighted = FALSE,
     boot.train.max.bias.boot <- apply(boot.train.resid, 2, maxBias,
                                       object$orig.y, n = 10)
     ## apparent estimates etc,
-    #est <- fitted(object, k = k, weighted = weighted)
     est <- if(weighted) {
       object$weighted$est
     } else {
       object$standard$est
     }
     obs <- object$orig.y
-    #resi <- resid(object, k = k, weighted = weighted)
     resi <- if(weighted) {
       object$weighted$resid
     } else {
       object$standard$resid
     }
-    #attributes(est) <- attributes(resi) <- NULL
-    ## subset for k
-    #s1.train <- boot.train.s1.train[,k]
-    #s2.train <- boot.train.s2.train[,k]
-    #s1.model <- boot.train.s1.model[k]
-    #s2.model <- boot.train.s2.model[k]
-    #boot.est <- boot.train.est[,k]
-    #boot.resi <- boot.train.resid[,k]
-    #rmsep.model <- boot.train.rmsep.model[k]
-    #rmsep.train <- boot.train.rmsep.train[,k]
-    #r2.boot <- boot.train.r2.boot[k]
-    #avg.bias.boot <- boot.train.avg.bias.boot[k]
-    #max.bias.boot <- boot.train.max.bias.boot[k]
-    #r2 <- ifelse(weighted, object$weighted$r.squared[k],
-    #             object$standard$r.squared[k])
-    #avg.bias <- ifelse(weighted, object$weighted$avg.bias[k],
-    #                   object$standard$avg.bias[k])
-    #max.bias <- ifelse(weighted, object$weighted$max.bias[k],
-    #                   object$standard$max.bias[k])
-    #rmse <- ifelse(weighted, object$weighted$rmse[k],
-    #               object$standard$rmse[k])
     r2 <- if(weighted) {
       object$weighted$r.squared
     } else {
@@ -241,35 +219,7 @@ bootstrap.mat <- function(object, newdata, newenv, k, weighted = FALSE,
       k.apparent <- k.boot <- k
       if(pred.newenv)
         k.test.apparent <- k.test.boot <- k
-    } 
-    ## re-apply some rownames
-    #names(est) <- names(resi) <- names(rmsep.train) <- train.names
-    #names(obs) <- names(boot.est) <- names(boot.resi) <- train.names
-    #names(s1.train) <- names(s2.train) <- train.names
-    ## return object
-    #res <- list(observed = obs,
-    #            apparent = list(estimated = est, residuals = resi,
-    #              r.squared = r2, avg.bias = avg.bias, max.bias = max.bias,
-    #              rmse = rmse),
-    #            bootstrap = list(estimated = boot.est, residuals = boot.resi,
-    #              r.squared = r2.boot, avg.bias = avg.bias.boot,
-    #              max.bias = max.bias.boot, rmsep = rmsep.model,
-    #              s1 = s1.model, s2 = s2.model),
-    #            sample.errors = list(rmsep = rmsep.train, s1 = s1.train,
-    #              s2 = s2.train),
-    #            weighted = weighted, k = k, auto = auto, n.boot = n.boot,
-    #            output = list(estimated = boot.train.est,
-    #              residuals = boot.train.resid,
-    #              r.squared = boot.train.r2.boot,
-    #              avg.bias = boot.train.avg.bias.boot,
-    #              max.bias = boot.train.max.bias.boot,
-    #              rmsep.model = boot.train.rmsep.model,
-    #              s1.model = boot.train.s1.model,
-    #              s2.model = boot.train.s2.model,
-    #              rmsep.samples = boot.train.rmsep.train,
-    #              s1.samples = boot.train.s1.train,
-    #              s2.samples = boot.train.s2.train)
-    #            )
+    }
     ## re-apply some rownames
     rownames(boot.train.est) <- rownames(boot.train.resid) <- train.names
     res <- list(observed = obs,
@@ -292,81 +242,70 @@ bootstrap.mat <- function(object, newdata, newenv, k, weighted = FALSE,
                   s1 = boot.train.s1.train,
                   s2 = boot.train.s2.train),
                 weighted = weighted,
-                #k = k,
                 auto = auto,
-                n.boot = n.boot)
+                n.boot = n.boot,
+                call = match.call(),
+                model = "MAT")
     if(predictions)
       {
         if(pred.newenv) {
           res$predictions <- list(observed = newenv,
                                   apparent = list(
-                                    predicted = predicted,#[k,],
-                                    residuals = test.resid.app,#[,k],
-                                    r.squared = test.r2.app,#[k],
-                                    avg.bias = test.avg.bias.app,#[k],
-                                    max.bias = test.max.bias.app,#[k],
-                                    rmse = test.rmse.app,#[k],
+                                    predicted = predicted,
+                                    residuals = test.resid.app,
+                                    r.squared = test.r2.app,
+                                    avg.bias = test.avg.bias.app,
+                                    max.bias = test.max.bias.app,
+                                    rmse = test.rmse.app,
                                     k = k.test.apparent),
                                   bootstrap = list(
-                                    predicted = predicted.boot,#[,k],
-                                    residuals = test.resid,#[,k],
-                                    r.squared = test.r2.boot,#[k],
-                                    avg.bias = test.avg.bias.boot,#[k],
-                                    max.bias = test.max.bias.boot,#[k],
-                                    rmsep = test.rmsep.model,#[k],
-                                    s1 = test.s1.model,#[k],
-                                    s2 = test.s2.model,#[k],
+                                    predicted = predicted.boot,
+                                    residuals = test.resid,
+                                    r.squared = test.r2.boot,
+                                    avg.bias = test.avg.bias.boot,
+                                    max.bias = test.max.bias.boot,
+                                    rmsep = test.rmsep.model,
+                                    s1 = test.s1.model,
+                                    s2 = test.s2.model,
                                     k = k.test.boot),
                                   sample.errors = list(
-                                    s1 = s1.fossil,#[,k],
-                                    s2 = pred.s2.test,#[,k],
-                                    rmsep = rmsep.fossil#[,k])
+                                    s1 = s1.fossil,
+                                    s2 = pred.s2.test,
+                                    rmsep = rmsep.fossil
                                     )
                                   )
         } else {
           res$predictions <- list(apparent = list(
-                                    predicted = predicted,#[k,],
+                                    predicted = predicted,
                                     k = k.boot),
                                   bootstrap = list(
                                     predicted = predicted.boot,
-                                    k = k.boot#[,k]
+                                    k = k.boot
                                     ),
                                   sample.errors = list(
-                                    s1 = s1.fossil,#[,k],
-                                    rmsep = rmsep.fossil#[,k]
+                                    s1 = s1.fossil,
+                                    rmsep = rmsep.fossil
                                     )
                                   )
-          #res$predictions.output <- list(predicted = predicted,
-          #                               bootstrap = predicted.boot,
-          #                               s1 = s1.fossil,
-          #                               rmsep = rmsep.fossil)
         }
       }
-    class(res) <- "bootstrap.mat"
+    #class(res) <- "bootstrap.mat"
+    class(res) <- "bootstrap"
     return(res)
   }
 
-print.bootstrap.mat <- function(x, digits = max(3, getOption("digits") - 3),
-                                ...)
+#print.bootstrap.mat <- function(x, digits = max(3, getOption("digits") - 3),
+print.bootstrap <- function(x, digits = max(3, getOption("digits") - 3),
+                            ...)
   {
     msg <- "Bootstrap results for palaeoecological models"
     cat("\n")
     writeLines(strwrap(msg,prefix = "\t"))
     cat("\n")
+    cat(paste("Model type:", x$model, "\n"))
     cat(paste("Weighted mean:", x$weighted, "\n"))
     cat(paste("Number of bootstrap cycles:", x$n.boot, "\n"))
     cat("\nApparent and bootstrap-derived error estimates:\n\n")
-    #s1.train <- boot.train.s1.train[,k]
-    #s2.train <- boot.train.s2.train[,k]
-    #s1.model <- boot.train.s1.model[k]
-    #s2.model <- boot.train.s2.model[k]
-    #boot.est <- boot.train.est[,k]
-    #boot.resi <- boot.train.resid[,k]
-    #rmsep.model <- boot.train.rmsep.model[k]
-    #rmsep.train <- boot.train.rmsep.train[,k]
-    #r2.boot <- boot.train.r2.boot[k]
-    #avg.bias.boot <- boot.train.avg.bias.boot[k]
-    #max.bias.boot <- boot.train.max.bias.boot[k]
     boot.errors <- with(x$bootstrap, c(k, rmsep[k], s1[k], s2[k],
                                        r.squared[k],
                                        avg.bias[k], max.bias[k]))

@@ -1,29 +1,21 @@
-\name{reconPlot}
-\alias{reconPlot}
-\alias{reconPlot.default}
-\alias{reconPlot.predict.mat}
+\name{plot.minDC}
+\alias{plot.minDC}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Stratigraphic plots of palaeoenvironmental reconstructions}
+\title{ ~~function to do ... ~~ }
 \description{
-  Draws a palaeoenvironmental reconstruction of predicted environmental
-  values for sub-fossil assemblages.
+  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-
-reconPlot(x, ...)
-
-\method{reconPlot}{default}(x, ...)
-
-\method{reconPlot}{predict.mat}(x, depths, use.labels = FALSE,
-          predictions = c("apparent", "bootstrap"),
-          error.bars = FALSE, sample.specific = TRUE,
-          rev.x = TRUE, type = "l", xlim, ylim,
-          xlab = "", ylab = "", main = "", ...)
+\method{plot}{minDC}(x, depths, use.labels = FALSE,
+           quantiles = TRUE, rev.x = TRUE, type = "l",
+           xlim, ylim, xlab = "", ylab = "Dissimilarity",
+           main = "", sub = NULL,
+           col.quantile = "red", lty.quantile = "dotted",
+           ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{An R object. Currently only objects of classes
-    \code{"predict.mat"} and \code{"mat"} are supported.}
+  \item{x}{an object of class \code{"minDC"}.}
   \item{depths}{numeric; a vector of depths for which predicted values
     exist or will be generated. Can be missing, in which case,
     \strong{if} \code{use.labels = TRUE}, the function will attempt to
@@ -31,24 +23,22 @@ reconPlot(x, ...)
   \item{use.labels}{logical; should \code{reconPlot} attempt to derive
     values for argument \code{depths} from the names of the predicted
     values? Only use if \code{depths} is missing. See Details below.}
-  \item{predictions}{character; one of \code{"apparent"} or
-    \code{"bootstrap"}. Which type of predicted values should be
-    plotted? The actual predictions (\code{"apparent"}) or the
-    bootstrap-derived predictions (\code{"bootstrap"}).}
-  \item{error.bars}{logical; should error bars be drawn on the plot?}
-  \item{sample.specific}{logical; should sample specific errors be used?
-  Only for \code{predictions = "bootstrap"}.}
+  \item{quantiles}{logical; should the probability quantiles be drawn on
+  the plot?}
   \item{rev.x}{logical; should the depth/age axis be reversed (drawn
     from high to low)?}
   \item{type}{type of line drawn. See \code{\link{par}} and argument
     \code{"type"}.}
   \item{xlab, ylab}{character; the x- and y-axis labels respectively.}
-  \item{main}{character; main title for the plot.}
+  \item{main, sub}{character; main title and subtitle for the plot.}
   \item{xlim, ylim}{numeric, length 2; the x- and y-limits for the
     plotted axes. If not provided, the function will calculate
     appropriate values to cover the range of plotted values and any
-    error bars (if requested via \code{"error.bars"}.}
-  \item{\dots}{arguments passed to other graphics functions.}
+    quantile lines (if requested via \code{"quantiles"}.}
+  \item{col.quantile}{colour in which to draw the quantile lines.}
+  \item{lty.quantile}{line type in which to draw the quantile lines.}
+  \item{\dots}{arguments to be passed to methods, such as graphical
+          parameters (see \code{\link{par}}). Currently ignored.}
 }
 \details{
   Conventionally, these plots are drawn on a depth or an age
@@ -66,16 +56,32 @@ reconPlot(x, ...)
 \value{
   A plot on the currently active device.
 }
-\author{Gavin L. Simpson }
-\seealso{\code{\link{mat}}, and \code{\link{predict.mat}} }
+%\references{ ~put references to the literature/web site here ~ }
+\author{Gavin L. Simpson}
+%\note{ ~~further notes~~ 
+%
+% ~Make other sections like Warning with \section{Warning }{....} ~
+%}
+\seealso{\code{\link{minDC}}}
 \examples{
-## continue the RLGH example from ?mat
-example(mat)
+## continue the RLGH example from ?join
+example(join)
 
-## draw the reconstruction
-reconPlot(rlgh.mat, use.labels = TRUE, error.bars = TRUE,
-          xlab = "Depth", ylab = "pH")
+## fit the MAT model using the squared chord distance measure
+swap.mat <- mat(swapdiat, swappH, method = "SQchord")
+swap.mat
+
+## reconstruct for the RLGH core data
+rlgh.mat <- predict(swap.mat, rlgh, k = 10)
+
+## extract the minimum DC values
+rlgh.mdc <- minDC(rlgh.mat)
+rlgh.mdc
+
+## draw a plot of minimum DC by time
+plot(rlgh.mdc, use.labels = TRUE, xlab = "Depth (cm.)")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{hplot}
+\keyword{hplot}% __ONLY ONE__ keyword per line
+\keyword{methods}

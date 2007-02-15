@@ -1,17 +1,20 @@
-\name{summary.bootstrap.mat}
-\alias{summary.bootstrap.mat}
-\alias{print.summary.bootstrap.mat}
+%\name{summary.bootstrap.mat}
+%\alias{summary.bootstrap.mat}
+%\alias{print.summary.bootstrap.mat}
+\name{summary.bootstrap}
+\alias{summary.bootstrap}
+\alias{print.summary.bootstrap}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Summarising bootstrap resampling for MAT models}
 \description{
-  \code{\link{summary}} method for class \code{"bootstrap.mat"}.
+  \code{\link{summary}} method for class \code{"bootstrap"}.
 }
 \usage{
-\method{summary}{bootstrap.mat}(object, ...)
+\method{summary}{bootstrap}(object, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{an object of class \code{"bootstrap.mat"}, usually the
+  \item{object}{an object of class \code{"bootstrap"}, usually the
     result of a call to \code{\link{bootstrap}}.}
   \item{\dots}{arguments passed to or from other methods.}
 }

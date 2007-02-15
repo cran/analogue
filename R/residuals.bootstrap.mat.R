@@ -15,7 +15,8 @@
 ##                 data of analogues as fitted/estimated values?         ##
 ##                                                                       ##
 ###########################################################################
-residuals.bootstrap.mat <- function(object, which = c("apparent", "bootstrap"),
+#residuals.bootstrap.mat <- function(object, which = c("apparent", "bootstrap"),
+residuals.bootstrap <- function(object, which = c("apparent", "bootstrap"),
                                     ...)
   {
     which <- match.arg(which, several.ok = TRUE)
@@ -33,13 +34,14 @@ residuals.bootstrap.mat <- function(object, which = c("apparent", "bootstrap"),
     return(res)
   }
 
-print.residuals.bootstrap.mat <- function(x,
+#print.residuals.bootstrap.mat <- function(x,
+print.residuals.bootstrap <- function(x,
                                           digits = min(3, getOption("digits") - 3),
                                           ...)
   {
     cat("\n")
-    writeLines(strwrap("Modern Analogue Technique bootstrap residuals",
-                       prefix = "\t"))
+    writeLines(strwrap("Bootstrap residuals", prefix = "\t"))
+    cat(paste("Model type:", x$model, "\n"))
     cat(paste("\nResiduals based on a",
               ifelse(x$weighted, " weighted", ""),
               " model with ", x$k,

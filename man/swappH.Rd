@@ -8,8 +8,9 @@
 }
 \usage{data(swappH)}
 \format{
-  Numeric vector containing the pH of 74 lakes from the SWAP diatom-pH
-  training set.
+  Numeric vector containing the pH of the 167 lakes from the SWAP
+  diatom-pH training set. The values are the average of 4 quarterly
+  samples.
 }
 \references{
 

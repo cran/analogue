@@ -22,6 +22,15 @@ k.mat <- function(object, weighted=FALSE, ...){
   return(retval)
 }
 
+k.bootstrap <- function(object, ...) {
+  if (!inherits(object, "bootstrap")) 
+    stop("Use only with \"bootstrap\" objects")
+  retval <- object$bootstrap$k
+  attr(retval, "auto") <- object$auto
+  attr(retval, "weighted") <- object$weighted
+  return(retval)
+}
+
 "k<-" <- function(object, weighted=FALSE, value) UseMethod("k<-")
 
 "k<-.default" <- function(object, weighted=FALSE, value) {

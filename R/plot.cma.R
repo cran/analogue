@@ -27,12 +27,16 @@
 ###########################################################################
 plot.cma <- function(x, method = c("overplot", "jitter", "stack"),
                      jitter = 0.1, vertical = FALSE, draw.quant = TRUE,
-                     xlab = NULL, ylab = "", main = "", ...,
-                     col.quant = "red", lty.quant = "dashed")
+                     xlab = NULL, ylab = "", main = "", cex.axis = NULL,
+                     ..., col.quant = "red", lty.quant = "dashed")
   {
     if (!inherits(x, "cma")) 
       stop("use only with \"cma\" objects")
-    opar <- par(mar = c(5, 5, 4, 2) + 0.1, las = 1)
+    if(is.null(cex.axis))
+      opar <- par(mar = c(5, 5, 4, 2) + 0.1, las = 1)
+    else
+      opar <- par(mar = c(5, 5, 4, 2) + 0.1, las = 1,
+                  cex.axis = cex.axis)
     on.exit(par(opar))
     dat <- as.vector(x$distances)
     dims <- dim(x$distances)
@@ -42,17 +46,22 @@ plot.cma <- function(x, method = c("overplot", "jitter", "stack"),
     groups <- gl(dims[2], dims[1], labels = colnames(x$distances))
     groups <- factor(groups[NAs], exclude = TRUE)
     if(is.null(xlab))
-      xlab <- paste("Dissimilarity <", x$cutoff)
+      xlab <- paste("Dissimilarity <", round(x$cutoff, 4))
     stripchart(dat ~ groups, method = method, vertical = vertical,
                jitter = jitter, main = main, xlab = xlab, ylab = ylab,
                ...)
     if(draw.quant) {
-      quant <- x$quant
-      abline(v = quant, col = col.quant, lty = lty.quant)
-      suffix <- rep("th", times = length(x$prob))
-      suffix[which(x$prob == 0.01)] <- "st"
-      quant.title <- paste(100 * x$prob, suffix, sep = "")
-      axis(side = 3, at = quant, labels = quant.title)
+      sel <- x$quant <= x$cutoff
+      if(any(sel)) {
+        quant <- x$quant[sel]
+        abline(v = quant, col = col.quant, lty = lty.quant)
+        suffix <- rep("th", times = length(x$prob[sel]))
+        suffix[which(x$prob == 0.01)] <- "st"
+        quant.title <- paste(100 * x$prob[sel], suffix, sep = "")
+        axis(side = 3, at = quant, labels = quant.title)
+      } else {
+        warning("No quantiles within 'x$cutoff'. 'draw.quant' ignored.")
+      }
     }
     invisible(list(distances = dat, groups = groups))
   }

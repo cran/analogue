@@ -58,8 +58,8 @@ analog(x, \dots)
     (\code{x}).}
   \item{train}{if argument \code{keep.train} is \code{TRUE} then a
     pairwise dissimilarity matrix for the modern training set.}
-  \item{method}{character; the dissimilarity coefficient used.}
   \item{call}{the matched function call.}
+  \item{method}{character; the dissimilarity coefficient used.}
 }
 \references{
 

@@ -1,13 +1,76 @@
 analogue Change Log
 
+Version 0.3-3
+
+   * Updated the example data sets to more complete
+     versions. See ?rlgh, ?swapdiat and ?swappH for
+     more details.
+     
+   * Changes to predict.mat to return minimum DC's and
+     quantiles of training set DC's.
+     
+   * Minor tweaks to plot.mat - now display a bit more info
+     such as 'k' for chosen model and whether it is weighted
+     or not.
+   
+   * New function minDC() with print and plot methods, for
+     extracting and plotting minimum dissimilarity for
+     fossil samples. A default method and methods for classes
+     "predict.mat" and "analog" are provided
+     
+   * Modified output from print.analog, print.cma to be more
+     compact (former) and more descriptive (latter).
+     
+   * cma() now returns the number of analogues per sample as
+     close or close than argument "cutoff". cma() also now
+     automatically determines "cutoff" if none supplied.
+     
+   * plot.cma() was plotting quantile lines for all x$quants
+     whether they were greater than x$cutoff or not. Fixed
+     to plot only x$quants <= x$cutoff. A check is made to
+     determine if any(x$quants <= x$cutoff), and plotting
+     of the qunantile lines is supressed if FALSE.
+     
+   * If 'y' was missing from distance() it was checking for
+     and deleting any species (columns) that were all zero.
+     
+   * plot.mat() was not using the stored value of k in its
+     plots. Now that k() can change the stored value plot.mat
+     should use this rather than calculate its own k.
+     
+   * plot.roc() was not drawing 'which = 3 ' correctly.
+   
+   * Fixed up the citation file.
+
+Version 0.3-2
+
+   * New method for Screeplot for objects of class
+     "bootstrap". Plots apparent and bootstrap statistics
+     in screeplot format.
+   
+   * Begun to generalise bootstrap. bootstrap.mat now returns
+     an object of class "bootstrap". print, summary, residuals
+     and print.summary methods for "bootstrap.mat" have been 
+     change to methods for "bootstrap". This is all in 
+     preparation for adding other transfer function models to
+     analogue in later versions, for which bootstrapping is
+     also used.
+     
+     WARNING: the object returned from bootstrap.mat has 
+     changed subtly and will change periodically as new
+     transfer functions models are added to allow for
+     differences between models. The ultimate aim is to have
+     a reasonable generic object "bootstrap" regardless of
+     the transfer function model used.
+
 Version 0.3-1 - The New Year edition
 
    * Added 'stats' and 'graphics' to Depends: in the
-     DESCRIPTION. Requested by the CRAN Maintiners.
+     DESCRIPTION. Requested by the CRAN Maintainers.
 
-	* New generic functions 'k' and 'k<-' for extracting and
-	  replacing the number of analogues stored in models.
-	  Currently for 'mat' objects only.   
+   * New generic functions 'k' and 'k<-' for extracting and
+     replacing the number of analogues stored in models.
+     Currently for 'mat' objects only.   
      
    * New dissimilarity coefficient in distance(), for Gower's
      general coefficient of similarity (expressed as a
@@ -20,7 +83,7 @@ Version 0.3-1 - The New Year edition
      coefficient as vegan. The alternative formulation used
      in Version 0.3-0 and earlier is now available as 
      method = "alt.gower".
-     
+    
    * distance() now works with missing values for methods
      "gower", "alt.gower" and "mixed" only.
      

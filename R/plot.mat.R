@@ -62,9 +62,11 @@ plot.mat <- function(x,
     if(missing(k)) {
       auto <- TRUE
       if(weighted)
-        k <- which.min(x$weighted$rmse)
+        ##k <- which.min(x$weighted$rmse)
+        k <- x$weighted$k
       else
-        k <- which.min(x$standard$rmse)
+        ##k <- which.min(x$standard$rmse)
+        k <- x$standard$k
     }
     ## set-up code would go here
     if(any(show[1:2])) {
@@ -105,8 +107,9 @@ plot.mat <- function(x,
     }
     if(show[1]) {
       lims <- range(Est, Obs)
+      ylabel <- paste("Fitted (k = ", k, ",weighted = ", weighted, ")", sep = "")
       plot(Obs, Est, type = "n", asp = 1, xlim = lims, ylim = lims,
-           ylab = "Fitted", xlab = "Observed", ...)
+           ylab = ylabel, xlab = "Observed", ...)
       abline(0, 1, col = "grey", ...)
       panel(Obs, Est, ...)
       if (one.fig) 
@@ -114,7 +117,8 @@ plot.mat <- function(x,
       mtext(caption[1], 3, 0.25)
     }
     if(show[2]) {
-      plot(Obs, Resi, type = "n", ylab = "Residuals", xlab = "Observed", ...)
+      ylabel <- paste("Residuals (k = ", k, ", weighted = ", weighted, ")", sep = "")
+      plot(Obs, Resi, type = "n", ylab = ylabel, xlab = "Observed", ...)
       abline(h = 0, col = "grey", ...)
       abline(h = mean(Resi), col = "blue", lty = "dashed")
       if(max.bias) {
@@ -129,7 +133,8 @@ plot.mat <- function(x,
         interv <- matrix(unlist(interv), ncol = 2, byrow = TRUE)
         ## add bias indicators per group
         arrows(interv[,1], bias, interv[,2], bias,
-               length = ifelse(one.fig, 0.05, 0.01), angle = 90, code = 3)
+               length = ifelse(one.fig, 0.05, 0.01), angle = 90, code = 3,
+               col = "blue")
       }
       panel(Obs, Resi, ...)
       if (one.fig) 
@@ -143,7 +148,8 @@ plot.mat <- function(x,
         dat <- x$standard$rmse[1:n.analogs]
       }
       plot(1:n.analogs, dat, type = "n",
-           ylab = "RMSE", xlab = xlabel, ...)
+           ylab = paste("RMSE (weighted = ", weighted, ")", sep = ""),
+           xlab = xlabel, ...)
       if(one.fig) {
         lines(1:n.analogs, dat, type = "b", pch = "", ...)
         text(1:n.analogs, dat, labels = as.character(seq(1, n.analogs)),
@@ -162,7 +168,8 @@ plot.mat <- function(x,
         dat <- x$standard$avg.bias[1:n.analogs]
       }
       plot(1:n.analogs, dat, type = "n",
-           ylab = "Average bias", xlab = xlabel, ...)
+           ylab = paste("Average bias (weighted = ", weighted, ")", sep = ""),
+           xlab = xlabel, ...)
       if(one.fig) {
         lines(1:n.analogs, dat, type = "b", pch = "", ...)
         text(1:n.analogs, dat, labels = as.character(seq(1, n.analogs)),
@@ -181,7 +188,8 @@ plot.mat <- function(x,
         dat <- x$standard$max.bias[1:n.analogs]
       }
       plot(1:n.analogs, dat, type = "n",
-           ylab = "Maximum bias", xlab = xlabel, ...)
+           ylab = paste("Maximum bias (weighted = ", weighted, ")", sep = ""),
+           xlab = xlabel, ...)
       if(one.fig) {
         lines(1:n.analogs, dat, type = "b", pch = "", ...)
         text(1:n.analogs, dat, labels = as.character(seq(1, n.analogs)),

@@ -1,7 +1,11 @@
-\name{residuals.bootstrap.mat}
-\alias{residuals.bootstrap.mat}
-\alias{resid.bootstrap.mat}
-\alias{print.residuals.bootstrap.mat}
+%\name{residuals.bootstrap.mat}
+\name{residuals.bootstrap}
+%\alias{residuals.bootstrap.mat}
+\alias{residuals.bootstrap}
+%\alias{resid.bootstrap.mat}
+\alias{resid.bootstrap}
+%\alias{print.residuals.bootstrap.mat}
+\alias{print.residuals.bootstrap}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Extract Bootstrapped Model Residuals}
 \description{
@@ -13,11 +17,11 @@
   The abbreviated form of this function is \code{resid}.
 }
 \usage{
-\method{residuals}{bootstrap.mat}(object, which = c("apparent", "bootstrap"), ...) 
+\method{residuals}{bootstrap}(object, which = c("apparent", "bootstrap"), ...) 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{an object of class \code{\link{mat}}.}
+  \item{object}{an object of class \code{\link{bootstrap}}.}
   \item{which}{character; which set of residuals to return, the
     apparanet residuals or the residuals of the bootstrap-derived
     estimates?}
@@ -37,7 +41,7 @@
     the mean of the environment for \emph{k}-closest analogues.}
 }
 \author{Gavin L. Simpson}
-\seealso{\code{\link{residuals}}, \code{\link{mat}}.}
+\seealso{\code{\link{residuals}}, \code{\link{mat}},  \code{\link{bootstrap}}.}
 \examples{
 ## continue the RLGH example from ?join
 example(join)
