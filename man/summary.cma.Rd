@@ -1,7 +1,6 @@
 \name{summary.cma}
 \alias{summary.cma}
 \alias{print.summary.cma}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Summarising the extraction of close modern analogues}
 \description{
   \code{\link{summary}} method for class \code{"cma"}.
@@ -9,18 +8,14 @@
 \usage{
 \method{summary}{cma}(object, \dots)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{an object of class \code{"cma"}, usually the
     result of a call to \code{\link{cma}}.}
   \item{\dots}{arguments passed to or from other methods.}
 }
 \value{
-  An object of class \code{"summary.cma"} with the components below. The
-  cut off  threshold used to define close modern analogues and the 
-  dissimilarity coefficient used are returned as attributes
-  \code{"cutoff"} and \code{"method"} respectively.
-  
+  An object of class \code{"summary.cma"} with the components of an
+  object of class \code{\link{cma}}, plus:  
   \item{distances}{a matrix of distances/dissimilarities. Individual
     columns contain the ordered close modern analogues for individual
     fossil samples. Rows of this matrix refer to the
@@ -61,4 +56,4 @@ swap.cma <- cma(swap.analog, cutoff = 0.6)
 swap.cma
 summary(swap.cma)
 }
-\keyword{methods}% at least one, from doc/KEYWORDS
+\keyword{methods}

@@ -27,18 +27,18 @@
 ##                           * Updated documentation                     ##
 ## 05-Jul-2006 - GLS - 0.1-3 * join() was dropping the rownames of the   ##
 ##                             joined objects. FIXED                     ##
+## 23-Jul-2007 - GLS - 0.2-0 * More user-friendly; will unsplit joined   ##
+##                             datasets if split == TRUE                 ##
 ##                                                                       ##
 ###########################################################################
-join <- function(..., verbose = FALSE, na.replace = TRUE)
+join <- function(..., verbose = FALSE, na.replace = TRUE, split = TRUE)
   {
     x <- list(...)
     if(any(sapply(x, class) != "data.frame"))
       stop("\nall objects to be merged must be data frames.")
-    if(verbose) {
-      dims <- do.call(rbind, lapply(x, dim))
-      n.joined <- nrow(dims)
-    }
-    ## From code provied by Sundar Dorai-Raj in R-Help posting:
+    dims <- do.call(rbind, lapply(x, dim))
+    n.joined <- nrow(dims)
+    ## From code provided by Sundar Dorai-Raj in R-Help posting:
     ## http://article.gmane.org/gmane.comp.lang.r.general/63042/match=merging
     cn <- unique(unlist(lapply(x, colnames)))
     for(i in seq(along = x)) {
@@ -48,16 +48,16 @@ join <- function(..., verbose = FALSE, na.replace = TRUE)
         x[[i]] <- cbind(x[[i]], na)
       }
     }
-    retval <- do.call(rbind, x)
+    joined <- do.call(rbind, x)
     ## End Sundar code
     if(na.replace) {
-      dim.names <- dimnames(retval)
-      retval <- sapply(retval, function(x) {x[is.na(x)] <- 0; x})
-      dimnames(retval) <- dim.names
+      dim.names <- dimnames(joined)
+      joined <- sapply(joined, function(x) {x[is.na(x)] <- 0; x})
+      dimnames(joined) <- dim.names
     }
     if(verbose)
       {
-        stats <- rbind(dims, dim(retval))
+        stats <- rbind(dims, dim(joined))
         rownames(stats) <- c(paste("Data set ", c(1:n.joined), ":", sep = ""),
                              "Merged:")
         colnames(stats) <- c("Rows", "Cols")
@@ -66,5 +66,16 @@ join <- function(..., verbose = FALSE, na.replace = TRUE)
                      na.print = "")
         cat("\n")
       }
-    return(as.data.frame(retval, row.names = rownames(retval)))
+    if(split) {
+      retval <- vector(mode = "list", length = n.joined)
+      ends<- cumsum(dims[,1])
+      start <- c(1, ends[-n.joined] + 1)
+      for(i in 1:n.joined) {
+        retval[[i]] <- as.data.frame(joined[start[i]:ends[i], ])
+        names(retval) <- as.character(match.call())[c(2, 2 + (n.joined-1))]
+      }
+      return(retval)
+    } else {
+      return(as.data.frame(joined, row.names = rownames(joined)))
+    }
   }

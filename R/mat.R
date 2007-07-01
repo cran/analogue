@@ -26,23 +26,29 @@ mat.default <- function(x, y,
     x <- as.matrix(x) # convert to matrix for speed (?)
     dimnames(x) <- NULL # clear the dimnames for speed (?)
     .call <- match.call()
+    ## need to reset due to method dispatch
+    .call[[1]] <- as.name("mat")
+    if(missing(method))
+      method <- "euclidean"
     method <- match.arg(method)
     dis <- distance(x, method = method) # calculate the distances
-    Wmeans <- apply(dis, 2, cumWmean, y) # Estimated values
-    means <- apply(dis, 2, cummean, y)
-    minDC <- apply(dis, 2, minDij) # minimum Dij per sample
-    error <- Werror <- matrix(ncol = length(y), nrow = nrow(Wmeans))
-    for(i in seq(along = y))
-      {
-        Werror[, i] <- y[i] - Wmeans[, i] # residuals for Wmeans
-        error[, i] <- y[i] - means[, i] # residuals for mean
-      }
-    WRMSE <- apply(Werror^2, 1, function(x) sqrt(mean(x))) # RMSE
+    ## new speed-ups might leave dimnames on dis
+    dimnames(dis) <- NULL
+    ## insure sample under test is not chosen as analogue for itself
+    diag(dis) <- NA
+    ## drop = FALSE in next calls as we now make sure sample cannot be
+    ## chosen as analogue for itself
+    Wmeans <- apply(dis, 2, cumWmean, y, drop = FALSE) # Estimated values
+    means <- apply(dis, 2, cummean, y, drop = FALSE)
+    minDC <- apply(dis, 2, minDij, drop = FALSE) # minimum Dij per sample
+    Werror <- -sweep(Wmeans, 2, y, "-") # residuals for Wmeans
+    error <- -sweep(means, 2, y, "-") # residuals for mean
+    WRMSE <- sqrt(rowMeans(Werror^2))
     k.w <- which.min(WRMSE)
-    RMSE <- apply(error^2, 1, function(x) sqrt(mean(x)))
+    RMSE <- sqrt(rowMeans(error^2))
     k <- which.min(RMSE)
-    Wbias <- apply(Werror, 1, mean)  # average bias
-    bias <- apply(error, 1, mean)
+    Wbias <- rowMeans(Werror)
+    bias <- rowMeans(error)
     Wmax.bias <- apply(Werror, 1, maxBias, y) # maximum bias
     max.bias <- apply(error, 1, maxBias, y)
     r2.mean <- apply(means, 1, function(x, y) {cor(x, y)^2}, y) # r.squared
@@ -54,10 +60,10 @@ mat.default <- function(x, y,
     rownames(Werror) <- rownames(error) <- 1:(dims[1] -1)
     ## return results
     structure(list(standard = list(est = means, resid = error,
-                     rmse = RMSE, avg.bias = bias, max.bias = max.bias,
+                     rmsep = RMSE, avg.bias = bias, max.bias = max.bias,
                      r.squared = r2.mean, k = k, auto = TRUE),
                    weighted = list(est = Wmeans, resid = Werror,
-                     rmse = WRMSE, avg.bias = Wbias, max.bias = Wmax.bias,
+                     rmsep = WRMSE, avg.bias = Wbias, max.bias = Wmax.bias,
                      r.squared = r2.Wmean, k = k.w, auto = TRUE),
                    Dij = dis,
                    orig.x = x,
@@ -66,6 +72,41 @@ mat.default <- function(x, y,
                    method = method),
               class = "mat")
   }
+
+mat.formula <- function(formula, data, subset, na.action,
+                        method = c("euclidean", "SQeuclidean", "chord",
+                          "SQchord", "bray", "chi.square", "SQchi.square",
+                          "information", "chi.distance", "manhattan",
+                          "kendall", "gower", "alt.gower", "mixed"),
+                        model = FALSE, ...) {
+  if(missing(method))
+    method <- "euclidean"
+  ## the function call
+  .call <- match.call()
+  ## need to reset due to method dispatch
+  .call[[1]] <- as.name("mat")
+  ## keep only the arguments which should go into the model frame
+  mf <- match.call(expand.dots = FALSE)
+  m <- match(c("formula", "data", "subset", "na.action"), names(mf), 0)
+  mf <- mf[c(1, m)]
+  mf$drop.unused.levels <- TRUE
+  mf[[1]] <- as.name("model.frame")
+  mf <- eval.parent(mf)
+  ## drop the intercept
+  attr(attr(mf, "terms"), "intercept") <- 0
+  ## 1) allow model.frame to update the terms object before saving it.
+  mt <- attr(mf, "terms") 
+  y <- model.response(mf, "numeric")
+  x <- model.matrix(mt, mf)
+  res <- mat.default(x, y, method = method)
+  res$na.action <- attr(mf, "na.action")
+  res$call <- .call
+  if(model) {
+    res$terms <- mt
+    res$model <- mf
+  }
+  return(res)
+}
 
 print.mat <- function(x, k = 10,
                       digits = min(3, getOption("digits") - 4),
@@ -77,9 +118,9 @@ print.mat <- function(x, k = 10,
     writeLines(strwrap("Modern Analogue Technique", prefix = "\t"))
     cat("\nCall:\n")
     cat(deparse(x$call), "\n")
-    tbl <- cbind(x$standard$rmse[1:k], x$standard$r.squared[1:k],
+    tbl <- cbind(x$standard$rmsep[1:k], x$standard$r.squared[1:k],
                  x$standard$avg.bias[1:k], x$standard$max.bias[1:k])
-    tbl.w <- cbind(x$weighted$rmse[1:k], x$weighted$r.squared[1:k],
+    tbl.w <- cbind(x$weighted$rmsep[1:k], x$weighted$r.squared[1:k],
                    x$weighted$avg.bias[1:k], x$weighted$max.bias[1:k])
     tbl <- as.matrix(format(tbl, digits = digits))
     tbl.w <- as.matrix(format(tbl.w, digits = digits))
@@ -87,8 +128,8 @@ print.mat <- function(x, k = 10,
     tbl.w <- cbind(as.integer(1:k), tbl.w)
     rownames(tbl) <- rownames(tbl.w) <- rep("", nrow(tbl))
     colnames(tbl) <- colnames(tbl.w) <- c("k",
-                                          "RMSE","R2","Avg Bias","Max Bias")
-    cat("\nQuantiles of the dissimilarities for the training set:\n\n")
+                                          "RMSEP","R2","Avg Bias","Max Bias")
+    cat("\nPercentiles of the dissimilarities for the training set:\n\n")
     print(quantile(as.dist(x$Dij), probs = c(0.01, 0.02, 0.05, 0.1, 0.2)),
           digits = digits)
     cat("\nInferences based on the mean of k-closest analogues:\n\n")

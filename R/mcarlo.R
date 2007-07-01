@@ -47,7 +47,7 @@ mcarlo.default <- function(object, nsamp = 10000,
                     complete = stop("type = \"complete\" not yet implemented."),
                     bootstrap = {
                       if(diag)
-                        num.dists <- ceiling(N^2 / 2)
+                        num.dists <- ceiling((N*N) / 2)
                       else
                         num.dists <- (N*(N-1)) / 2
                       samp <- matrix(ncol = num.dists, nrow = nsamp)
@@ -67,13 +67,31 @@ mcarlo.mat <- function(object, nsamp = 10000,
                        type = c("paired", "complete", "bootstrap", "permuted"),
                        replace = FALSE, diag = FALSE,
                        ...) {
-  if(!inherits(x, "mat"))
+  if(!inherits(object, "mat"))
     stop("'mat' method for 'mcarlo' only for objects of class 'mat'.")
   if(missing(type))
     type <- "paired"
   TYPE <- match.arg(type)
-  METHOD <- attr(object, "method")
+  METHOD <- object$method
   retval <- mcarlo.default(object$Dij, nsamp = nsamp,
+                           type = TYPE, replace = replace, method = METHOD,
+                           is.dcmat = TRUE, diag = diag,  ...)
+  retval
+}
+
+mcarlo.analog <- function(object, nsamp = 10000,
+                          type = c("paired", "complete", "bootstrap", "permuted"),
+                          replace = FALSE, diag = FALSE,
+                          ...) {
+  if(!inherits(object, "analog"))
+    stop("'object' not of class \"analog\".")
+  if(missing(type))
+    type <- "paired"
+  TYPE <- match.arg(type)
+  METHOD <- object$method
+  if(is.null(object$train))
+    stop("'object$train' missing. Refit 'object' with argument 'keep.train = TRUE'")
+  retval <- mcarlo.default(object$train, nsamp = nsamp,
                            type = TYPE, replace = replace, method = METHOD,
                            is.dcmat = TRUE, diag = diag,  ...)
   retval
@@ -95,7 +113,7 @@ print.mcarlo <- function(x,
   cat(paste("Coefficient     :", attr(x, "method"), "\n"))
   cat("\nSummary of simulated distribution:\n")
   print(summ, digits = digits)
-  cat("\nQuantiles of simulated distribution:\n")
+  cat("\nPercentiles of simulated distribution:\n")
   print(quant, digits = digits)
   cat("\n")
   invisible(x)

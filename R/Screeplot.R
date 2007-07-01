@@ -1,6 +1,6 @@
 ###########################################################################
 ##                                                                       ##
-## Screeplot     - 'Screeplot' generic. Currently only method for 'mat'  ##
+## screeplot     - 'screeplot' methods.                                  ##
 ##                                                                       ##
 ## Created       : 27-May-2006                                           ##
 ## Author        : Gavin Simpson                                         ##
@@ -22,20 +22,13 @@
 ## ...           - arguments passed to other graphics functions          ##
 ##                                                                       ##
 ###########################################################################
-Screeplot <- function(x, ...)
-  UseMethod("Screeplot")
-
-Screeplot.default <- function(x, ...)
-  {
-    stop("No default method for \"Screeplot\"")
-  }
-
-Screeplot.mat <- function(x,
+screeplot.mat <- function(x,
                           k,
                           restrict = 20,
-                          display = c("rmse","rmsep","avg.bias",
+                          display = c("rmsep","avg.bias",
                             "max.bias","r.squared"),
-                          weighted = TRUE,
+                          weighted = FALSE,
+                          col = "red",
                           xlab = NULL,
                           ylab = NULL,
                           main = NULL,
@@ -52,10 +45,10 @@ Screeplot.mat <- function(x,
         k <- n.obs
     }
     if(missing(display))
-      display <- "rmse"
+      display <- "rmsep"
     display <- match.arg(display)
-    captions <- c("RMSE","RMSEP","Average bias","Maximum bias","R squared")
-    names(captions) <- c("rmse","rmsep","avg.bias","max.bias","r.squared")
+    captions <- c("RMSEP","Average bias","Maximum bias","R squared")
+    names(captions) <- c("rmsep","avg.bias","max.bias","r.squared")
     if (is.null(xlab))
       xlab <- "No. of analogues, k"
     if (is.null(ylab))
@@ -75,8 +68,8 @@ Screeplot.mat <- function(x,
         paste(substr(cc[1], 1, min(75, nc)), "...")
       else cc[1]
     }
-    if(display == "rmsep")
-      display <- "rmse"
+    #if(display == "rmsep")
+    #  display <- "rmsep"
     if(weighted)
       dat <- x$weighted[[display]][1:k]
     else
@@ -92,27 +85,28 @@ Screeplot.mat <- function(x,
     invisible()
   }
 
-#Screeplot.bootstrap.mat <- function(x,
-Screeplot.bootstrap <- function(x,
-                                k,
-                                restrict = 20,
-                                display = c("rmse","rmsep",
-                                  "avg.bias","max.bias","r.squared"),
-                                legend = TRUE,
-                                loc.legend = "topright",
-                                xlab = NULL,
-                                ylab = NULL,
-                                main = NULL,
-                                sub = NULL,
-                                ..., 
-                                lty = c("solid","dashed")
-                                ) {
-  #if (!inherits(x, "bootstrap.mat")) 
-  #  stop("use only with \"bootstrap.mat\" objects")
-  if (!inherits(x, "bootstrap")) 
-    stop("use only with \"bootstrap\" objects")
+##screeplot.bootstrap <- function(x,
+screeplot.bootstrap.mat <- function(x,
+                                    k,
+                                    restrict = 20,
+                                    display = c("rmsep",
+                                      "avg.bias","max.bias","r.squared"),
+                                    legend = TRUE,
+                                    loc.legend = "topright",
+                                    col = c("red", "blue"),
+                                    xlab = NULL,
+                                    ylab = NULL,
+                                    main = NULL,
+                                    sub = NULL,
+                                    ..., 
+                                    lty = c("solid","dashed")
+                                    ) {
+  if (!inherits(x, "bootstrap.mat")) 
+    stop("use only with \"bootstrap.mat\" objects")
+  ##if (!inherits(x, "bootstrap")) 
+  ##  stop("use only with \"bootstrap\" objects")
   if(missing(k) || is.null(k)) {
-    n.obs <- length(x$apparent$rmse)
+    n.obs <- length(x$model$rmsep)
     if (n.obs > restrict)
       k <- restrict
     else
@@ -120,11 +114,13 @@ Screeplot.bootstrap <- function(x,
   }
   ##dotargs <- list(...)
   if(missing(display))
-    display <- "error"
+    display <- "rmsep"
   else
     display <- match.arg(display)
   captions <- c("Error","Average bias","Maximum bias","R squared")
-  names(captions) <- c("error","avg.bias","max.bias","r.squared")
+  names(captions) <- c("rmsep","avg.bias","max.bias","r.squared")
+  if(length(col) == 1)
+    col <- rep(col, 2)
   if (is.null(xlab))
     xlab <- "No. of analogues, k"
   if (is.null(ylab))
@@ -144,11 +140,11 @@ Screeplot.bootstrap <- function(x,
       paste(substr(cc[1], 1, min(75, nc)), "...")
     else cc[1]
   }
-  if(display == "error") {
-    dat1 <- x$apparent$rmse[1:k]
+  if(display == "rmsep") {
+    dat1 <- x$model$rmsep[1:k]
     dat2 <- x$bootstrap$rmsep[1:k]
   } else {
-    dat1 <- x$apparent[[display]][1:k]
+    dat1 <- x$model[[display]][1:k]
     dat2 <- x$bootstrap[[display]][1:k]
   }
   ylims <- range(dat1, dat2)
@@ -156,19 +152,20 @@ Screeplot.bootstrap <- function(x,
   if(legend)
     ylims[2] <- ylims[2] + ((ylims[2] - ylims[1]) * 0.1)
   plot(1:k, dat1, type = "n", ylim = ylims, ylab = ylab, xlab = xlab,
-       main = main, sub = sub, ...)
+       main = main, sub = sub, col = col[1], ...)
   if(restrict > 20) {
-    lines(1:k, dat1, type = "l", lty = lty[1], ...)
-    lines(1:k, dat2, type = "l", lty = lty[2], ...)
+    lines(1:k, dat1, type = "l", lty = lty[1], col = col[1], ...)
+    lines(1:k, dat2, type = "l", lty = lty[2], col = col[1], ...)
   } else {
-    lines(1:k, dat1, type = "b", pch = "", lty = lty[1], ...)
+    lines(1:k, dat1, type = "b", pch = "", lty = lty[1], col = col[1], ...)
     text(1:k, dat1, labels = as.character(seq(1, k)), cex = 0.8, ...)
-    lines(1:k, dat2, type = "b", pch = "", lty = lty[2], ...)
+    lines(1:k, dat2, type = "b", pch = "", lty = lty[2], col = col[2], ...)
     text(1:k, dat2, labels = as.character(seq(1, k)), cex = 0.8, ...)
   }
   if(legend) {
-    legend(loc.legend, legend = c("apparent","bootstrap"), lty = lty,
-           inset = 0.01, bty = "n", horiz = TRUE, cex = 0.8)
+    legend(loc.legend, legend = c("LOO","Bootstrap"), lty = lty,
+           inset = 0.01, bty = "n", horiz = FALSE, cex = 0.8,
+           col = col)
   }
   invisible()
 }

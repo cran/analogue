@@ -25,13 +25,14 @@ cumWmean <- function(weights, y, drop = TRUE)
   {
     #if (length(weights) != length(y)) 
     #  stop("'y' and 'weights' must have the same length")
-    ord <- order(weights)
+    nas <- is.na(weights)
+    ord <- order(weights[!nas])
     if(drop) {
-      weights <- 1 / weights[ord][-1]
-      env <- y[ord][-1]
+      weights <- 1 / weights[!nas][ord][-1]
+      env <- y[!nas][ord][-1]
     } else {
-      weights <- 1 / weights[ord]
-      env <- y[ord]
+      weights <- 1 / weights[!nas][ord]
+      env <- y[!nas][ord]
     }
     cumsum(weights * env) / cumsum(weights)
   }
@@ -52,13 +53,14 @@ cumWmean <- function(weights, y, drop = TRUE)
 ###########################################################################
 cummean <- function(dis, y, drop = TRUE)
   {
-    ord <- order(dis)
+    nas <- is.na(dis)
+    ord <- order(dis[!nas])
     if(drop) {
-      dis <- dis[ord][-1]
-      y <- y[ord][-1]
+      dis <- dis[!nas][ord][-1]
+      y <- y[!nas][ord][-1]
     } else {
-      dis <- dis[ord]
-      y <- y[ord]
+      dis <- dis[!nas][ord]
+      y <- y[!nas][ord]
     }
     cumsum(y) / 1:length(dis)
   }
@@ -76,10 +78,13 @@ cummean <- function(dis, y, drop = TRUE)
 ##                     minimum is required                               ##
 ##                                                                       ##
 ###########################################################################
-minDij <- function(x)
+minDij <- function(x, drop = TRUE)
   {
     ord <- order(x)
-    x[ord][2] # we don't want the first zero distance
+    if(drop)
+      x[ord][2] # we don't want the first zero distance
+    else
+      x[ord][1]
   }
 ###########################################################################
 ##                                                                       ##
@@ -96,9 +101,48 @@ minDij <- function(x)
 ## n                 - number of sections to break env gradient into     ##
 ##                                                                       ##
 ###########################################################################
+##maxBias <- function(error, y, n = 10)
+##  {
+##    groups <- cut(y, breaks = n, labels = 1:n)
+##    bias <- aggregate(error, list(group = groups), mean)$x
+##    bias[which.max(abs(bias))]
+##  }
 maxBias <- function(error, y, n = 10)
   {
-    groups <- cut(y, breaks = n, labels = 1:n)
-    bias <- aggregate(error, list(group = groups), mean)$x
+    groups <- cut.default(y, breaks = n, labels = 1:n)
+    bias <- tapply(error, groups, mean)
     bias[which.max(abs(bias))]
   }
+###########################################################################
+##                                                                       ##
+## .simpleCap - simple capitalisation function from ?toupper             ##
+##                                                                       ##
+## Created       : 16-Feb-2007                                           ##
+## Author        : Gavin Simpson                                         ##
+## Version       : 0.1                                                   ##
+## Last modified : 16-Feb-2007                                           ##
+##                                                                       ##
+## ARGUMENTS:                                                            ##
+## x - string to be capitalised                                          ##
+##                                                                       ##
+###########################################################################
+.simpleCap <- function(x) {
+  s <- strsplit(x, " ")[[1]]
+  paste(toupper(substring(s, 1,1)), substring(s, 2), sep="", collapse=" ")
+}
+###########################################################################
+##                                                                       ##
+## wmean - simple, quick version of weighted.mean                        ##
+##                                                                       ##
+## Created       : 16-Feb-2007                                           ##
+## Author        : Gavin Simpson                                         ##
+## Version       : 0.1                                                   ##
+## Last modified : 16-Feb-2007                                           ##
+##                                                                       ##
+## ARGUMENTS:                                                            ##
+## x - string to be capitalised                                          ##
+##                                                                       ##
+###########################################################################
+wmean <- function(spp, env) {
+  sum(env * spp)/sum(spp)
+}

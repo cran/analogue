@@ -39,9 +39,9 @@ predict.mat <- function(object, newdata, k, weighted = FALSE,
         {
           auto <- TRUE
           if(weighted)
-            k <- which.min(object$weighted$rmse)
+            k <- which.min(object$weighted$rmsep)
           else
-            k <- which.min(object$standard$rmse)
+            k <- which.min(object$standard$rmsep)
         }
       dis <- distance(x = object$orig.x, y = newdata,
                       method = object$method)
@@ -55,24 +55,24 @@ predict.mat <- function(object, newdata, k, weighted = FALSE,
       obs <- object$orig.y
       resi <- resid(object, k = k, weighted = weighted)
       if(weighted) {
-        apparent <- object$weighted$rmse
+        model <- object$weighted$rmsep
         r2 <- object$weighted$r.squared
         avg.bias <- object$weighted$avg.bias
         max.bias <- object$weighted$max.bias
       } else {
-        apparent <- object$standard$rmse
+        model <- object$standard$rmsep
         r2 <- object$standard$r.squared
         avg.bias <- object$standard$avg.bias
         max.bias <- object$standard$max.bias
       }
       res <- list(observed = obs,
-                  apparent = list(estimated = est,
+                  model = list(estimated = est,
                     residuals = resi, r.squared = r2, avg.bias = avg.bias,
-                    max.bias = max.bias, rmse = apparent, k = k),
+                    max.bias = max.bias, rmsep = model, k = k),
                   weighted = weighted, auto = auto,
                   method = object$method,
                   quantiles = quantiles,
-                  predictions = list(apparent =
+                  predictions = list(model =
                     list(predicted = predicted,
                          k = k)),
                   minDC = minDC)
@@ -93,7 +93,7 @@ print.predict.mat <- function(x, digits = max(3, getOption("digits") - 3),
     writeLines(strwrap("Modern Analogue Technique predictions", prefix = "\t"))
     cat("\n")
     cat(paste("Dissimilarity:", x$method, "\n"))
-    cat(paste("k-closest analogues: ", x$predictions$apparent$k,
+    cat(paste("k-closest analogues: ", x$predictions$model$k,
               ",\tChosen automatically? ", x$auto, "\n",
               sep = ""))
     cat(paste("Weighted mean:", x$weighted, "\n"))
@@ -102,28 +102,28 @@ print.predict.mat <- function(x, digits = max(3, getOption("digits") - 3),
               "\n"))
     if(!is.null(x$bootstrap)){
       cat(paste("Number of bootstrap cycles:", x$n.boot, "\n"))
-      cat("\nApparent and bootstrap-derived error estimates:\n\n")
+      cat("\nModel and bootstrap-derived error estimates:\n\n")
       boot.errors <- with(x$bootstrap,
                           c(rmsep[k], s1[k], s2[k], r.squared[k],
                             avg.bias[k], max.bias[k]))
-      apparent.errors <- with(x$apparent, c(rmse[k], NA, NA, r.squared[k],
+      model.errors <- with(x$model, c(rmsep[k], NA, NA, r.squared[k],
                                             avg.bias[k], max.bias[k]))
-      errors <- rbind(apparent.errors, boot.errors)
-      colnames(errors) <- c("RMSE(P)", "S1", "S2", "r.squared",
+      errors <- rbind(model.errors, boot.errors)
+      colnames(errors) <- c("RMSEP", "S1", "S2", "r.squared",
                             "avg.bias", "max.bias")
-      rownames(errors) <- c("Apparent", "Bootstrap")
+      rownames(errors) <- c("Model", "Bootstrap")
       print(errors, digits = digits, na.print = "-")
     } else {
-      cat("\nApparent model error estimates:\n")
-      apparent.errors <- with(x$apparent, c(rmse[k], r.squared[k],
+      cat("\nModel error estimates:\n")
+      model.errors <- with(x$model, c(rmsep[k], r.squared[k],
                                             avg.bias[k], max.bias[k]))
-      names(apparent.errors) <- c("RMSE", "r.squared",
+      names(model.errors) <- c("RMSEP", "r.squared",
                                   "avg.bias", "max.bias")
-      print(apparent.errors, digits = digits, na.print = "-")
+      print(model.errors, digits = digits, na.print = "-")
     }
     if(!is.null(x$predictions)) {
       cat("\nPredicted values:\n")
-      with(x$predictions$apparent, print(predicted[k,], digits = digits))
+      with(x$predictions$model, print(predicted[k,], digits = digits))
       if(!is.null(x$bootstrap)) {
         txt <- paste("\nBootstrap-derived estimated values based on a",
                      ifelse(x$weighted, " weighted", ""),

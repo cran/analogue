@@ -1,6 +1,7 @@
 \name{mat}
 \alias{mat}
 \alias{mat.default}
+\alias{mat.formula}
 \alias{print.mat}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Modern Analogue Technique transfer function models}
@@ -19,6 +20,12 @@ mat(x, \dots)
                "information", "chi.distance", "manhattan",
                "kendall", "gower", "alt.gower", "mixed"),
     \dots)
+\method{mat}{formula}(formula, data, subset, na.action,
+    method = c("euclidean", "SQeuclidean", "chord", "SQchord",
+               "bray", "chi.square", "SQchi.square",
+               "information", "chi.distance", "manhattan",
+               "kendall", "gower", "alt.gower", "mixed"),
+    model = FALSE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -26,9 +33,26 @@ mat(x, \dots)
     species data.}
   \item{y}{a vector containing the response variable, usually
     environmental data to be predicted from \code{x}.}
+  \item{formula}{a symbolic description of the model to be fit. The
+    details of model specification are given below.}
+  \item{data}{an optional data frame, list or environment (or object
+    coercible by \code{\link{as.data.frame}} to a data frame) containing
+    the variables in the model.  If not found in \code{data}, the
+    variables are taken from \code{environment(formula)}, typically the
+    environment from which \code{wa} is called.}
+  \item{subset}{an optional vector specifying a subset of observations
+    to be used in the fitting process.}
+  \item{na.action}{a function which indicates what should happen when
+    the data contain \code{NA}s.  The default is set by the
+    \code{na.action} setting of \code{\link{options}}, and is
+    \code{\link{na.fail}} if that is unset.  The "factory-fresh" default
+    is \code{\link{na.omit}}.  Another possible value is \code{NULL}, no
+    action. Value \code{\link{na.exclude}} can be useful.}
   \item{method}{a character string indicating the dissimilarity
     (distance) coefficient to be used to define modern analogues. See
     Details, below.}
+  \item{model}{logical; If \code{TRUE} the model frame of the fit is
+    returned.}
   \item{\dots}{arguments to or from other methods.}
 }
 \details{
@@ -39,6 +63,15 @@ mat(x, \dots)
   \emph{k}-closest modern analogues selected from a modern  training set
   of samples. If used, weights are the reciprocal of the dissimilarity
   between the fossil sample and each modern analogue.
+
+  A typical model has the form \code{response ~ terms} where
+  \code{response} is the (numeric) response data frame and \code{terms}
+  is a series of terms which specifies a linear predictor for
+  \code{response}. A typical form for \code{terms} is \code{.},
+  which is shorthand for "all variables" in \code{data}. If \code{.} is
+  used, \code{data} must also be provided. If specific species
+  (variables) are required then \code{terms} should take the form
+  \code{spp1 + spp2 + spp3}.
 
   Pairwise sample dissimilarity is defined by dissimilarity or
   distance coefficients. A variety of coefficients are supported --- see
@@ -61,13 +94,13 @@ mat(x, \dots)
   each bootstrap sample, predictions for samples in the bootstrap test
   set can be made for \eqn{k = 1, ..., n}, where \eqn{n} is the
   number of samples in the training set. \eqn{k} can be chosen from the
-  model with the lowest RMSEP. See function \code{\link{bootstrap}} for
+  model with the lowest RMSEP. See function \code{\link{bootstrap.mat}} for
   further details on choosing \eqn{k}.
 
   The output from \code{\link{summary.mat}} can be used to choose
   \eqn{k} in the first case above. For predictions on an optimsation or
   test set see \code{\link{predict.mat}}. For bootstrap resampling of
-  \code{\link{mat}} models, see \code{\link{bootstrap}.}
+  \code{\link{mat}} models, see \code{\link{bootstrap.mat}.}
 }
 \value{
   Returns an object of class \code{mat} with the following components:
@@ -81,6 +114,10 @@ mat(x, \dots)
   \item{orig.y}{the original environmental data or response, \code{y}.}
   \item{call}{the matched function call.}
   \item{method}{the dissimilarity coefficient used.}
+
+  If \code{model = TRUE} then additional components \code{"terms"} and
+  \code{"model"} are returned containing the \code{\link{terms}} object
+  and model frame used. 
 }
 \note{
   Lists \code{"standard"} and \code{"weighted"} both contain the
@@ -93,8 +130,8 @@ mat(x, \dots)
       colums containing the estimates for each training set sample.}
     \item{\code{resid}}{matrix; as for \code{"est"}, but containing the
       model residuals.}
-    \item{\code{rmse}}{vector; containing the apparent root mean square
-      error.}
+    \item{\code{rmsep}}{vector; containing the leave-one-out root mean square
+      error or prediction.}
     \item{\code{avg.bias}}{vector; contains the average bias (mean of
       residuals) for models using \emph{k} analogues, where \eqn{k = 1,
 	..., n}. \eqn{n} is the number of smaples in the training set.}
@@ -128,7 +165,7 @@ mat(x, \dots)
 
 }
 \author{Gavin L. Simpson}
-\seealso{\code{\link{summary.mat}}, \code{\link{bootstrap}} for boostrap
+\seealso{\code{\link{summary.mat}}, \code{\link{bootstrap.mat}} for boostrap
   resampling of MAT models, \code{\link{predict.mat}} for making
   predictions from MAT models, \code{\link{fitted.mat}} and
   \code{\link{resid.mat}} for extraction of fitted values and residuals
@@ -160,19 +197,10 @@ par(mfrow = c(1,1))
 rlgh.mat <- predict(swap.mat, rlgh, k = 10)
 rlgh.mat
 summary(rlgh.mat)
-rlgh.Wmat <- predict(swap.mat, rlgh, k = 10, weighted  = TRUE)
-rlgh.Wmat
-summary(rlgh.Wmat)
 
-## plot of pH change in the RLGH
-depths <- as.numeric(colnames(rlgh.mat$predictions$apparent$predicted))
-n.analogues <- rlgh.mat$predictions$apparent$k
-plot(rlgh.mat$predictions$apparent$predicted[n.analogues, ], depths,
-     ylim = rev(range(depths)),
-     xlab = "pH",
-     ylab = "Depth (cm)",
-     main = "Estimated pH",
-     type = "l")
+## draw the reconstruction
+reconPlot(rlgh.mat, use.labels = TRUE, display.error = "bars",
+          xlab = "Depth", ylab = "pH")
 }
 \keyword{models}% at least one, from doc/KEYWORDS
 \keyword{multivariate}% __ONLY ONE__ keyword per line

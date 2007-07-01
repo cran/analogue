@@ -17,6 +17,7 @@ distance(x, y, method = c("euclidean", "SQeuclidean",
          "SQchi.square", "information", "chi.distance",
          "manhattan", "kendall", "gower", "alt.gower",
          "mixed"),
+         fast = TRUE,
          weights = NULL, R = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -26,6 +27,8 @@ distance(x, y, method = c("euclidean", "SQeuclidean",
     samples.}
   \item{method}{character; which choice of dissimilarity coefficient to
     use. One of the listed options. See Details below.}
+  \item{fast}{logical; should fast versions of the dissimilarities be
+    calculated? See details below.}
   \item{weights}{numeric; vector of weights for each descriptor.}
   \item{R}{numeric; vector of ranges for each descriptor.}
 }
@@ -101,6 +104,16 @@ distance(x, y, method = c("euclidean", "SQeuclidean",
     \tab between samples \eqn{j} and \eqn{k} for descriptor (variable)
     \eqn{i}.
   }
+
+  Argument \code{fast} determines whether fast C versions of some of the
+  dissimilarity coefficients are used. The fast versions make use of
+  \code{\link[stats]{dist}} for \code{method}s \code{"euclidean"},
+  \code{"SQeuclidean"}, \code{"chord"}, \code{"SQchord"}, and
+  \code{\link[vegan]{vegdist}} for \code{method} == \code{"bray"}. These
+  fast versions are used only when \code{x} is supplied, not when
+  \code{y} is also supplied. Future versions of \code{distance} will
+  include fast C versions of all the dissimilary coefficients and for
+  cases where \code{y} is supplied.
 }
 \value{
   A matrix of dissimilarities where columns are the samples in

@@ -7,7 +7,7 @@
   \code{\link{summary}} method for objects of class \code{"predict.mat"}.
 }
 \usage{
-\method{summary}{predict.mat}(object, ...)
+\method{summary}{predict.mat}(object, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -15,16 +15,16 @@
     result of a call to \code{\link{predict.mat}}.}
   \item{\dots}{arguments passed to or from other methods.}
 }
-\details{
-  Currently a simple wrapper for \code{\link{summary.bootstrap}}.
-}
+%\details{
+%  
+%}
 \value{
-  An object of class \code{"summary.bootstrap"}, see
-  \code{\link{summary.bootstrap}} for more details.
+  An object of class \code{"summary.predict.mat"}, see
+  \code{\link{predict.mat}} for more details.
 }
 \author{Gavin L. Simpson}
 \seealso{\code{\link{predict.mat}}, \code{\link{mat}},
-  \code{\link{bootstrap}} and \code{\link{summary}}.}
+  \code{\link{bootstrap.mat}} and \code{\link{summary}}.}
 \examples{
 ## continue the RLGH example from ?join
 example(join)
@@ -33,11 +33,8 @@ example(join)
 swap.mat <- mat(swapdiat, swappH, method = "SQchord")
 
 ## predict for RLGH data
-swap.pred <- predict(swap.mat, rlgh, bootstrap = FALSE)
+swap.pred <- predict(swap.mat, rlgh, bootstrap = FALSE, n.boot = 100)
 summary(swap.pred)
 
-## again but with bootstrap estimates and sample specific errors
-swap.pred <- predict(swap.mat, rlgh)
-summary(swap.pred)
 }
 \keyword{methods}% at least one, from doc/KEYWORDS

@@ -15,18 +15,17 @@ ecological restoration.
 \tabular{ll}{
 Package: \tab analogue\cr
 Type: \tab Package\cr
-Version: \tab 0.2-7\cr
-Date: \tab 2006-12-06\cr
+Version: \tab 0.4-0\cr
+Date: \tab 2007-07-01\cr
 Depends: \tab \cr
 License: \tab GPL Version 2\cr
 Encoding: \tab UTF-8\cr
-Packaged: \tab Wed Dec 6 16:33:51 2006; gavin\cr
-Built: \tab R 2.4.0; ; 2006-12-06 16:33:56; unix\cr
+Packaged: \tab Sun Jul 7 10:47:25 2007; gavin\cr
+Built: \tab R 2.5.0; ; 2007-06-12 16:33:56; unix\cr
 }
 
 Index:
 \preformatted{
-Screeplot               Screeplots of model results
 analog                  Analogue matching
 bayesF                  Bayes factors
 bootstrap               Bootstrap estimation and errors
@@ -36,7 +35,7 @@ distance                Flexibly calculate dissimilarity or distance
                         measures
 fitted.mat              Fitted values of a MAT model
 join                    Merge species data sets on common columns (species)
-k                       Extract and set the number of analogues
+getK                    Extract and set the number of analogues
 mat                     Modern Analogue Technique transfer function
                         models
 mcarlo                  Monte Carlo simulation of dissimilarities
@@ -58,6 +57,7 @@ residuals.bootstrap.mat
 residuals.mat           Extract Model Residuals
 rlgh                    Round Loch of Glenhead Diatoms
 roc                     ROC curve analysis
+screeplot.mat           Screeplots of model results
 summary.analog          Summarising analogue matching results
 summary.bootstrap.mat   Summarising bootstrap resampling for MAT models
 summary.cma             Summarising the extraction of close modern

@@ -2,6 +2,7 @@
 \alias{reconPlot}
 \alias{reconPlot.default}
 \alias{reconPlot.predict.mat}
+\alias{reconPlot.predict.wa}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Stratigraphic plots of palaeoenvironmental reconstructions}
 \description{
@@ -10,36 +11,40 @@
 }
 \usage{
 
-reconPlot(x, ...)
+reconPlot(x, \dots)
 
-\method{reconPlot}{default}(x, ...)
+\method{reconPlot}{default}(x, depths, errors,
+          display.error = c("none", "bars", "lines"),
+          rev.x = TRUE,
+          col.error = "grey", lty.error = "dashed",
+          type = "l",
+          xlim, ylim,
+          xlab = "", ylab = "", main = "",
+          \dots)
 
 \method{reconPlot}{predict.mat}(x, depths, use.labels = FALSE,
-          predictions = c("apparent", "bootstrap"),
-          error.bars = FALSE, sample.specific = TRUE,
-          rev.x = TRUE, type = "l", xlim, ylim,
-          xlab = "", ylab = "", main = "", ...)
+          predictions = c("model", "bootstrap"),
+          display.error = c("none", "bars", "lines"),
+          sample.specific = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{An R object. Currently only objects of classes
-    \code{"predict.mat"} and \code{"mat"} are supported.}
+  \item{x}{An R object.}
   \item{depths}{numeric; a vector of depths for which predicted values
     exist or will be generated. Can be missing, in which case,
     \strong{if} \code{use.labels = TRUE}, the function will attempt to
     derive suitable values for you. See Details below.}
-  \item{use.labels}{logical; should \code{reconPlot} attempt to derive
-    values for argument \code{depths} from the names of the predicted
-    values? Only use if \code{depths} is missing. See Details below.}
-  \item{predictions}{character; one of \code{"apparent"} or
-    \code{"bootstrap"}. Which type of predicted values should be
-    plotted? The actual predictions (\code{"apparent"}) or the
-    bootstrap-derived predictions (\code{"bootstrap"}).}
-  \item{error.bars}{logical; should error bars be drawn on the plot?}
-  \item{sample.specific}{logical; should sample specific errors be used?
-  Only for \code{predictions = "bootstrap"}.}
+  \item{errors}{numeric; a vector of errors for plotting error bars or
+    lines.}
+  \item{display.error}{character; hown should error bars be drawn on the
+    plot? One of \code{"none"}, \code{"bars"}, or \code{"lines"}. If
+    \code{"bars"}, error bars are drawn for each sample. If
+    \code{"lines"}, lines are drawn enclosing the region prediction +/-
+    RMSEP.}
   \item{rev.x}{logical; should the depth/age axis be reversed (drawn
     from high to low)?}
+  \item{col.error, lty.error}{the colour and type of line drawn. See
+    \code{\link{par}} and arguments \code{"col"} and \code{"lty"}.}
   \item{type}{type of line drawn. See \code{\link{par}} and argument
     \code{"type"}.}
   \item{xlab, ylab}{character; the x- and y-axis labels respectively.}
@@ -48,6 +53,15 @@ reconPlot(x, ...)
     plotted axes. If not provided, the function will calculate
     appropriate values to cover the range of plotted values and any
     error bars (if requested via \code{"error.bars"}.}
+  \item{use.labels}{logical; should \code{reconPlot} attempt to derive
+    values for argument \code{depths} from the names of the predicted
+    values? Only use if \code{depths} is missing. See Details below.}
+  \item{predictions}{character; one of \code{"model"} or
+    \code{"bootstrap"}. Which type of predicted values should be
+    plotted? The model predictions (\code{"model"}) or the
+    bootstrap-derived predictions (\code{"bootstrap"}).}
+  \item{sample.specific}{logical; should sample specific errors be used?
+  Only for \code{predictions = "bootstrap"}.}
   \item{\dots}{arguments passed to other graphics functions.}
 }
 \details{
@@ -59,8 +73,8 @@ reconPlot(x, ...)
   derive the appropriate values from the labels of the predictions if
   \code{use.labels = TRUE}. You must provide \code{depths} or set
   \code{use.labels = TRUE} otherwise an error will result. The derived
-  labels will be coerced to numerics. If your labels are coercible, then
-  you'll either get nonsense on the plot or an error from R. If so,
+  labels will be coerced to numerics. If your labels are not coercible,
+  then you'll either get nonsense on the plot or an error from R. If so,
   provide suitable values for \code{depths}.
 }
 \value{
@@ -69,11 +83,19 @@ reconPlot(x, ...)
 \author{Gavin L. Simpson }
 \seealso{\code{\link{mat}}, and \code{\link{predict.mat}} }
 \examples{
-## continue the RLGH example from ?mat
-example(mat)
+## Continue example from ?join
+example(join)
+
+## Fit a MAT model
+swap.mat <- mat(swapdiat, swappH, method = "SQchord")
+swap.mat
+
+## Reconstruct pH for the RLGH core
+rlgh.pH <- predict(swap.mat, rlgh, bootstrap = TRUE,
+                   n.boot = 100)
 
 ## draw the reconstruction
-reconPlot(rlgh.mat, use.labels = TRUE, error.bars = TRUE,
+reconPlot(rlgh.pH, use.labels = TRUE, display.error = "bars",
           xlab = "Depth", ylab = "pH")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

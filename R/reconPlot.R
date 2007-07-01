@@ -5,8 +5,8 @@
 ##                                                                       ##
 ## Created       : 05-Nov-2006                                           ##
 ## Author        : Gavin Simpson                                         ##
-## Version       : 0.0-1                                                 ##
-## Last modified : 05-Nov-2006                                           ##
+## Version       : 0.1-0                                                 ##
+## Last modified : 03-Mar-2007                                           ##
 ##                                                                       ##
 ###########################################################################
 ##
@@ -15,77 +15,84 @@
 ## S3 method
 reconPlot <- function(x, ...) UseMethod("reconPlot")
 
-reconPlot.default <- function(x, ...)
-  {
-    stop("No default method for \"reconPlot\"")
+reconPlot.default <- function(x, depths, errors,
+                              display.error = c("none", "bars", "lines"),
+                              rev.x = TRUE,
+                              col.error = "grey", lty.error = "dashed",
+                              type = "l",
+                              xlim, ylim,
+                              xlab = "", ylab = "", main = "",
+                              ...) {
+  ##stop("No default method for \"reconPlot\"")
+  if(missing(display.error))
+    display.error <- "none"
+  display.error <- match.arg(display.error)
+  show.errors <- FALSE
+  if(display.error != "none")
+    show.errors <- TRUE
+  if(missing(errors) & show.errors)
+    stop("'errors' must be supplied if 'display.error != \"none\".")
+  if(missing(xlim))
+    xlim <- range(depths)
+  if(rev.x)
+    xlim <- rev(xlim)
+  if(show.errors) {
+    upper <- x + errors
+    lower <- x - errors
   }
+  if(missing(ylim)) {
+    if(show.errors)
+      ylim <- range(x, upper, lower)
+    else
+      ylim <- range(x)
+  }
+  plot(depths, x, ylim = ylim, xlim = xlim, type = "n",
+       ylab = ylab, xlab = xlab, main = main, ...)
+  if(show.errors){
+    if(display.error == "bars")
+      arrows(depths, upper, depths, lower, length = 0.02, angle = 90,
+             code = 3, col = col.error)
+    else {
+      lines(depths, upper, type = type, lty = lty.error, col = col.error)
+      lines(depths, lower, type = type, lty = lty.error, col = col.error)
+    }
+  }
+  lines(depths, x, type = type, ...)
+  invisible()
+}
 
 reconPlot.predict.mat <- function(x, depths, use.labels = FALSE,
-                                  predictions = c("apparent",
+                                  predictions = c("model",
                                     "bootstrap"),
-                                  error.bars = FALSE,
+                                  display.error = c("none", "bars", "lines"),
                                   sample.specific = TRUE,
-                                  rev.x = TRUE,
-                                  type = "l",
-                                  xlim, ylim,
-                                  xlab = "", ylab = "", main = "",
-                                  ...)
-  {
-    if(missing(predictions))
-      predictions <- "apparent"
-    predictions <- match.arg(predictions)
-    if(missing(depths))
-      {
-        if(use.labels) {
-          if(predictions == "apparent") {
-            depths <- as.numeric(colnames(x$predictions$apparent$predicted))
-            n.analogues <- x$predictions$apparent$k
-            preds <- x$predictions$apparent$predicted[n.analogues, ]
-            errors <- x$apparent$rmse[n.analogues]
-          } else {
-            depths <- as.numeric(rownames(x$predictions$bootstrap$predicted))
-            n.analogues <- x$predictions$bootstrap$k
-            preds <- x$predictions$bootstrap$predicted[,n.analogues]
-            if(sample.specific)
-              errors <- x$predictions$sample.errors$rmsep[, n.analogues]
-            else
-              errors <- x$bootstrap$rmsep[n.analogues]
-          }
+                                  ...) {
+  if(missing(display.error))
+    display.error <- "none"
+  display.error <- match.arg(display.error)
+  if(missing(predictions))
+    predictions <- "model"
+  predictions <- match.arg(predictions)
+  if(missing(depths))
+    {
+      if(use.labels) {
+        if(predictions == "model") {
+          depths <- as.numeric(colnames(x$predictions$model$predicted))
+          n.analogues <- x$predictions$model$k
+          preds <- x$predictions$model$predicted[n.analogues, ]
+          errors <- x$model$rmsep[n.analogues]
         } else {
-          stop("If \"use.labels = FALSE\", then \"depths\" must be provided.")
+          depths <- as.numeric(rownames(x$predictions$bootstrap$predicted))
+          n.analogues <- x$predictions$bootstrap$k
+          preds <- x$predictions$bootstrap$predicted[,n.analogues]
+          if(sample.specific)
+            errors <- x$predictions$sample.errors$rmsep[, n.analogues]
+          else
+            errors <- x$bootstrap$rmsep[n.analogues]
         }
+      } else {
+        stop("If \"use.labels = FALSE\", then \"depths\" must be provided.")
       }
-    if(missing(xlim))
-      xlim <- range(depths)
-    if(rev.x)
-      xlim <- rev(xlim)
-    upper <- preds + errors
-    lower <- preds - errors
-    if(missing(ylim)) {
-      if(error.bars)
-        ylim <- range(preds, upper, lower)
-      else
-        ylim <- range(preds)
     }
-    plot(depths, preds, ylim = ylim, xlim = xlim, type = "n",
-         ylab = ylab, xlab = xlab, main = main, ...)
-    if(error.bars)
-      arrows(depths, upper, depths, lower, length = 0.02, angle = 90,
-             code = 3, col = "grey")
-    lines(depths, preds, type = type, ...)
-    invisible()
+  reconPlot.default(preds, depths, errors, display.error = display.error, ...)
   }
-    
-
-#reconPlot.mat <- function(x, fossil, k, depths, use.labels = FALSE, ...)
-#  {
-#    if(missing(k))
-#      env <- predict(x, newdata = fossil)
-#    if(missing(depths)) {
-#      if(use.labels)
-#        depths <- x$predictions$apparent$predicted
-#    }
-#}
-#reconPlot(rlgh.mat, use.labels = TRUE, xlab = "Depth", ylab = "pH",
-#          error.bars = TRUE, predictions = "bootstrap")
-

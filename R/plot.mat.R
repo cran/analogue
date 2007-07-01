@@ -41,7 +41,7 @@ plot.mat <- function(x,
                      weighted = FALSE,
                      k,
                      caption = c("Inferred vs Observed", "Residuals vs Fitted",
-                       "Apparent errors", "Average bias", "Maximum bias"), 
+                       "Leave-one-out errors", "Average bias", "Maximum bias"), 
                      max.bias = TRUE,
                      n.bias = 10,
                      restrict = 20,
@@ -148,7 +148,7 @@ plot.mat <- function(x,
         dat <- x$standard$rmse[1:n.analogs]
       }
       plot(1:n.analogs, dat, type = "n",
-           ylab = paste("RMSE (weighted = ", weighted, ")", sep = ""),
+           ylab = paste("RMSEP (weighted = ", weighted, ")", sep = ""),
            xlab = xlabel, ...)
       if(one.fig) {
         lines(1:n.analogs, dat, type = "b", pch = "", ...)

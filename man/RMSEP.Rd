@@ -1,22 +1,31 @@
 \name{RMSEP}
 \alias{RMSEP}
 \alias{RMSEP.default}
-\alias{RMSEP.bootstrap}
+\alias{RMSEP.mat}
+\alias{RMSEP.bootstrap.mat}
+\alias{RMSEP.bootstrap.wa}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Root mean square error of prediction}
 \description{
   Calculates or extracts the RMSEP from transfer function models.
 }
 \usage{
-RMSEP(object, ...)
+RMSEP(object, \dots)
 
-\method{RMSEP}{bootstrap}(object, type = c("birks1990", "standard"),
-          ...)
+\method{RMSEP}{mat}(object, k, weighted = FALSE,
+          \dots)
+
+\method{RMSEP}{bootstrap.mat}(object, type = c("birks1990", "standard"),
+          \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{An object. Currently only objects of class
-    \code{"bootstrap"}.}
+  \item{object}{An R object.}
+  \item{k}{numeric; the number of analogues to use in calculating the
+    RMSEP. May be missing. If missing, \code{k} is extracted from the
+    model using \code{\link{getK}}.}
+  \item{weighted}{logical; Return the RMSEP for the weighted or
+    unweighted model? Defaults is for the unweighted model.}
   \item{type}{The type of RMSEP to return/calculate.}
   \item{\dots}{Arguments passed to other methods.}
 }
@@ -31,14 +40,18 @@ RMSEP(object, ...)
 
   In the wider statistical literature, the following form of RMSEP is
   more commonly used:
-  \deqn{\mathrm{RMSEP} = \sqrt{\frac{(y_i - \hat{y_i})^2}{n}}}{%
+  \deqn{\mathrm{RMSEP} = \sqrt{\frac{\sum_{i=1}^n (y_i - \hat{y}_i)^2}{n}}}{%
     RMSEP = sqrt(mean((y[i] - yhat[i])^2))}
-  where \eqn{y_i}{y[i]} are the observed values and \eqn{\hat{y_i}} the
+  where \eqn{y_i}{y[i]} are the observed values and \eqn{\hat{y}_i} the
   transfer function predictions/fitted values.
 
   The first form of RMSEP is returned by default or if \code{type =
     "birks1990"} is supplied. The latter form is returned if \code{type
     = "standard"} is supplied.
+
+  The RMSEP for objects of class \code{"mat"} is a leave-one-out
+  cross-validated RMSEP, and is calculated as for \code{type =
+    "standard"}.}
 }
 \value{
   A numeric vector of length 1 that is the RMSEP of \code{object}.
@@ -51,17 +64,16 @@ RMSEP(object, ...)
   263--278.
 }
 \author{Gavin L. Simpson}
-\note{
-  \code{RMSEP} is a generic function. Currently it can only be used with
-  objects of class \code{"bootstrap"}. Further methods are planned.
-}
-\seealso{\code{\link{bootstrap}}}
+\seealso{\code{\link{mat}}, \code{\link{bootstrap}}}
 \examples{
 ## continue the RLGH and SWAP example from ?join
 example(join)
 
 ## fit the MAT model using the squared chord distance measure
 swap.mat <- mat(swapdiat, swappH, method = "SQchord")
+
+## Leave-one-out RMSEP for the MAT model
+RMSEP(swap.mat)
 
 ## bootstrap training set
 swap.boot <- bootstrap(swap.mat, n.boot = 100)

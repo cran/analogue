@@ -3,6 +3,8 @@
 \alias{cummean}
 \alias{minDij}
 \alias{maxBias}
+\alias{.simpleCap}
+\alias{wmean}
 \title{Internal analogue Functions}
 \description{
   Internal analogue functions

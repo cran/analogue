@@ -16,6 +16,7 @@ distance <- function(x, y,
                        "SQchord", "bray", "chi.square", "SQchi.square",
                        "information", "chi.distance", "manhattan",
                        "kendall", "gower", "alt.gower", "mixed"),
+                     fast = TRUE,
                      weights = NULL, R = NULL)
   {
     euclidean <- function(x, y)
@@ -130,7 +131,6 @@ distance <- function(x, y,
       ## sanity check: are same columns in x and y factors
       facs.x <- sapply(as.data.frame(x), is.factor)
     }
-    #X <- x; Y <- y
     x <- data.matrix(x)
     n.vars <- ncol(x)
     x.names <- rownames(x)
@@ -139,12 +139,14 @@ distance <- function(x, y,
     NA.RM <- FALSE
     if(method %in% c("gower", "alt.gower", "mixed"))
       NA.RM <- TRUE
+    y.miss <- FALSE
     if(missing(y)) {
       #colsumx <- colSums(x, na.rm = NA.RM)
       #if(any(colsumx <= 0)) {
       #  x <- x[, colsumx > 0, drop = FALSE]
       #  warning("some species contain no data and were removed from data matrix x\n")
       #}
+      y.miss <- TRUE
       y <- x
       y.names <- x.names
     } else {
@@ -158,7 +160,7 @@ distance <- function(x, y,
       y.names <- rownames(y)
     }
     if(method == "chi.distance")
-      colsum <- colSums(join(as.data.frame(x),as.data.frame(y)))
+      colsum <- colSums(join(as.data.frame(x),as.data.frame(y), split = FALSE))
     if(method == "mixed") {
       ## sort out the weights used, eg the Kroneker's Deltas
       ## weights must be NULL or numeric vector of length == ncol(x)
@@ -170,14 +172,16 @@ distance <- function(x, y,
       }
     }
     if(method == "kendall") {
-      maxi <- apply(join(as.data.frame(x),as.data.frame(y)), 2, max)
+      maxi <- apply(join(as.data.frame(x),as.data.frame(y),
+                         split = FALSE),
+                    2, max)
     }
     if(method %in% c("gower", "alt.gower", "mixed")){
       ## gower & mixed can handle missing values though, so really,
       ## want to use the na.rm argument
-      maxi <- apply(join(as.data.frame(x),as.data.frame(y)), 2,
+      maxi <- apply(join(as.data.frame(x),as.data.frame(y), split = FALSE), 2,
                     max, na.rm = NA.RM)
-      mini <- apply(join(as.data.frame(x),as.data.frame(y)), 2,
+      mini <- apply(join(as.data.frame(x),as.data.frame(y), split = FALSE), 2,
                     min, na.rm = NA.RM)
       if(is.null(R))
         R <- maxi - mini
@@ -198,7 +202,19 @@ distance <- function(x, y,
     } else if (method == "mixed") {
       res <- apply(y, 1, Dist, x, method, facs = facs.x, weights = weights,
                    R = R)
-    } else{
+    } else if (method %in% c("euclidean","SQeuclidean","chord","SQchord","bray") &&
+               fast == TRUE && y.miss == TRUE) {
+      if(method == "bray") {
+        res <- as.matrix(vegdist(x, method = "bray"))
+      } else {
+        if(method %in% c("chord", "SQchord"))
+          res <- as.matrix(dist(sqrt(x), method = "euclidean"))
+        else
+          res <- as.matrix(dist(x, method = "euclidean"))
+        if(method %in% c("SQeuclidean", "SQchord"))
+          res <- res^2
+      }
+    } else {
       res <- apply(y, 1, Dist, x, method)
     }
     colnames(res) <- y.names

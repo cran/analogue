@@ -2,6 +2,7 @@
 \alias{roc}
 \alias{roc.default}
 \alias{roc.mat}
+\alias{roc.analog}
 \alias{print.roc}
 \concept{ROC}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -17,10 +18,12 @@
 roc(object, groups, ...)
 
 \method{roc}{mat}(object, groups, ...)
+
+\method{roc}{analog}(object, groups, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{an R object. }
+  \item{object}{an R object.}
   \item{groups}{numeric; a vector of group memberships, one entry per
     sample in the training set data.}
   \item{\dots}{arguments passed to/from other methods.}
@@ -59,8 +62,8 @@ roc(object, groups, ...)
   \item{groups}{numeric; the group membership}
   \item{dissims}{numeric; vector of observed dissimilarities.}
   \item{method}{character; the dissimilarity coefficient used. Taken
-    from "\code{object}".}
-  \item{call}{the system call.}
+    from \code{"object"}.}
+  \item{call}{the matched call.}
 }
 \references{
   
@@ -82,9 +85,9 @@ roc(object, groups, ...)
 \author{Gavin L. Simpson, based on code from Thomas Lumley to optimise
   the calculation of the ROC curve.}
 \seealso{\code{\link{mat}} for fitting of MAT models.
-\code{\link{bootstrap}} and \code{\link{mcarlo}} for alternative methods
-for selecting critical values of analogue-ness for dissimilarity
-coefficients.}
+  \code{\link{bootstrap.mat}} and \code{\link{mcarlo}} for alternative
+  methods for selecting critical values of analogue-ness for
+  dissimilarity coefficients.}
 \examples{
 ## continue the example from join()
 example(join)
@@ -100,6 +103,20 @@ grps <- cutree(clust, 12)
 ## fit the ROC curve
 swap.roc <- roc(swap.mat, groups = grps)
 swap.roc
+
+## fit a analogue matching (AM) model using the squared chord distance
+## measure - need to keep the training set dissimilarities
+swap.ana <- analog(swapdiat, rlgh, method = "SQchord",
+                   keep.train = TRUE)
+
+## fit the ROC curve to the SWAP diatom data using the AM results
+## Generate a grouping for the SWAP lakes
+clust <- hclust(as.dist(swap.ana$train), method = "ward")
+grps <- cutree(clust, 12)
+
+## fit the ROC curve
+swap.roc2 <- roc(swap.ana, groups = grps)
+swap.roc2
 
 }
 \keyword{models}% at least one, from doc/KEYWORDS

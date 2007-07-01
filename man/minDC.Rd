@@ -5,7 +5,7 @@
 \alias{minDC.analog}
 \alias{print.minDC}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Functions to extract and plot minimum dissimilarities}
+\title{Functions to extract minimum dissimilarities}
 \description{
   Minimum dissimilarity is a useful indicator of reliability of
   reconstructions performed via MAT and other methods, and for analogue
@@ -23,8 +23,8 @@ minDC(x, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{an object. Currently only \code{"default"} and
-    \code{"predict.mat"} methods available.}
+  \item{x}{an object of class \code{"predict.mat"}, \code{"analog"} or
+    a object with a component named \code{"minDC"}.}
   \item{probs}{numeric; vector of probabilities with values in [0,1].}
   \item{\dots}{other arguments to be passed to other methods. Currently
     ignored.}
@@ -49,7 +49,7 @@ The \code{"default"} method of \code{minDC} will attempt to extract the
 relevant component of the object in question. This may be useful until a
 specific \code{minDC} method is written for a given class.
 }
-\seealso{\code{\link{predict.mat}}, and \code{\link{plot.mat}} for a
+\seealso{\code{\link{predict.mat}}, and \code{\link{plot.minDC}} for a
   plotting method.}
 \examples{
 ## continue the RLGH example from ?join

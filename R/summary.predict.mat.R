@@ -23,11 +23,11 @@ print.summary.predict.mat <- function(x,
   {
     print.predict.mat(x)
     if(!is.null(x$bootstrap)) {
-      k.apparent <- x$apparent$k
+      k.model <- x$model$k
       k.boot <- x$bootstrap$k
       dat <- data.frame(Obs = x$observed,
-                        Est = x$apparent$estimated[k.apparent, ],
-                        Resid = x$apparent$residuals[k.apparent, ],
+                        Est = x$model$estimated[k.model, ],
+                        Resid = x$model$residuals[k.model, ],
                         Boot.Est = x$bootstrap$estimated[, k.boot],
                         Boot.Resid = x$bootstrap$residuals[, k.boot],
                         s1 = x$sample.errors$s1[, k.boot],
@@ -36,11 +36,11 @@ print.summary.predict.mat <- function(x,
       cat("\nTraining set assessment:\n\n")
       print(dat, digits = digits)
     } else {
-      k.apparent <- x$apparent$k
+      k.model <- x$model$k
       dat <- data.frame(Obs = x$observed,
-                        Est = as.numeric(x$apparent$estimated[k.apparent]),
-                        Resid = x$apparent$residuals$residuals)
-      rownames(dat) <- names(x$apparent$estimated)
+                        Est = as.numeric(x$model$estimated[k.model]),
+                        Resid = x$model$residuals$residuals)
+      rownames(dat) <- names(x$model$estimated)
     }
     cat("\nTraining set assessment:\n\n")
     print(dat, digits = digits)
