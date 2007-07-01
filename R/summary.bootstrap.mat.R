@@ -10,21 +10,20 @@
 ## Last modified : 27-May-2006                                           ##
 ##                                                                       ##
 ###########################################################################
-#summary.bootstrap.mat <- function(object, ...)
-summary.bootstrap <- function(object, ...)
+summary.bootstrap.mat <- function(object, ...)
   {
-    #class(object) <- "summary.bootstrap.mat"
-    class(object) <- "summary.bootstrap"
+    class(object) <- "summary.bootstrap.mat"
+    #class(object) <- "summary.bootstrap"
     return(object)
   }
 
-#print.summary.bootstrap.mat <- function(x,
-print.summary.bootstrap <- function(x,
+print.summary.bootstrap.mat <- function(x,
+#print.summary.bootstrap <- function(x,
                                         digits = max(3, getOption("digits") - 3),
                                         ...)
   {
-    #print.bootstrap.mat(x)
-    print.bootstrap(x)
+    print.bootstrap.mat(x)
+    #print.bootstrap(x)
     cat("\nBootstrap estimated values for training set:\n")
     with(x$bootstrap, print(estimated[,k], digits = digits))
     if(!is.null(x$predictions)) {
@@ -33,10 +32,10 @@ print.summary.bootstrap <- function(x,
                 " model with ", x$apparent$k,
                 "-closest analogues\n", sep = ""))
       if(x$auto)
-        cat("(k chosen from model with lowest RMSE)\n\n")
+        cat("(k chosen from model with lowest RMSEP)\n\n")
       else
         cat("\n")
-      with(x$predictions$apparent, print(predicted[k,], digits = digits))
+      with(x$predictions$model, print(predicted[k,], digits = digits))
     }
     if(!is.null(x$predictions)) {
       cat(paste("\nBoostrap predicted values based on a",
@@ -50,11 +49,11 @@ print.summary.bootstrap <- function(x,
       with(x$predictions$bootstrap, print(predicted[,k], digits = digits))
     }
     cat("\nTraining set assessment:\n\n")
-    k.apparent <- x$apparent$k
+    k.model <- x$model$k
     k.boot <- x$bootstrap$k
     dat <- data.frame(Obs = x$observed,
-                      Est = x$apparent$estimated[k.apparent,],
-                      Resid = x$apparent$residuals[k.apparent,],
+                      Est = x$model$estimated[k.model,],
+                      Resid = x$model$residuals[k.model,],
                       Boot.Est = x$bootstrap$estimated[,k.boot],
                       Boot.Resid = x$bootstrap$residuals[,k.boot],
                       s1 = x$sample.errors$s1[,k.boot],

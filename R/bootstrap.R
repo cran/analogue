@@ -54,7 +54,9 @@ bootstrap.mat <- function(object, newdata, newenv, k, weighted = FALSE,
     for(i in 1:n.boot)
       {
         ## draw a bootstrap sample of size n.train
-        samp.boot <- sample(1:n.train, replace = TRUE)
+        ##samp.boot <- sample(1:n.train, replace = TRUE)
+        samp.boot <- .Internal(sample(n.train, n.train,
+                                      replace = TRUE, prob = NULL))
         ## store the unique values for subsetting later
         samp.test <- unique(samp.boot)
         ## subset the env data for training set
@@ -94,29 +96,30 @@ bootstrap.mat <- function(object, newdata, newenv, k, weighted = FALSE,
       }
     ## to get boot est env for each k over all bootstraps we need
     ## means applied over cols then rows of the array
-    boot.train.est <- apply(k.preds, c(2,1), mean, na.rm = TRUE)
+    temp <- rowMeans(k.preds, na.rm = TRUE, dims = 2)
+    boot.train.est <- t(temp)
     ## s1.train == sd of the bootstrap predictions for a training
     ## set sample when included in the bootstrap test set only 
-    boot.train.s1.train <- apply(k.preds, c(2,1), sd, na.rm = TRUE)
+    ns <- rowSums(!is.na(k.preds), dims = 2)
+    mns <- as.vector(temp)
+    boot.train.s1.train <- t(sqrt(rowSums((k.preds - mns)^2,
+                                          na.rm = TRUE, dims = 2) /
+                                  as.vector(ns - 1)))
+    ##sds[t(ns)==0] <- NA ## might be needed if a sample gets no bootstraps
     ## s2.train == RMSEP for individual samples across all bootstrap cycles
     ## this does diff between obs value of x_i and each
     ## prediction x_{i,boot} 
     boot.train.s2.train <- sweep(k.preds, c(2,1), object$orig.y, "-")
-    boot.train.s2.train <- apply(boot.train.s2.train, c(2,1),
-                                 function(x) {sqrt(mean(x^2,
-                                                        na.rm = TRUE))})
+    boot.train.s2.train <- sqrt(t(rowMeans(boot.train.s2.train^2,
+                                           na.rm = TRUE, dims = 2)))
     ## overall s1 for the model
-    boot.train.s1.model <- apply(boot.train.s1.train, 2,
-                                 function(x) sqrt(mean(x^2)))
+    boot.train.s1.model <- sqrt(colMeans(boot.train.s1.train^2))
     ## bootstrap residuals
-    boot.train.resid <- apply(boot.train.est, 2,
-                              function(x) object$orig.y - x)
+    boot.train.resid <- object$orig.y - boot.train.est
     ## s2 for the model == RMS of the difference between the mean of the
     ## predictions for x_i when x_i in the test set - this is across all
     ## bootstraps
-    boot.train.s2.model <- apply(boot.train.resid, 2,
-                                 function(x)sqrt(mean(x^2,
-                                                      na.rm = TRUE))) 
+    boot.train.s2.model <- sqrt(colMeans(boot.train.resid^2, na.rm = TRUE))
     ## RMSEP for individual samples
     boot.train.rmsep.train <- sqrt(boot.train.s1.train^2 +
                                    boot.train.s2.model^2)
@@ -127,7 +130,7 @@ bootstrap.mat <- function(object, newdata, newenv, k, weighted = FALSE,
     ## need to check ?cor and argument "use"
     boot.train.r2.boot <- apply(boot.train.est, 2, cor, object$orig.y)
     ## average and maximum bias statistics for training set
-    boot.train.avg.bias.boot <- apply(boot.train.resid, 2, mean)
+    boot.train.avg.bias.boot <- colMeans(boot.train.resid) #apply(boot.train.resid, 2, mean)
     boot.train.max.bias.boot <- apply(boot.train.resid, 2, maxBias,
                                       object$orig.y, n = 10)
     ## apparent estimates etc,
@@ -168,35 +171,37 @@ bootstrap.mat <- function(object, newdata, newenv, k, weighted = FALSE,
           predicted <- apply(dis, 2, cumWmean, object$orig.y, drop = FALSE)
         else
           predicted <- apply(dis, 2, cummean, object$orig.y, drop = FALSE)
-        predicted.boot <- apply(k.new.preds, c(2,1), mean, na.rm = TRUE)
+        ## bootstrap predictions
+        temp <- rowMeans(k.new.preds, na.rm = TRUE, dims = 2)
+        predicted.boot <- t(temp)
         ## s1.fossil == sd of the bootstrap predictions
-        s1.fossil <- apply(k.new.preds, c(2,1), sd, na.rm = TRUE)
+        ns <- rowSums(!is.na(k.new.preds), dims = 2)
+        mns <- as.vector(temp)
+        s1.fossil <- t(sqrt(rowSums((k.new.preds - mns)^2,
+                                    na.rm = TRUE, dims = 2) /
+                            as.vector(ns - 1)))
         if(pred.newenv) {
           #apparent stats
           test.resid.app <- apply(predicted, 1,
                                   function(x) newenv - x)
           test.r2.app <- apply(predicted, 1, cor, newenv)
-          test.avg.bias.app <- apply(test.resid.app, 2, mean)
+          test.avg.bias.app <- colMeans(test.resid.app)
           test.max.bias.app <- apply(test.resid.app, 2, maxBias,
                                      newenv, n = 10)
-          test.rmse.app <- apply(test.resid.app, 2, function(x) {
-            sqrt(mean(x^2))})
+          test.rmse.app <- sqrt(colMeans(test.resid.app^2))
           ## bootstrap stats
           pred.s2.test <- sweep(k.new.preds, c(2,1), newenv, "-")
-          pred.s2.test <- apply(pred.s2.test, c(2,1),
-                                function(x) {sqrt(mean(x^2,
-                                                       na.rm = TRUE))})
-          test.resid <- apply(predicted.boot, 2,
-                              function(x) newenv - x)
-          test.avg.bias.boot <- apply(test.resid, 2, mean)
+          pred.s2.test <- sqrt(t(rowMeans(pred.s2.test^2,
+                                           na.rm = TRUE, dims = 2)))
+          ##test.resid <- apply(predicted.boot, 2,
+          ##                    function(x) newenv - x)
+          test.resid <- newenv - predicted.boot
+          test.avg.bias.boot <- colMeans(test.resid)#apply(test.resid, 2, mean)
           test.max.bias.boot <- apply(test.resid, 2, maxBias,
                                       newenv, n = 10)
           test.r2.boot <- apply(predicted.boot, 2, cor, newenv)
-          test.s1.model <- apply(s1.fossil, 2,
-                                 function(x) sqrt(mean(x^2)))
-          test.s2.model <- apply(test.resid, 2,
-                                 function(x)sqrt(mean(x^2,
-                                                      na.rm = TRUE)))
+          test.s1.model <- sqrt(colMeans(s1.fossil^2))
+          test.s2.model <- sqrt(colMeans(test.resid^2, na.rm = TRUE))
           test.rmsep.model <- sqrt(test.s1.model^2 + test.s2.model^2)
           rmsep.fossil <- sqrt(s1.fossil^2 + pred.s2.test^2)
         } else {
@@ -222,11 +227,13 @@ bootstrap.mat <- function(object, newdata, newenv, k, weighted = FALSE,
     }
     ## re-apply some rownames
     rownames(boot.train.est) <- rownames(boot.train.resid) <- train.names
+    .call <- match.call()
+    .call[[1]] <- as.name("bootstrap")
     res <- list(observed = obs,
-                apparent = list(
+                model = list(
                   estimated = est, residuals = resi,
                   r.squared = r2, avg.bias = avg.bias,
-                  max.bias = max.bias, rmse = rmse, k = k.apparent),
+                  max.bias = max.bias, rmsep = rmse, k = k.apparent),
                 bootstrap = list(
                   estimated = boot.train.est,
                   residuals = boot.train.resid,
@@ -244,19 +251,19 @@ bootstrap.mat <- function(object, newdata, newenv, k, weighted = FALSE,
                 weighted = weighted,
                 auto = auto,
                 n.boot = n.boot,
-                call = match.call(),
-                model = "MAT")
+                call = .call,
+                type = "MAT")
     if(predictions)
       {
         if(pred.newenv) {
           res$predictions <- list(observed = newenv,
-                                  apparent = list(
+                                  model = list(
                                     predicted = predicted,
                                     residuals = test.resid.app,
                                     r.squared = test.r2.app,
                                     avg.bias = test.avg.bias.app,
                                     max.bias = test.max.bias.app,
-                                    rmse = test.rmse.app,
+                                    rmsep = test.rmse.app,
                                     k = k.test.apparent),
                                   bootstrap = list(
                                     predicted = predicted.boot,
@@ -275,7 +282,7 @@ bootstrap.mat <- function(object, newdata, newenv, k, weighted = FALSE,
                                     )
                                   )
         } else {
-          res$predictions <- list(apparent = list(
+          res$predictions <- list(model = list(
                                     predicted = predicted,
                                     k = k.boot),
                                   bootstrap = list(
@@ -289,32 +296,30 @@ bootstrap.mat <- function(object, newdata, newenv, k, weighted = FALSE,
                                   )
         }
       }
-    #class(res) <- "bootstrap.mat"
-    class(res) <- "bootstrap"
+    class(res) <- "bootstrap.mat"
     return(res)
   }
 
-#print.bootstrap.mat <- function(x, digits = max(3, getOption("digits") - 3),
-print.bootstrap <- function(x, digits = max(3, getOption("digits") - 3),
+print.bootstrap.mat <- function(x, digits = max(3, getOption("digits") - 3),
                             ...)
   {
     msg <- "Bootstrap results for palaeoecological models"
     cat("\n")
     writeLines(strwrap(msg,prefix = "\t"))
     cat("\n")
-    cat(paste("Model type:", x$model, "\n"))
+    cat(paste("Model type:", x$type, "\n"))
     cat(paste("Weighted mean:", x$weighted, "\n"))
     cat(paste("Number of bootstrap cycles:", x$n.boot, "\n"))
-    cat("\nApparent and bootstrap-derived error estimates:\n\n")
+    cat("\nLeave-one-out and bootstrap-derived error estimates:\n\n")
     boot.errors <- with(x$bootstrap, c(k, rmsep[k], s1[k], s2[k],
                                        r.squared[k],
                                        avg.bias[k], max.bias[k]))
-    apparent.errors <- with(x$apparent, c(k, rmse[k], NA, NA,
+    apparent.errors <- with(x$model, c(k, rmsep[k], NA, NA,
                                           r.squared[k],
                                           avg.bias[k], max.bias[k]))
     errors <- rbind(apparent.errors, boot.errors)
     if(!is.null(x$predictions$observed)) {
-      test.app.errors <- with(x$predictions$apparent, c(k, rmse[k],
+      test.model.errors <- with(x$predictions$model, c(k, rmsep[k],
                                                         NA, NA,
                                                         r.squared[k],
                                                         avg.bias[k],
@@ -323,13 +328,13 @@ print.bootstrap <- function(x, digits = max(3, getOption("digits") - 3),
                                                      s2[k], r.squared[k],
                                                      avg.bias[k],
                                                      max.bias[k]))
-      errors <- rbind(errors, test.app.errors, test.errors)
-      rownames(errors) <- c("Apparent", "Bootstrap",
-                            "Test (App.)", "Test (Boot)")
+      errors <- rbind(errors, test.model.errors, test.errors)
+      rownames(errors) <- c("LOO", "Bootstrap",
+                            "Test", "Test (Boot)")
     } else {
-      rownames(errors) <- c("Apparent", "Bootstrap")
+      rownames(errors) <- c("LOO", "Bootstrap")
     }
-    colnames(errors) <- c("k", "RMSE(P)", "S1", "S2", "r.squared",
+    colnames(errors) <- c("k", "RMSEP", "S1", "S2", "r.squared",
                           "avg.bias", "max.bias")
     print(errors, digits = digits, na.print = "-")
     cat("\n")

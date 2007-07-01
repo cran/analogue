@@ -45,7 +45,7 @@
 \seealso{\code{\link{mat}} for the model fitting function,
   \code{\link{residuals.mat}} for extraction of residuals. Related
   functions are \code{\link{predict.mat}} for predicting for unknown
-  samples and \code{\link{bootstrap}} for bootstrap estimates for the
+  samples and \code{\link{bootstrap.mat}} for bootstrap estimates for the
   training set.}
 \examples{
 ## continue the RLGH and SWAP example from ?join

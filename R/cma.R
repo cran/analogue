@@ -33,37 +33,22 @@ cma.analog <- function(object, cutoff, prob = c(0.01, 0.025, 0.05), ...)
       if (!is.numeric(cutoff))
         stop("Argument \"cutoff\" must be numeric")
     }
-    if(!any(apply(object$analogs, 2, function(x) any(x <= cutoff))))
-      stop(paste("No analogues as close or closer than \"cutoff = ",
-                 cutoff, "\":\n\tChoose a more suitable value", sep = ""))
+    #if(!any(apply(object$analogs, 2, function(x) any(x <= cutoff))))
+    #  stop(paste("No analogues as close or closer than \"cutoff = ",
+    #             cutoff, "\":\n\tChoose a more suitable value", sep = ""))
     n.samp <- ncol(object$analogs)
-    close <- vector("list", length = n.samp)
     nams <- colnames(object$analogs)
-    for(i in 1:n.samp)
-      {
-        x <- sort(object$analogs[,i])
-        x <- x[x <= cutoff]
-        if(length(x) == 0) {
-          x <- NA
-          names(x) <- "None"
-        }
-        close[[i]] <- x
-      }
+    close <- apply(object$analogs, 2, function(x) {
+      x <- sort(x)
+      x <- x[x <= cutoff]})
+    if(length(close) == 0) 
+      close <- vector(mode = "list", length = length(nams))
     each.analogs <- sapply(close, length)
-    max.analogs <- max(each.analogs)
-    samples <- distances <- matrix(NA, nrow = max.analogs,
-                               ncol = n.samp)
-    for (i in seq(along = close))
-      {
-        len <- each.analogs[i]
-        distances[1:len,i] <- close[[i]]
-        samples[1:len,i] <- names(close[[i]])
-      }
-    rownames(distances) <- rownames(samples) <- 1:max.analogs
-    names(each.analogs) <- colnames(distances) <- colnames(samples) <- nams
-    each.analogs[each.analogs == 1] <- 0
-    structure(list(distances = distances, samples = samples,
-                   call = match.call(), cutoff = cutoff,
+    names(each.analogs) <- names(close) <- nams
+    .call <- match.call()
+    .call[[1]] <- as.name("cma")
+    structure(list(close = close,
+                   call = .call, cutoff = cutoff,
                    quant = quantile(dissim(object), probs = prob),
                    prob = prob,
                    method = object$method,

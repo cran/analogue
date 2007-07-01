@@ -57,7 +57,7 @@ print.summary.analog <- function(x,
     cat(paste("k-closest:", closest, "\n"))
     if(!is.null(x$quantiles))
       {
-        cat("\nQuantiles of the dissimilarities for the training set:\n\n")
+        cat("\nPercentiles of the dissimilarities for the training set:\n\n")
         print(x$quantiles, digits)
         cat("\n")
       }

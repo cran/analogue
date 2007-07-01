@@ -1,12 +1,12 @@
 ## functions for extracting and setting the number
 ## of analogues to be used
-k <- function(object, ...) UseMethod("k")
+getK <- function(object, ...) UseMethod("getK")
 
-k.default <- function(object, ...) {
+getK.default <- function(object, ...) {
   stop("No default method for 'k'")
 }
 
-k.mat <- function(object, weighted=FALSE, ...){
+getK.mat <- function(object, weighted=FALSE, ...){
   ## check that this is a mat object
   if(class(object) != "mat")
     stop("'object' must be of class 'mat'")
@@ -22,22 +22,36 @@ k.mat <- function(object, weighted=FALSE, ...){
   return(retval)
 }
 
-k.bootstrap <- function(object, ...) {
-  if (!inherits(object, "bootstrap")) 
-    stop("Use only with \"bootstrap\" objects")
-  retval <- object$bootstrap$k
+getK.bootstrap.mat <- function(object, which = c("bootstrap", "model"),
+                               prediction = FALSE, ...) {
+  if (!inherits(object, "bootstrap.mat")) 
+    stop("Use only with \"bootstrap.mat\" objects")
+  if(missing(which))
+    which <- "bootstrap"
+  which <- match.arg(which)
+  if(which == "bootstrap") {
+    if(prediction)
+      retval <- object$predictions$bootstrap$k
+    else
+      retval <- object$bootstrap$k
+  } else {
+    if(prediction)
+      retval <- object$predictions$model$k
+    else
+      retval <- object$predictions$model$k
+  }
   attr(retval, "auto") <- object$auto
   attr(retval, "weighted") <- object$weighted
   return(retval)
 }
 
-"k<-" <- function(object, weighted=FALSE, value) UseMethod("k<-")
+"getK<-" <- function(object, weighted=FALSE, value) UseMethod("getK<-")
 
-"k<-.default" <- function(object, weighted=FALSE, value) {
+"getK<-.default" <- function(object, weighted=FALSE, value) {
   stop("no default replacement method for 'k'")
 }
 
-"k<-.mat" <- function(object, weighted=FALSE, value) {
+"getK<-.mat" <- function(object, weighted=FALSE, value) {
   ## check that this is a mat object
   if(class(object) != "mat")
     stop("'object' must be of class 'mat'")

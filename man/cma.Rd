@@ -35,17 +35,13 @@ cma(object, \dots)
 %}
 \value{
   A list of class \code{"cma"} with the following components:
-  \item{distances}{a matrix of distances/dissimilarities. Individual
-    columns contain the ordered close modern analogues for individual
-    fossil samples. Rows of this matrix refer to the
-    \eqn{k^{\mathrm{th}}}{k-th} closest analogue for each fossil
-      sample. See notes below.}
-  \item{samples }{a matrix of sample names from the reference set that
-    are close modern analogues for a fossil sample. Individual
-    columns contain the ordered close modern analogues for individual 
-    fossil samples. Rows of this matrix refer to the
-    \eqn{k^{\mathrm{th}}}{k-th} closest analogue for each fossil sample.
-    See notes below.}
+  \item{close}{a named list of named vectors of close modern analogues
+    and their dissimilarities. The names of the list components are the
+    names of the fossil samples. The named vector in each
+    component of \code{close} is the distances for the close modern
+    analogues from the training set that are as close as \code{cutoff},
+    or closer, to the fossil sample.}
+  \item{call}{the matched call.}
   \item{cutoff}{the cutoff threshold used to define close modern
     analogues.}
   \item{quant}{numeric vector of the requested quantiles.}
@@ -70,19 +66,6 @@ cma(object, \dots)
 \author{Gavin L. Simpson}
 \note{
   Currently, only objects of class \code{\link{analog}} are supported.
-  The number of rows in the returned matrices is equal to the maximum
-  number of close modern analogues identified for an individual fossil
-  sample. If no close modern analogues exist for an individual fossil
-  sample, then the relevant column in \code{"distances"}will contain all
-  missing values and in \code{"samples"} the string \code{"none"}. Rows
-  of individual columns will be padded with missing values if the number
-  of close modern analogues for that sample is less than the maximum
-  number of close modern analogues identified for a single sample.
-}
-\section{Warning}{
-  The matrix representation of the returned objects \code{"distances"}
-  and \code{"samples"} is used for convenience \bold{only}. Do not
-  attempt to compare values across rows between columns.
 }
 \seealso{\code{\link{analog}}}
 \examples{

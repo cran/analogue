@@ -15,7 +15,7 @@
      weighted = FALSE,
      k,
      caption = c("Inferred vs Observed", "Residuals vs Fitted",
-                 "Apparent errors", "Average bias",
+                 "Leave-one-out errors", "Average bias",
                  "Maximum bias"),
      max.bias = TRUE,
      n.bias = 10,
@@ -24,7 +24,7 @@
      main = "",
      ask = prod(par("mfcol")) < length(which) &&
                                   dev.interactive(),
-     ...,
+     \dots,
      panel = if (add.smooth) panel.smooth else points,
      add.smooth = getOption("add.smooth"))
 }

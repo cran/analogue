@@ -1,9 +1,12 @@
 \name{plot.minDC}
 \alias{plot.minDC}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ ~~function to do ... ~~ }
+\title{A plot of minimum dissimilarity per sample}
 \description{
-  ~~ A concise (1-5 lines) description of what the function does. ~~
+  Minimum dissimilarity is a useful indicator of reliability of
+  reconstructions performed via MAT and other methods, and for analogue
+  matching. Minimum dissimilarity for a sample is the smallest
+  dissimilarity between it and the training set samples.
 }
 \usage{
 \method{plot}{minDC}(x, depths, use.labels = FALSE,

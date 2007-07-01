@@ -15,9 +15,9 @@ summary.mat <- function(object, k = 10,
                         digits = min(2, getOption("digits") - 4),
                         ...)
   {
-    tbl <- cbind(object$standard$rmse[1:k], object$standard$r.squared[1:k],
+    tbl <- cbind(object$standard$rmsep[1:k], object$standard$r.squared[1:k],
                  object$standard$avg.bias[1:k], object$standard$max.bias[1:k])
-    tbl.w <- cbind(object$weighted$rmse[1:k], object$weighted$r.squared[1:k],
+    tbl.w <- cbind(object$weighted$rmsep[1:k], object$weighted$r.squared[1:k],
                    object$weighted$avg.bias[1:k], object$weighted$max.bias[1:k])
     tbl <- as.matrix(format(tbl, digits = digits))
     tbl.w <- as.matrix(format(tbl.w, digits = digits))
@@ -25,7 +25,7 @@ summary.mat <- function(object, k = 10,
     tbl.w <- cbind(as.integer(1:k), tbl.w)
     rownames(tbl) <- rownames(tbl.w) <- rep("", nrow(tbl))
     colnames(tbl) <- colnames(tbl.w) <- c("k",
-                                          "RMSE","R2","Avg Bias","Max Bias")
+                                          "RMSEP","R2","Avg Bias","Max Bias")
     W.Est <- object$weighted$est[k, ]
     Est <- object$standard$est[k, ]
     Obs <- object$orig.y
@@ -60,13 +60,12 @@ print.summary.mat <- function(x,
     writeLines(strwrap("Modern Analogue Technique", prefix = "\t"))
     cat("\nCall:\n")
     cat(deparse(x$call), "\n")
-    cat("\nQuantiles of the dissimilarities for the training set:\n\n")
+    cat("\nPercentiles of the dissimilarities for the training set:\n\n")
     print(x$quantiles, digits = digits)
     cat("\nInferences based on the mean of k-closest analogues:\n\n")
     print(x$tbl, quote = FALSE, right = TRUE)
     cat("\nInferences based on the weighted mean of k-closest analogues:\n\n")
     print(x$tbl.w, quote = FALSE, right = TRUE)
-    #cat("\n")
     k <- attr(x, "k")
     x <- x$summ
     class(x) <- "data.frame"

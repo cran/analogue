@@ -38,6 +38,7 @@ plot.cma <- function(x, method = c("overplot", "jitter", "stack"),
       opar <- par(mar = c(5, 5, 4, 2) + 0.1, las = 1,
                   cex.axis = cex.axis)
     on.exit(par(opar))
+    x <- summary(x)
     dat <- as.vector(x$distances)
     dims <- dim(x$distances)
     NAs <- !is.na(dat)

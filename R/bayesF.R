@@ -1,6 +1,5 @@
 ## compute Bayes factors (syn. likelihood ratios) of
 ## positive and negative events
-#bayesF <- function(x, which = "both", prior = NULL) {
 bayesF <- function(x, prior = NULL) {
   if(class(x) != "roc")
     stop("Likelihood ratios only for objects of class 'roc'")

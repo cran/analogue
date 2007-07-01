@@ -14,7 +14,7 @@
 }
 
 \usage{
-\method{residuals}{mat}(object, k, weighted = FALSE, ...)
+\method{residuals}{mat}(object, k, weighted = FALSE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -25,6 +25,11 @@
     for the \code{"k"} modern analogues be used instead of the mean?}
   \item{\dots}{arguments pass to or from other methods.}
 }
+\details{
+  Typical usages are
+  \preformatted{
+    resid(object, k, weighted = FALSE, \dots)}
+  }
 \value{
   A list with the following components:
   \item{residuals}{numeric; a vector of model residuals.}

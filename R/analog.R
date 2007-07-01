@@ -33,8 +33,10 @@ analog.default <- function(x, y, method = c("euclidean", "SQeuclidean",
     train <- NULL
     if(keep.train)
         train <- distance(x = x, method = method)
+    .call <- match.call()
+    .call[[1]] <- as.name("analogue")
     retval <- list(analogs = dissim, train = train,
-                   call = match.call(), method = method)
+                   call = .call, method = method)
     class(retval) <- "analog"
     return(retval)
   }
@@ -52,7 +54,7 @@ print.analog <- function(x, probs = c(0.01, 0.02, 0.05, 0.1, 0.2),
     minDij <- minDC(x)
     if(!is.null(x$train))
        {
-         cat("\nQuantiles of the dissimilarities for the training set:\n\n")
+         cat("\nPercentiles of the dissimilarities for the training set:\n\n")
          print(quantile(as.vector(as.dist(x$train)), probs = probs),
                digits = digits)
        }

@@ -22,9 +22,9 @@ fitted.mat <- function(object, k, weighted = FALSE, ...)
       {
         auto <- TRUE
         if(weighted)
-          k <- which.min(object$weighted$rmse)
+          k <- which.min(object$weighted$rmsep)
         else
-          k <- which.min(object$standard$rmse)
+          k <- which.min(object$standard$rmsep)
       }
     if(weighted) {
       ## need the row from this matrix

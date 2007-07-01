@@ -9,7 +9,7 @@
   data sets with respect to training set samples. 
 }
 \usage{
-join(\dots, verbose = FALSE, na.replace = TRUE)
+join(\dots, verbose = FALSE, na.replace = TRUE, split = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,9 +24,15 @@ join(\dots, verbose = FALSE, na.replace = TRUE)
     ecology and palaeoecology. If you want to replace with another
     value, then set \code{na.replace} to \code{FALSE} and do the
     replacement later.}
+  \item{split}{logical; should the merged data sets samples be split
+    back into individual data frames, but now with common columns
+    (i.e. species)?}
 }
 \value{
-  A data frame containing the merged data sets.
+  If \code{split = TRUE}, a list of data frames, with as many components
+  as the number of data frames originally merged.
+
+  Otherwise, a data frame containing the merged data sets.
 }
 \author{Gavin L. Simpson}
 \seealso{\code{\link{merge}}}
@@ -35,18 +41,14 @@ join(\dots, verbose = FALSE, na.replace = TRUE)
 data(swapdiat)
 data(swappH)
 data(rlgh)
-## process so common set of columns for training and test
-## number of training set samples
-n.train <- nrow(swapdiat)
 
 ## merge training and test set on columns
 dat <- join(swapdiat, rlgh, verbose = TRUE)
 
-## convert to proportions
-dat <- dat / 100
-## subset data back into training and test sets
-swapdiat <- dat[1:n.train, ]
-rlgh <- dat[(n.train+1):nrow(dat), ]
+## extract the merged data sets and convert to proportions
+swapdiat <- dat[[1]] / 100
+rlgh <- dat[[2]] / 100
+
 }
 \keyword{multivariate}% at least one, from doc/KEYWORDS
 \keyword{manip}% __ONLY ONE__ keyword per line

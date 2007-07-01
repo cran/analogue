@@ -1,8 +1,8 @@
 \name{bootstrap}
 \alias{bootstrap}
 \alias{bootstrap.default}
-\alias{bootstrap.mat}}
-\alias{print.bootstrap}
+\alias{bootstrap.mat}
+\alias{print.bootstrap.mat}
 %\alias{print.bootstrap.mat}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Bootstrap estimation and errors }
@@ -14,12 +14,12 @@
 }
 \usage{
 
-bootstrap(object, ...)
+bootstrap(object, \dots)
 
-\method{bootstrap}{default}(object, ...)
+\method{bootstrap}{default}(object, \dots)
 
 \method{bootstrap}{mat}(object, newdata, newenv, k,
-          weighted = FALSE, n.boot = 1000, ...)
+          weighted = FALSE, n.boot = 1000, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -82,7 +82,7 @@ bootstrap(object, ...)
   on whether \code{newdata} and \code{newenv} are supplied or not.
 
   \item{observed}{vector of observed environmental values.}
-  \item{apparent}{a list containing the apparent or non-bootstrapped
+  \item{model}{a list containing the apparent or non-bootstrapped
     estimates for the training set. With the following components:
     \item{\code{estimated}}{estimated values for \code{"y"}, the
       environment.}
@@ -127,12 +127,14 @@ bootstrap(object, ...)
   \item{auto}{logical; whether \code{"k"} was choosen automatically or
     user-selected.}
   \item{n.boot}{numeric; the number of bootstrap samples taken.}
+  \item{call}{the matched call.}
+  \item{call}{model type.}
   \item{predictions}{a list containing the apparent and
     bootstrap-derived estimates for the new data, with the following
     components:
     \item{\code{observed}}{the observed values for the new samples ---
       only if \code{newenv} is provided.}
-    \item{\code{apparent}}{a list containing the apparent or
+    \item{\code{model}}{a list containing the apparent or
       non-bootstrapped estimates for the new samples. A list with the
       same components as \code{apparent}, above.
     }
@@ -153,7 +155,7 @@ bootstrap(object, ...)
 
 }
 \author{Gavin L. Simpson }
-\seealso{\code{mat}, \code{plot.mat} \code{summary.bootstrap}}
+\seealso{\code{mat}, \code{plot.mat}, \code{summary.bootstrap.mat}}
 \examples{
 ## continue the RLGH and SWAP example from ?join
 example(join)
@@ -165,9 +167,6 @@ swap.mat <- mat(swapdiat, swappH, method = "SQchord")
 swap.boot <- bootstrap(swap.mat, n.boot = 100)
 swap.boot
 summary(swap.boot)
-
-## bootstrap with predictions:
-rlgh.boot <- bootstrap(swap.mat, rlgh, n.boot = 100)
 
 }
 \keyword{multivariate}% at least one, from doc/KEYWORDS

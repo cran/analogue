@@ -4,25 +4,18 @@
 ##                                                                       ##
 ## Created       : 13-Jun-2006                                           ##
 ## Author        : Gavin Simpson                                         ##
-## Version       : 0.1                                                   ##
-## Last modified : 13-Jun-2006                                           ##
-##                                                                       ##
-## ARGUMENTS:                                                            ##
-## object        - object on which method dispatch applied (Only 'mat')  ##
-## k             - number of analogues to use. If missing 'k' is chosen  ##
-##                 automatically as the 'k' that achieves lowest RMSE.   ##
-## weighted      - Logical. Should the analysis use weighted mean of env ##
-##                 data of analogues as fitted/estimated values?         ##
+## Version       : 0.2                                                   ##
+## Last modified : 27-Jun-2007                                           ##
 ##                                                                       ##
 ###########################################################################
-#residuals.bootstrap.mat <- function(object, which = c("apparent", "bootstrap"),
-residuals.bootstrap <- function(object, which = c("apparent", "bootstrap"),
+residuals.bootstrap.mat <- function(object, which = c("model", "bootstrap"),
+#residuals.bootstrap <- function(object, which = c("model", "bootstrap"),
                                     ...)
   {
     which <- match.arg(which, several.ok = TRUE)
     res <- vector("list")
-    if("apparent" %in% which)
-      res$apparent <- object$apparent$residuals
+    if("model" %in% which)
+      res$model <- object$model$residuals
     if("bootstrap" %in% which)
       res$bootstrap <- object$bootstrap$residuals
     res$k <- object$k
@@ -34,8 +27,8 @@ residuals.bootstrap <- function(object, which = c("apparent", "bootstrap"),
     return(res)
   }
 
-#print.residuals.bootstrap.mat <- function(x,
-print.residuals.bootstrap <- function(x,
+print.residuals.bootstrap.mat <- function(x,
+#print.residuals.bootstrap <- function(x,
                                           digits = min(3, getOption("digits") - 3),
                                           ...)
   {
@@ -47,12 +40,12 @@ print.residuals.bootstrap <- function(x,
               " model with ", x$k,
               "-closest analogues\n", sep = ""))
     if(x$auto)
-      cat("(k chosen from model with lowest RMSE)\n\n")
+      cat("(k chosen from model with lowest RMSEP)\n\n")
     else
       cat("\n")
-    if(!is.null(x$apparent)) {
-      cat("Apparent residuals:\n")
-      print(x$apparent, digits = digits)
+    if(!is.null(x$model)) {
+      cat("Model residuals:\n")
+      print(x$model, digits = digits)
       cat("\n")
     }
     if(!is.null(x$bootstrap)) {
