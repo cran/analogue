@@ -1,8 +1,6 @@
 TODO
 ====
 
-Version 0.4-0
-
 	* Written documentation in the form of a vignette.
 	
 	* A formula method for 'mat' - DONE in 0.3-4
