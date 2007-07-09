@@ -1,5 +1,9 @@
 analogue Change Log
 
+Version 0.4-1
+
+   * Fixed silly bug in RMSEP.bootstrap.mat.
+
 Version 0.4-0
 
    * Changed the components of returned objects from mat,

@@ -26,6 +26,6 @@ RMSEP.bootstrap.mat <- function(object, type = c("birks1990", "standard"), ...) 
   if(type == "birks1990")
     rmsep <- object$bootstrap$rmsep[getK(object)]
   else
-    rmsep <- sqrt(mean(object$bootstrap$residuals[, getK(swap.boot)]^2))
+    rmsep <- sqrt(mean(object$bootstrap$residuals[, getK(object)]^2))
   return(rmsep)
 }
