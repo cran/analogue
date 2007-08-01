@@ -62,6 +62,7 @@
 }
 \seealso{\code{\link{mat}}, \code{\link{summary}}.}
 \examples{
+\dontrun{
 ## continue the RLGH example from ?join
 example(join)
 
@@ -75,5 +76,6 @@ summary(swap.mat)
 ## model summary - evaluating models using k = 1, ..., 20
 ## analogues instead of the default, 10.
 summary(swap.mat, k = 20)
+}
 }
 \keyword{methods}% at least one, from doc/KEYWORDS

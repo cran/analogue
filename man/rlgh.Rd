@@ -22,7 +22,5 @@
 }
 \examples{
 data(rlgh)
-str(rlgh)
-
 }
 \keyword{datasets}

@@ -43,6 +43,7 @@
 }
 \seealso{\code{\link{cma}}}
 \examples{
+\dontrun{
 ## continue the RLGH example from ?join
 example(join)
 
@@ -55,5 +56,6 @@ summary(swap.analog)
 swap.cma <- cma(swap.analog, cutoff = 0.6)
 swap.cma
 summary(swap.cma)
+}
 }
 \keyword{methods}

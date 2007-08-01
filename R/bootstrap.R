@@ -300,6 +300,38 @@ bootstrap.mat <- function(object, newdata, newenv, k, weighted = FALSE,
     return(res)
   }
 
+fitted.bootstrap.mat <- function(object, k, ...)
+  {
+    auto <- FALSE
+    if(missing(k))
+      {
+        auto <- TRUE
+        k <- object$bootstrap$k
+      }
+    est <- object$bootstrap$estimated[, k]
+    retval <- list(estimated = est, k = k,
+                   weighted = object$weighted,
+                   auto = auto)
+    class(retval) <- "fitted.bootstrap.mat"
+    return(retval)
+  }
+
+print.fitted.bootstrap.mat <-
+  function(x, digits = max(3, getOption("digits") - 3), ...)
+  {
+    k <- x$k
+    cat("\n")
+    writeLines(strwrap("Modern Analogue Technique: Bootstrap fitted values
+for the training set",
+                       prefix = "\t"))
+    cat("\n")
+    cat(paste("No. of analogues (k) :", k, "\n"))
+    cat(paste("User supplied k?     :", !x$auto, "\n"))
+    cat(paste("Weighted analysis?   :", x$weighted, "\n\n"))
+    print.default(x$estimated, digits = digits)
+    invisible(x)
+  }
+
 print.bootstrap.mat <- function(x, digits = max(3, getOption("digits") - 3),
                             ...)
   {

@@ -18,11 +18,13 @@ residuals.bootstrap.mat <- function(object, which = c("model", "bootstrap"),
       res$model <- object$model$residuals
     if("bootstrap" %in% which)
       res$bootstrap <- object$bootstrap$residuals
-    res$k <- object$k
+    res$k.model <- object$model$k
+    res$k.boot <- object$model$k
     if(!is.null(object$bootstrap))
       res$n.boot <- object$n.boot
     res$auto <- object$auto
     res$weighted <- object$weighted
+    res$type <- object$type
     class(res) <- "residuals.bootstrap.mat"
     return(res)
   }
@@ -34,23 +36,20 @@ print.residuals.bootstrap.mat <- function(x,
   {
     cat("\n")
     writeLines(strwrap("Bootstrap residuals", prefix = "\t"))
-    cat(paste("Model type:", x$model, "\n"))
-    cat(paste("\nResiduals based on a",
-              ifelse(x$weighted, " weighted", ""),
-              " model with ", x$k,
-              "-closest analogues\n", sep = ""))
+    cat(paste("Model type:", x$type, "\n"))
+    cat(paste("Weighted:", x$weighted, "\n"))
     if(x$auto)
-      cat("(k chosen from model with lowest RMSEP)\n\n")
+      cat("\n(k chosen from model with lowest RMSEP)\n\n")
     else
       cat("\n")
     if(!is.null(x$model)) {
       cat("Model residuals:\n")
-      print(x$model, digits = digits)
+      print(x$model[x$k.model, ], digits = digits)
       cat("\n")
     }
     if(!is.null(x$bootstrap)) {
       cat("Bootstrap residuals:\n")
-      print(x$bootstrap, digits = digits)
+      print(x$bootstrap[, x$k.boot], digits = digits)
       cat("\n")
     }
     invisible(x)

@@ -26,6 +26,7 @@
 \seealso{\code{\link{predict.mat}}, \code{\link{mat}},
   \code{\link{bootstrap.mat}} and \code{\link{summary}}.}
 \examples{
+\dontrun{
 ## continue the RLGH example from ?join
 example(join)
 
@@ -33,8 +34,8 @@ example(join)
 swap.mat <- mat(swapdiat, swappH, method = "SQchord")
 
 ## predict for RLGH data
-swap.pred <- predict(swap.mat, rlgh, bootstrap = FALSE, n.boot = 100)
+swap.pred <- predict(swap.mat, rlgh, bootstrap = FALSE)
 summary(swap.pred)
-
+}
 }
 \keyword{methods}% at least one, from doc/KEYWORDS

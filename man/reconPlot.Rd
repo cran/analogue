@@ -91,8 +91,7 @@ swap.mat <- mat(swapdiat, swappH, method = "SQchord")
 swap.mat
 
 ## Reconstruct pH for the RLGH core
-rlgh.pH <- predict(swap.mat, rlgh, bootstrap = TRUE,
-                   n.boot = 100)
+rlgh.pH <- predict(swap.mat, rlgh)
 
 ## draw the reconstruction
 reconPlot(rlgh.pH, use.labels = TRUE, display.error = "bars",
