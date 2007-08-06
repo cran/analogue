@@ -90,6 +90,7 @@
 \seealso{\code{\link{bootstrap.mat}}, \code{\link{mat}},
   \code{\link{summary}}.}
 \examples{
+\dontrun{
 ## continue the RLGH example from ?join
 example(join)
 
@@ -100,6 +101,6 @@ swap.mat <- mat(swapdiat, swappH, method = "SQchord")
 swap.boot <- bootstrap(swap.mat, k = 10, n.boot = 100)
 swap.boot
 summary(swap.boot)
-
+}
 }
 \keyword{methods}% at least one, from doc/KEYWORDS

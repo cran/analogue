@@ -1,6 +1,7 @@
 \name{bayesF}
 \alias{bayesF}
 \alias{print.bayesF}
+\alias{plot.bayesF}
 \concept{likelihood ratios}
 \concept{Bayes factors}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -11,19 +12,25 @@
 }
 \usage{
 bayesF(x, prior = NULL)
-%bayesF(x, which = "both", prior = NULL)
+
+\method{plot}{bayesF}(x, xlab = NULL, ylab = "Pr (A+ | d)",
+        col = "red", abline.col = "lightgrey", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{an object of class \dQuote{\code{roc}}.}
-  %\item{which}{character; one of \code{"both"}, \code{"pos"}, or
-  %  \code{"neg"} describing the Bayes factors required. \code{"pos"}
-  %  calculates the Bayes factor or likelihood ratio of a positive event
-  %  (analogue) and \code{"neg"} of a negative event (no-analogue).}
+  \item{x}{for \code{bayesF} an object of class \code{roc}, for the plot
+        method an object of class \code{bayesF}, usually the result of a
+        call to \code{baeysF}.}
   \item{prior}{numeric; the prior probabilities of analogue and
     no-analogue, provided as a vector of length 2 whose elements sum to
     1. If not provided, the function will use the relative occurences of
     analogue and no analogue situations used to evaluate the ROC curve.}
+  \item{xlab,ylab}{the x- and y-axis labels for the plot.}
+  \item{col}{colour of the line used to draw the posterior probability.}
+  \item{abline.col}{colour of the vertical line drawn to indicate the
+    optimal dissimilarity determined from the ROC curve.}
+  \item{\dots}{other plot arguments passed to plotting
+    functions. Currently ignored.}
 }
 \details{
   LR(+), is the likelihood ratio of a positive test result, that
@@ -39,10 +46,15 @@ bayesF(x, prior = NULL)
   LR(+) likelihood ratio values multiplied by the prior odds of
   analogue, for given values of the dissimilarity, and is then converted
   to a  probability.
+  
+  The plotting function is very simple that currently only draws the 
+  posterior probability of analogue based on the Bayes factor or
+  likelihood ratio of a positive event (analogue).
 }
 \value{
-  A list with the followin components, some of which may be \code{NULL}
-  depending on argument \code{which}:
+  For \code{plot.bayesF} a plot on the currently active device.
+
+  For \code{bayesF}, a list with the following components:
   \item{pos}{Bayes factor or likelihood ratio of a positive event
     (analogue).}
   \item{neg}{Bayes factor or likelihood ratio of anegative event
@@ -58,7 +70,6 @@ bayesF(x, prior = NULL)
     probabilities are available.}
   \item{optimal}{numeric; the optimal dissimilarity, as assessed by the
     ROC curve.}
-  %\item{method}{one of \code{"both"}, \code{"pos"}, or \code{"neg"}.}
   \item{object}{name of the object passed as argument \code{x}.}
 }
 \references{
@@ -92,6 +103,7 @@ swap.bayes
 ## plot the probability of analogue
 plot(swap.bayes)
 
+\dontrun{
 ## calculate the Bayes factors of analogue and no-analogue
 ## with prior probabilities c(0.5, 0.05)
 swap.bayes2 <- bayesF(swap.roc, prior = c(0.5, 0.05))
@@ -99,6 +111,7 @@ swap.bayes
 
 ## plot the probability of analogue
 plot(swap.bayes2)
+}
 }
 \keyword{univar}
 \keyword{methods}

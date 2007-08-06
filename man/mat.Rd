@@ -2,7 +2,12 @@
 \alias{mat}
 \alias{mat.default}
 \alias{mat.formula}
+\alias{fitted.mat}
+\alias{residuals.mat}
+\alias{resid.mat}
+\alias{print.residuals.mat}
 \alias{print.mat}
+\alias{print.fitted.mat}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Modern Analogue Technique transfer function models}
 \description{
@@ -20,12 +25,17 @@ mat(x, \dots)
                "information", "chi.distance", "manhattan",
                "kendall", "gower", "alt.gower", "mixed"),
     \dots)
+
 \method{mat}{formula}(formula, data, subset, na.action,
     method = c("euclidean", "SQeuclidean", "chord", "SQchord",
                "bray", "chi.square", "SQchi.square",
                "information", "chi.distance", "manhattan",
                "kendall", "gower", "alt.gower", "mixed"),
     model = FALSE, \dots)
+
+\method{fitted}{mat}(object, k, weighted = FALSE, \dots)
+
+\method{residuals}{mat}(object, k, weighted = FALSE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -53,6 +63,12 @@ mat(x, \dots)
     Details, below.}
   \item{model}{logical; If \code{TRUE} the model frame of the fit is
     returned.}
+  \item{object}{an object of class \code{\link{mat}}.}
+  \item{k}{numeric; the \emph{k}-closest analogue models' for which
+    fitted values and residuals are returned. Overides the default stored in
+    the object.}
+  \item{weighted}{logical; should weighted averages be used instead of
+    simple averages?}
   \item{\dots}{arguments to or from other methods.}
 }
 \details{
@@ -101,9 +117,24 @@ mat(x, \dots)
   \eqn{k} in the first case above. For predictions on an optimsation or
   test set see \code{\link{predict.mat}}. For bootstrap resampling of
   \code{\link{mat}} models, see \code{\link{bootstrap.mat}.}
+  
+  The fitted values are for the training set and are taken as the,
+  possibly weighted, mean of the environmental variable in question
+  across the \emph{k}-closest analogues. The fitted value for each
+  sample does \bold{not} include a contribution from itself --- it is
+  the closest analogue, having zero dissimilarity. This spurious
+  distance is ignored and analogues are ordered in terms of the non-zero
+  distances to other samples in the training set, with the
+  \emph{k}-closest contributing to the fitted value.
+
+  Typical usages for \code{residuals.mat} are:
+  \preformatted{
+    resid(object, k, weighted = FALSE, \dots)}
+  }
 }
 \value{
-  Returns an object of class \code{mat} with the following components:
+  \code{mat} returns an object of class \code{mat} with the following
+  components: 
   \item{standard}{list; the model statistics based on simple
     averages of \emph{k}-closest analogues. See below.}
   \item{weighted}{list; the model statistics based on weighted  of
@@ -117,11 +148,22 @@ mat(x, \dots)
 
   If \code{model = TRUE} then additional components \code{"terms"} and
   \code{"model"} are returned containing the \code{\link{terms}} object
-  and model frame used. 
+  and model frame used.
+  
+  \code{fitted.mat} returns a list with the following components:
+  \itemize{
+    \item{estimated}{numeric; a vector of fitted values.}
+    \item{k}{numeric; this is the \emph{k}-closest analogue model with
+      lowest apparent RMSE.}
+    \item{weighted}{logical; are the fitted values the weighted averages
+      of the environment for the \emph{k}-closest analogues. If
+      \code{FALSE}, the fitted values are the average of the environment
+      for the \emph{k}-closest analogues.}
+  }
 }
 \note{
-  Lists \code{"standard"} and \code{"weighted"} both contain the
-  following elements:
+  The object returned by \code{mat} contains lists \code{"standard"} and
+  \code{"weighted"} both with the following elements:
   \itemize{
     \item{\code{est}}{a matrix of estimated values for the training set
       samples for models using \eqn{k} analogues, where \eqn{k = 1,
@@ -204,3 +246,4 @@ reconPlot(rlgh.mat, use.labels = TRUE, display.error = "bars",
 }
 \keyword{models}% at least one, from doc/KEYWORDS
 \keyword{multivariate}% __ONLY ONE__ keyword per line
+\keyword{methods}

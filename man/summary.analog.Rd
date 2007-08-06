@@ -43,6 +43,7 @@
 \author{Gavin L. Simpson}
 \seealso{\code{\link{analog}}.}
 \examples{
+\dontrun{
 ## continue the RLGH example from ?join
 example(join)
 
@@ -50,5 +51,6 @@ example(join)
 swap.analog <- analog(swapdiat, rlgh, method = "chord")
 swap.analog
 summary(swap.analog)
+}
 }
 \keyword{methods}% at least one, from doc/KEYWORDS

@@ -45,13 +45,13 @@ getK.bootstrap.mat <- function(object, which = c("bootstrap", "model"),
   return(retval)
 }
 
-"getK<-" <- function(object, weighted=FALSE, value) UseMethod("getK<-")
+"setK<-" <- function(object, weighted=FALSE, value) UseMethod("setK<-")
 
-"getK<-.default" <- function(object, weighted=FALSE, value) {
+"setK<-.default" <- function(object, weighted=FALSE, value) {
   stop("no default replacement method for 'k'")
 }
 
-"getK<-.mat" <- function(object, weighted=FALSE, value) {
+"setK<-.mat" <- function(object, weighted=FALSE, value) {
   ## check that this is a mat object
   if(class(object) != "mat")
     stop("'object' must be of class 'mat'")

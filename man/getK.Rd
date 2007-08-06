@@ -3,15 +3,15 @@
 \alias{getK.default}
 \alias{getK.mat}
 \alias{getK.bootstrap.mat}
-\alias{getK<-}
-\alias{getK<-.default}
-\alias{getK<-.mat}
+\alias{setK<-}
+\alias{setK<-.default}
+\alias{setK<-.mat}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Extract and set the number of analogues}
 \description{
   An extractor function to access the number of analogues used in
-  particular models. Can also be used to set or update the stored value
-  of \eqn{k}.
+  particular models. The stored value of \eqn{k} can be updated using
+  \code{setK}.
 }
 \usage{
 getK(object, ...)
@@ -21,9 +21,9 @@ getK(object, ...)
 \method{getK}{bootstrap.mat}(object, which = c("bootstrap", "model"),
              prediction = FALSE, ...)
 
-getK(object, weighted = FALSE) <- value
+setK(object, weighted = FALSE) <- value
 
-\method{getK}{mat}(object, weighted = FALSE) <- value
+\method{setK}{mat}(object, weighted = FALSE) <- value
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -41,7 +41,7 @@ getK(object, weighted = FALSE) <- value
   \item{value}{integer; replacement value for \eqn{k}.}
 }
 \details{
-  \code{getK} is a generic accessor function, and \code{getK<-} is a generic
+  \code{getK} is a generic accessor function, and \code{setK<-} is a generic
   replacement function.
 
   Objects of class \code{\link{bootstrap.mat}} contain several different
@@ -62,7 +62,7 @@ getK(object, weighted = FALSE) <- value
   (\code{FALSE}). \dQuote{weighted} states if the returned value is for
   a \code{weighted} analysis or an un-\code{weighted} analysis (\code{FALSE}).
 
-  For \code{getK<-}, the updated object.
+  For \code{setK<-}, the updated object.
 }
 \author{Gavin L. Simpson}
 \seealso{\code{\link{mat}}}
@@ -78,7 +78,7 @@ getK(swap.mat)
 ## note that this value was chosen automatically
 
 ## Now set k to be 10
-getK(swap.mat) <- 10
+setK(swap.mat) <- 10
 
 ## check
 getK(swap.mat)

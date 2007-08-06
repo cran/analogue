@@ -34,7 +34,7 @@ analog.default <- function(x, y, method = c("euclidean", "SQeuclidean",
     if(keep.train)
         train <- distance(x = x, method = method)
     .call <- match.call()
-    .call[[1]] <- as.name("analogue")
+    .call[[1]] <- as.name("analog")
     retval <- list(analogs = dissim, train = train,
                    call = .call, method = method)
     class(retval) <- "analog"

@@ -1,4 +1,6 @@
 .First.lib <- function(lib, pkg)  {
-    cat(paste("\n", pkg, "version 0.4-0\n\n"))
-    invisible()
+  cat(paste("This is analogue",
+            utils::packageDescription("analogue")$Version,
+            "\n"))
+  invisible()
 }

@@ -66,7 +66,7 @@ example(join)
 
 ## perform the modified method of Sawada (2004) - paired sampling,
 ## with replacement
-swap.mcarlo <- mcarlo(swapdiat, method = "SQchord", nsamp = 10000,
+swap.mcarlo <- mcarlo(swapdiat, method = "SQchord", nsamp = 1000,
                       type = "paired", replace = FALSE)
 swap.mcarlo
 

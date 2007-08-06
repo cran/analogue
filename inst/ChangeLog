@@ -1,5 +1,28 @@
 analogue Change Log
 
+Version 0.4-2
+
+   * New fitted method for bootstrap.map. Returns the bootstrap
+     fitted values for the training set.
+
+   * getK<- changed to setK<- as this makes much more sense.
+     The extractor function getK remains the same.
+     
+   * Fixed a couple of bugs in residuals.bootstrap.mat and
+     print.residuals.bootstrap.mat that affected how the
+     results were printed. Now does what it was supposed to do.
+     
+   * Fixed minor bug in the code that updated the call in
+     analog.
+
+   * Added automagical printing of version number on loading
+     of the package.
+     
+   * Numerous documentation tweaks and updates have been
+     applied, which simplify package checking and which 
+     provide better documentation of certain comples returned
+     objects.
+
 Version 0.4-1
 
    * Fixed silly bug in RMSEP.bootstrap.mat.

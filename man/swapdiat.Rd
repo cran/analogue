@@ -31,6 +31,5 @@
 \seealso{\code{\link{swappH}}}
 \examples{
 data(swapdiat)
-str(swapdiat)
 }
 \keyword{datasets}

@@ -92,18 +92,6 @@ roc(object, groups, ...)
 ## continue the example from join()
 example(join)
 
-## fit the MAT model using the squared chord distance measure
-swap.mat <- mat(swapdiat, swappH, method = "SQchord")
-
-## fit the ROC curve to the SWAP diatom data using the MAT results
-## Generate a grouping for the SWAP lakes
-clust <- hclust(as.dist(swap.mat$Dij), method = "ward")
-grps <- cutree(clust, 12)
-
-## fit the ROC curve
-swap.roc <- roc(swap.mat, groups = grps)
-swap.roc
-
 ## fit a analogue matching (AM) model using the squared chord distance
 ## measure - need to keep the training set dissimilarities
 swap.ana <- analog(swapdiat, rlgh, method = "SQchord",
@@ -115,8 +103,8 @@ clust <- hclust(as.dist(swap.ana$train), method = "ward")
 grps <- cutree(clust, 12)
 
 ## fit the ROC curve
-swap.roc2 <- roc(swap.ana, groups = grps)
-swap.roc2
+swap.roc <- roc(swap.ana, groups = grps)
+swap.roc
 
 }
 \keyword{models}% at least one, from doc/KEYWORDS
