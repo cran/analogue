@@ -23,7 +23,7 @@
 ###########################################################################
 cumWmean <- function(weights, y, drop = TRUE)
   {
-    #if (length(weights) != length(y)) 
+    #if (length(weights) != length(y))
     #  stop("'y' and 'weights' must have the same length")
     nas <- is.na(weights)
     ord <- order(weights[!nas])
@@ -51,19 +51,31 @@ cumWmean <- function(weights, y, drop = TRUE)
 ## drop              - drop spurious zero distance                       ##
 ##                                                                       ##
 ###########################################################################
+#cummean <- function(dis, y, drop = TRUE)
+#  {
+#    nas <- is.na(dis)
+#    ord <- order(dis[!nas])
+#    if(drop) {
+#      dis <- dis[!nas][ord][-1]
+#      y <- y[!nas][ord][-1]
+#    } else {
+#      dis <- dis[!nas][ord]
+#      y <- y[!nas][ord]
+#    }
+#    cumsum(y) / 1:length(dis)
+#  }
 cummean <- function(dis, y, drop = TRUE)
-  {
+{
     nas <- is.na(dis)
     ord <- order(dis[!nas])
+    y <- y[!nas][ord]
+    len <- length(dis[!nas])
     if(drop) {
-      dis <- dis[!nas][ord][-1]
-      y <- y[!nas][ord][-1]
-    } else {
-      dis <- dis[!nas][ord]
-      y <- y[!nas][ord]
+        y <- y[-1]
+        len <- len - 1
     }
-    cumsum(y) / 1:length(dis)
-  }
+    cumsum(y) / 1:len
+}
 ###########################################################################
 ##                                                                       ##
 ## minDij - returns the non-zero minimum distance                        ##
@@ -145,4 +157,52 @@ maxBias <- function(error, y, n = 10)
 ###########################################################################
 wmean <- function(spp, env) {
   sum(env * spp)/sum(spp)
+}
+
+## w.avg - fast weighted mean function with no checks
+`w.avg` <- function(x, env) {
+    opt <- ColSums(x * env) / ColSums(x)
+    names(opt) <- colnames(x)
+    opt
+}
+
+## inverse deshrinking function
+`inv.deshrink` <- function(env, wa.env) {
+    X <- cbind(rep(1, length(wa.env)), wa.env)
+    QR <- qr(X)
+    coef <- qr.coef(QR, env)
+    pred <- qr.fitted(QR, env)
+    return(list(coef = coef, env = pred))
+}
+
+## classical deshrinking
+`class.deshrink` <- function(env, wa.env) {
+    X <- cbind(rep(1, length(env)), env)
+    QR <- qr(X)
+    coef <- qr.coef(QR, wa.env)
+    pred <- qr.fitted(QR, wa.env)
+    return(list(coef = coef, env = pred))
+}
+
+## fast rowSums and colSums functiosn without the checking
+`RowSums` <- function(x, na.rm = FALSE) {
+    dn <- dim(x)
+    p <- dn[2]
+    dn <- dn[1]
+    .Internal(rowSums(x, dn, p, na.rm))
+}
+
+`ColSums` <- function(x, na.rm = FALSE) {
+    dn <- dim(x)
+    n <- dn[1]
+    dn <- dn[2]
+    .Internal(colSums(x, n, dn, na.rm))
+}
+
+## deshrinking function given deshrinking coefs and a method
+`deshrink.pred` <- function(x, coef, deshrink) {
+    switch(deshrink,
+           inverse = coef[1] + (x * coef[2]),
+           classical = (x - coef[1]) / coef[2]
+           )
 }
