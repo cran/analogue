@@ -24,13 +24,13 @@
                        inverse = inv.deshrink(env, wa.env),
                        classical = class.deshrink(env, wa.env))
     wa.env <- expanded$env
-    coefficients<- expanded$coef
+    coefficients<- coef(expanded)
     ## site/sample names need to be reapplied
     names(wa.env) <- rownames(x)
     ## species names need to be reapplied
     names(wa.optima) <- colnames(x)
     ## residuals
-    resi <- env - wa.env
+    resi <- wa.env - env
     ## RMSE of predicted/fitted values
     rmse <- sqrt(mean(resi^2))
     ## r-squared
