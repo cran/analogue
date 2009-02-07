@@ -23,17 +23,17 @@ mat.default <- function(x, y,
   {
     dims <- dim(x) # the numbers of samples / species
     site.nams <- rownames(x) # store sample names for later
-    x <- as.matrix(x) # convert to matrix for speed (?)
-    dimnames(x) <- NULL # clear the dimnames for speed (?)
     .call <- match.call()
     ## need to reset due to method dispatch
     .call[[1]] <- as.name("mat")
     if(missing(method))
       method <- "euclidean"
     method <- match.arg(method)
-    dis <- distance(x, method = method) # calculate the distances
+    dis <- distance(x, method = method, ...) # calculate the distances
     ## new speed-ups might leave dimnames on dis
     dimnames(dis) <- NULL
+    x <- as.matrix(x) # convert to matrix for speed (?)
+    dimnames(x) <- NULL # clear the dimnames for speed (?)
     ## insure sample under test is not chosen as analogue for itself
     diag(dis) <- NA
     ## drop = FALSE in next calls as we now make sure sample cannot be
@@ -59,18 +59,20 @@ mat.default <- function(x, y,
     rownames(Wmeans) <- rownames(means) <- 1:(dims[1] -1)
     rownames(Werror) <- rownames(error) <- 1:(dims[1] -1)
     ## return results
-    structure(list(standard = list(est = means, resid = error,
-                     rmsep = RMSE, avg.bias = bias, max.bias = max.bias,
-                     r.squared = r2.mean, k = k, auto = TRUE),
-                   weighted = list(est = Wmeans, resid = Werror,
-                     rmsep = WRMSE, avg.bias = Wbias, max.bias = Wmax.bias,
-                     r.squared = r2.Wmean, k = k.w, auto = TRUE),
-                   Dij = dis,
-                   orig.x = x,
-                   orig.y = y,
-                   call = .call,
-                   method = method),
-              class = "mat")
+    retval <- structure(list(standard = list(est = means, resid = error,
+                             rmsep = RMSE, avg.bias = bias, max.bias = max.bias,
+                             r.squared = r2.mean, k = k, auto = TRUE),
+                             weighted = list(est = Wmeans, resid = Werror,
+                             rmsep = WRMSE, avg.bias = Wbias, max.bias = Wmax.bias,
+                             r.squared = r2.Wmean, k = k.w, auto = TRUE),
+                             Dij = dis,
+                             orig.x = x,
+                             orig.y = y,
+                             call = .call,
+                             method = method),
+                        class = "mat")
+    attr(retval, "method") <- method
+    retval
   }
 
 mat.formula <- function(formula, data, subset, na.action,
@@ -98,7 +100,7 @@ mat.formula <- function(formula, data, subset, na.action,
   mt <- attr(mf, "terms")
   y <- model.response(mf, "numeric")
   x <- model.matrix(mt, mf)
-  res <- mat.default(x, y, method = method)
+  res <- mat.default(x, y, method = method, ...)
   res$na.action <- attr(mf, "na.action")
   res$call <- .call
   if(model) {
@@ -130,7 +132,8 @@ print.mat <- function(x, k = 10,
     colnames(tbl) <- colnames(tbl.w) <- c("k",
                                           "RMSEP","R2","Avg Bias","Max Bias")
     cat("\nPercentiles of the dissimilarities for the training set:\n\n")
-    print(quantile(as.dist(x$Dij), probs = c(0.01, 0.02, 0.05, 0.1, 0.2)),
+    print(quantile(x$Dij[lower.tri(x$Dij)],
+                   probs = c(0.01, 0.02, 0.05, 0.1, 0.2)),
           digits = digits)
     cat("\nInferences based on the mean of k-closest analogues:\n\n")
     print(tbl, quote = FALSE, right = TRUE)

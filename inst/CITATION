@@ -1,14 +1,31 @@
-citHeader("To cite package 'analogue' in publications use:")
+citHeader("To cite use of 'analogue' in publications use:")
 
 citEntry(entry="Manual",
-	title ="analogue: Analogue matching and Modern Analogue Technique transfer function models",
-	author = personList(as.person("G. L. Simpson")),
-	year = 2007,
+	title ="analogue: Analogue and weighted averaging methods for palaeoecology",
+	author = personList(as.person("G. L. Simpson"), as.person("J. Oksanen")),
+	year = "2009",
 	note = paste("R package version", packageDescription("analogue")$Version),
+   url = "http://cran.r-project.org/package=analogue",
+
 	textVersion =
-	paste("Simpson, G.L. (2007). ", 
-	"analogue: Analogue matching and Modern Analogue Technique transfer function models",
-	packageDescription("analogue")$Version, 
- 	".", sep=" ")
+	paste("Simpson, G.L. and Oksanen, J. (2009). ", 
+         "analogue: Analogue matching and Modern Analogue Technique transfer function models. (R package version",
+	      packageDescription("analogue")$Version,").", 
+	      "(http://cran.r-project.org/package=analogue).", sep=" ")
+)
+
+citEntry(entry="Article",
+	title   = "Analogue Methods in Palaeoecology: Using the analogue Package",
+	author  = personList(as.person("G. L. Simpson")),
+	journal = "Journal of Statistical Software",
+	year    = "2007",
+	volume  = "22",
+	number  = "2",
+	pages   = "1--29",
+
+	textVersion =
+	paste("Simpson, G.L. (2007).", 
+              "Analogue Methods in Palaeoecology: Using the analogue Package",
+	      "Journal of Statistical Software, 22(2), 1--29")
 )
 

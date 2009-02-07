@@ -1,5 +1,168 @@
 analogue Change Log
 
+Version 0.6-6 (Released to CRAN: Wed 25th Feb 2009)
+
+	* optima, tolerance: New print methods for both functions. Returned 
+	objects now have additional attributes.
+
+	* join: new methods for 'head' and 'tail' to return the first/last
+	few rows from each of the joined data sets. Handles cases where
+	'split = FALSE' by calling the 'data.frame' method.
+
+Version 0.6-5
+
+	* wa: now computes tolerances and can perform tolerance downweighting
+	in WA transfer functions. Contains several options to manage working
+	tolerances used in the WA computations, including how to deal with
+	species that have very small (narrow) tolerances.
+
+	The actual tolerances and working values are returned from wa().
+
+	* optima, tolerance: two new user visible functions to compute weighted
+	average optima and tolerance ranges from species abundances and 
+	associated environmental data.
+
+Version 0.6-4
+
+	* Datasets: Version 1.7 of the North American Modern Pollen 
+	Database has been added to 'analogue'. The data are contained
+	in four datasets: Pollen, Biome, Climate and Location, containing
+	the pollen counts on 134 taxa, vegetation classification, 32
+	climatic variables and location (latitude/longitude) respectively
+	on 4833 sampling locations in North America and Greenland.
+
+	* plot.logitreg: adjusted the correction to the degrees of freedom
+	in the calculation of the confidence intervals.
+
+	* roc: now returns the observed prior probability that two samples 
+	are analogues for each group. Also returns the index of the point 
+	along the ROC curve where the slope of the curve is maximal (the 
+	point corresponding to the optimal dissimilarity).
+
+	* bayesF: now returns the posterior probabilities as well as 
+	posterior odds of true analogue and true non-analogues for points 
+	along the ROC curve.
+
+	Documentation of the object returned from 'bayesF' has been updated
+	to match the changes introduce in version 0.6-0.
+
+	* wa: documentation for wa did not state that the 'tol.dw' argument
+	was currently ignored. Tolerance down weighting is not currently
+	implemented in wa and the documentation now states this clearly.
+	Reported by Andreas Plank (R-Forge Bug ID 287).
+	
+Version 0.6-3
+
+	* logitreg: new function to evaluate the probability that two
+	samples are analogues conditional upon the dissimilarity between
+	the two samples. Essentially fits logistic regression models to
+	the data used to produce the statistics drawn on a ROC curve.
+
+	Methods for 'summary' and 'plot' are currently available.
+	
+	* analog: was converting 'x' and 'y' objects to matrices before
+	calling distance(). This broke handling of factor variables in
+	'method = "mixed"' with distance().
+
+	* distance: objects created by distance() now have an explicit 
+	class "distance", and inherit from class "matrix".
+
+	* roc: component 'statistics' has reordered columns.
+
+	* plot.roc: superficial changes to ordering of plot components.
+
+	* Depends: Package now depends on MASS. No longer need dependency 
+	on brglm.
+
+Version 0.6-2
+
+	* Stratiplot: new graphics function for plotting stratigraphic
+	diagrams, with 'default' and 'formula' methods. Uses the Lattice 
+	package for plotting.
+
+	* panel.Stratiplot: lattice panel function for drawing stratigraphic
+	diagrams.
+
+	* panel.Loess: modified version of standard lattice panel function
+	'panel.loess' for drawing LOESS smooths on stratigraphic diagrams.
+
+	* Documentation: fixes and tweaks to several Rd files to fix parse
+	errors caught with the new Rd parser coming in R 2.9.0. 
+	
+Version 0.6-1
+
+	* ImbrieKipp: made the training set environment and sediment core
+	data set names easier to manage. The three environmental variables
+	are now in seperate data sets ('SumSST', 'WinSST', and 'Salinity')
+	as named, numeric vectors of the same name as the data sets.
+
+	* mat: example now uses the ImbrieKipp data resulting in large
+	speed-up.
+
+	* Requires: package now depends on package 'brglm' for use in
+	modelling probability of analogue or not. For future 'logitReg()'
+	function.
+
+Version 0.6-0
+
+	* roc: new version of roc, which correctly computes the no-analogue
+	part of the ROC analysis. Now roc returns information on individual
+	grops as well as an overall or combined ROC curve for the data.
+
+	The number of close analogues to use in computing the ROC curve
+	can now also be specified.
+
+	These changes have altered bayesF() and the plot methods for bayesF
+	roc. bayesF now computes Bayes factors for all groups as well as
+	for the overall ROC analysis.
+
+	The plot method for bayesF will now plot the Bayes factors for all 
+	groups or for a single, named group. plot.roc has been updated to 
+	work with the new roc object, and by default, the plots refer to the 
+	overall ROC curve. Which group is plotted is controlled by new 
+	argument 'group'.
+
+	There is now a summary method for roc that displays summary data for
+	the individual ROC curves.
+	
+	* fuse: new function to fuse (combine) two or more 
+	dissimilarity objects.
+
+	* ImbrieKipp: New data sets containing the classic Imbrie and Kipp
+	(1971) training set.
+
+	* tran: tran was clobbering dimnames. These are now preserved.
+
+	* .first.lib: package startup now uses packageStartupMessage() 
+	to display the startup message.
+
+	* distance: speed up in calculating range and maximum statistics
+	for those dissimilarity coefficients that incorporate these terms.
+
+	distance() now also returns the dissimilarity coefficient used as
+	attribute "method"
+
+	* mat: was converting 'x' to matrix too early, which upset some of 
+	the DC methods.
+
+	mat also now passes arguments in '...' on to distance. This allows
+	additional options required for some dissimilarity coefficients to
+	be provided.
+
+	* print.mat, summary.mat: quantiles of dissimilarities are now much
+	more efficiently calculated.
+
+	* plot.mcarlo: now works correctly for both types of plot, and 
+	computes ranges so that histogram and density estimates fit into
+	plotting region.
+
+Version 0.5-3
+
+	* tran: new function to apply common transformations and 
+	standardizations applicable to palaeoecolgical data.
+
+	* predict.wa: added k-fold ("nfold") cross-validation.
+
 Version 0.5-2
 
 	* wa: classical deshrinking did not work, but returned the
