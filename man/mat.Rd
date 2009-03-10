@@ -69,7 +69,8 @@ mat(x, \dots)
     the object.}
   \item{weighted}{logical; should weighted averages be used instead of
     simple averages?}
-  \item{\dots}{arguments to or from other methods.}
+  \item{\dots}{arguments can be passed to \code{\link{distance}} to
+    provide additional optios required for some dissimilarities.}
 }
 \details{
   The Modern Analogue Technique (MAT) is perhaps the simplest of the
@@ -214,35 +215,45 @@ mat(x, \dots)
   from MAT models respectively. \code{\link{plot.mat}} provides a
   \code{\link{plot.lm}}-like plotting tool for MAT models.}
 \examples{
-## continue the RLGH example from ?join
-example(join)
+## Imbrie and Kipp Sea Surface Temperature
+data(ImbrieKipp)
+data(SumSST)
+data(V12.122)
+
+## merge training set and core samples
+dat <- join(ImbrieKipp, V12.122, verbose = TRUE)
+
+## extract the merged data sets and convert to proportions
+ImbrieKipp <- dat[[1]] / 100
+ImbrieKippCore <- dat[[2]] / 100
 
 ## fit the MAT model using the squared chord distance measure
-swap.mat <- mat(swapdiat, swappH, method = "SQchord")
-swap.mat
+ik.mat <- mat(ImbrieKipp, SumSST, method = "SQchord")
+ik.mat
 
 ## model summary
-summary(swap.mat)
+summary(ik.mat)
 
 ## fitted values
-fitted(swap.mat)
+fitted(ik.mat)
 
 ## model residuals
-resid(swap.mat)
+resid(ik.mat)
 
 ## draw summary plots of the model
 par(mfrow = c(2,2))
-plot(swap.mat)
+plot(ik.mat)
 par(mfrow = c(1,1))
 
 ## reconstruct for the RLGH core data
-rlgh.mat <- predict(swap.mat, rlgh, k = 10)
-rlgh.mat
-summary(rlgh.mat)
+coreV12.mat <- predict(ik.mat, V12.122, k = 3)
+coreV12.mat
+summary(coreV12.mat)
 
 ## draw the reconstruction
-reconPlot(rlgh.mat, use.labels = TRUE, display.error = "bars",
-          xlab = "Depth", ylab = "pH")
+reconPlot(coreV12.mat, use.labels = TRUE, display.error = "bars",
+          xlab = "Depth", ylab = "SumSST")
+
 }
 \keyword{models}% at least one, from doc/KEYWORDS
 \keyword{multivariate}% __ONLY ONE__ keyword per line

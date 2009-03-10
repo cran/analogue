@@ -11,9 +11,9 @@
   no-analogue results.
 }
 \usage{
-bayesF(x, prior = NULL)
+bayesF(x, prior = rep(0.5, 2))
 
-\method{plot}{bayesF}(x, xlab = NULL, ylab = "Pr (A+ | d)",
+\method{plot}{bayesF}(x, group = "all", xlab = NULL, ylab = "Pr (A+ | d)",
         col = "red", abline.col = "lightgrey", ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -25,6 +25,8 @@ bayesF(x, prior = NULL)
     no-analogue, provided as a vector of length 2 whose elements sum to
     1. If not provided, the function will use the relative occurences of
     analogue and no analogue situations used to evaluate the ROC curve.}
+  \item{group}{character vector of length 1 giving the name of the group
+        to plot, or \code{"all"} to plot all groups in \code{x}.}
   \item{xlab,ylab}{the x- and y-axis labels for the plot.}
   \item{col}{colour of the line used to draw the posterior probability.}
   \item{abline.col}{colour of the vertical line drawn to indicate the
@@ -54,23 +56,27 @@ bayesF(x, prior = NULL)
 \value{
   For \code{plot.bayesF} a plot on the currently active device.
 
-  For \code{bayesF}, a list with the following components:
-  \item{pos}{Bayes factor or likelihood ratio of a positive event
-    (analogue).}
-  \item{neg}{Bayes factor or likelihood ratio of a negative event
-    (analogue).}
-  \item{posterior}{list with components \code{pos} and \code{neg}
-    containing the posterior probabilities of positive and negative
-    events, respectively.}
-  \item{prior}{list with components \code{pos} and \code{neg}
-    containing the prior probabilities of positive and negative
-    events, respectively.}
-  \item{roc.points}{vector of points at which the ROC curve was
-    evaluated and for which Bayes factors and prior and posterior
-    probabilities are available.}
-  \item{optimal}{numeric; the optimal dissimilarity, as assessed by the
+  For \code{bayesF}, a list containing the results of computing Bayes
+  factors for each group in \code{x}. Each component of this list is
+  itself a list with the following components:
+
+  \item{bayesF, posterior.odds, posterior.probs, prior.prob}{Bayes
+    factors, posterior odds and probabilities and prior probabilities of
+    true analogue and true non-analogue events. Each components is a list
+    with two components; \code{pos} (for true analogue events) and
+    \code{neg} (for true non-analogue events). The components of
+    \code{prior.prob} are vectors of length 1, whilst components of the
+    other lists are numeric vectors.}
+  \item{roc.points}{numeric; the points at which the ROC curve was
+    evaluated.}
+  \item{optimal}{numeric; the optimal dissimilarity as assessed by the
     ROC curve.}
-  \item{object}{name of the object passed as argument \code{x}.}
+  \item{max.roc}{numeric; the position along the ROC curve at which the
+    slope of the ROC curve is maximal. This is the index of this point
+    on the curve, and can be used to extract the element of
+    \code{bayesF}, \code{posterior.odds} and \code{posterior.probs} for
+    the optimal dissimilarity.}
+  %\item{object}{name of the object passed as argument \code{x}.}
 }
 \references{
   
