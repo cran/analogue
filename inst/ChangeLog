@@ -1,5 +1,44 @@
 analogue Change Log
 
+Version 0.6-8 (Closed Mon 5 May 2009)
+
+	* residLen: new function to compute squared residual length 
+	diagnostic for passive samples in a constrained ordination. Used as
+	a test of whether core samples are well fitted in a transfer function
+	model.
+
+	Several utility functions to compute fitted values from an ordination
+	and corresponding residual lengths are provided, which me be useful
+	for authors of other functions.
+
+	'plot' and 'hist' methods produce density plots and histograms for
+	'residLen' objects using base graphics.
+
+	'densityplot' and 'histogram' methods for 'residLen' objects using
+	Lattice graphics.
+
+	* stdError: new function to compute the weighted standard deviation
+	of the environment values for the k closest analogues in MAT models.
+	This can be used as an uncertainty measure for MAT fitted values or
+	transfer function predictions.
+
+	Methods are available for 'mat' and 'predict.mat'.
+
+	* predict.mat: now returns the dissimilarity matrix between the 
+	training set samples and samples in 'newdata'.
+
+	* getK: new method for 'predict.mat'.
+
+	* CITATION: updated as per request from Kurt Hornik and CRAN.
+
+Version 0.6-7 (Closed Mon 13 Apr 2009) 
+
+	* optima, tolerance: new methods to coerce objects of these classes
+	to data frames.
+
+	* distance: method = "kendall" was incorrectly computing the min of
+	the x and y components in the dissimilarity.
+
 Version 0.6-6 (Released to CRAN: Wed 25th Feb 2009)
 
 	* optima, tolerance: New print methods for both functions. Returned 
