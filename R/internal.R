@@ -167,39 +167,39 @@ wmean <- function(spp, env) {
 }
 
 ## inverse deshrinking function
-`inv.deshrink` <- function(env, wa.env) {
-    X <- cbind(rep(1, length(wa.env)), wa.env)
-    QR <- qr(X)
-    coef <- qr.coef(QR, env)
-    pred <- qr.fitted(QR, env)
-    return(list(coefficients = coef, env = pred))
-}
+## `inv.deshrink` <- function(env, wa.env) {
+##     X <- cbind(rep(1, length(wa.env)), wa.env)
+##     QR <- qr(X)
+##     coef <- qr.coef(QR, env)
+##     pred <- qr.fitted(QR, env)
+##     return(list(coefficients = coef, env = pred))
+## }
 
 ## classical deshrinking
-`class.deshrink` <- function(env, wa.env) {
-    X <- cbind(rep(1, length(env)), env)
-    QR <- qr(X)
-    coef <- drop(qr.coef(QR, wa.env))
-    coef <- c(-coef[1], 1)/coef[2]
-    pred <- deshrink.pred(wa.env, coef)
-    return(list(coefficients = coef, env = pred))
-}
+## `class.deshrink` <- function(env, wa.env) {
+##     X <- cbind(rep(1, length(env)), env)
+##     QR <- qr(X)
+##     coef <- drop(qr.coef(QR, wa.env))
+##     coef <- c(-coef[1], 1)/coef[2]
+##     pred <- deshrink.pred(wa.env, coef)
+##     return(list(coefficients = coef, env = pred))
+## }
 
 ## deshrinking to equal sd
 ## A bit like in vegan:::wascores, but wascores uses weighted sd which
 ## would need row and column sums in the function call, and this would
 ## make the function API incompatible with other *.deshrink functions.
-`expand.deshrink` <- function(env, wa.env) {
-    b1 <- sd(env)/sd(wa.env)
-    b0 <- mean(env) - b1 * mean(wa.env)
-    pred <- b0 + b1 * wa.env
-    return(list(coefficients = c(b0, b1), env = pred))
-}
+## `expand.deshrink` <- function(env, wa.env) {
+##     b1 <- sd(env)/sd(wa.env)
+##     b0 <- mean(env) - b1 * mean(wa.env)
+##     pred <- b0 + b1 * wa.env
+##     return(list(coefficients = c(b0, b1), env = pred))
+## }
 
 # Do not deshrink: for those who think they know what they do
-`no.deshrink` <- function(env, wa.env) {
-    return(list(coefficients = c(0, 1), env = wa.env))
-}
+## `no.deshrink` <- function(env, wa.env) {
+##     return(list(coefficients = c(0, 1), env = wa.env))
+## }
 
 ## fast rowSums and colSums functiosn without the checking
 `RowSums` <- function(x, na.rm = FALSE) {
@@ -217,9 +217,9 @@ wmean <- function(spp, env) {
 }
 
 ## deshrinking function given deshrinking coefs and a method
-`deshrink.pred` <- function(x, coef) {
-    coef[1] + x * coef[2]
-}
+##`deshrink.pred` <- function(x, coef) {
+##    coef[1] + x * coef[2]
+##}
 
 
 ## w.tol --- computes weighted standard deviations AKA tolerances
@@ -227,7 +227,14 @@ w.tol <- function(x, env, opt, useN2 = TRUE) {
     ## x   = species abundances
     ## env = vector of response var
     ## opt = weighted average optima
-    tol <- sqrt(ColSums(x * outer(env, opt, "-")^2) / ColSums(x))
+    ##tol <- sqrt(ColSums(x * outer(env, opt, "-")^2) / ColSums(x))
+    nr <- NROW(x)
+    nc <- NCOL(x)
+    tol <- .C("WTOL", x = as.double(env), w = as.double(x),
+              opt = as.double(opt),
+              nr = as.integer(nr), nc = as.integer(nc),
+              stat = double(nc), NAOK = FALSE,
+              PACKAGE="analogue")$stat
     if(useN2)
         tol <- tol / sqrt(1 - (1 / sppN2(x)))
     names(tol) <- colnames(x)
@@ -245,6 +252,3 @@ w.tol <- function(x, env, opt, useN2 = TRUE) {
     1/H
 }
 
-## data(ImbrieKipp)
-## data(SumSST)
-## mod <- wa(SumSST ~ ., data = ImbrieKipp, tol.dw = TRUE)

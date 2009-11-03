@@ -1,8 +1,121 @@
 analogue Change Log
 
+Version 0.6-21
+
+	* distx.c, distxy.c: Warning due to non ISO C-compliant 'mistake'
+	in experimental code for Gower's Mixed coefficient.
+
+Version 0.6-20
+
+	* Stratiplot: was not respecting the sort variable under certain
+	conditions.
+
+	* panel.Stratiplot: typo in Rd file was causing warnings in R
+	version 2.10.0-beta.
+
+Version 0.6-19
+
+	* join: gains ability to return the inner join of the supplied
+	data frames. This is the intersection of the set of variables
+	in the supplied data frames, the set of variables common to the
+	supplied data frames.
+
+Version 0.6-18
+
+	* join: new arguments 'type' and 'value'.
+
+	'type' controls which join is performed. Options are (currently)
+	"outer" (default) and "left". The left join is used to prepare two
+	or more data sets for ordinating the first and subsequently
+	passively projecting the other data sets into this ordination.
+	The outer join is used to prepare data for transfer functions such
+	as MAT and WA.
+
+	'value' allows the user to supply a numeric value to be used to
+	replace 'NA's.
+
+Version 0.6-17
+
+	* predict.wa: deshrinking method was not being honoured when
+	expanding predictions.
+
+	* Stratiplot: gains option ('rev') to reverse the y-axis limits.
+
+	Can now also sort/order the columns of 'x' (the species or
+	variables) as weighted averages of 'y' (to emphasise the change
+	in composition along 'y'), or using a supplied variable. The
+	latter is useful if you want to sort the variables by their optima
+	with an environmental variable.
+
+	Now also provides a guess as to the y-axis label if none is supplied.
+
+Version 0.6-16
+
+	* roc: For large problems the calculation of AUC and its standard
+	error could overflow the largest number R currently handles. roc()
+	now has two new arguments, 'thin' and 'max.len', which allow the
+	number of points on the ROC curve to be thinned to a smaller number,
+	which should allow the computations to be performed. The original
+	problem was reported by Diana Stralberg.
+
+Version 0.6-15
+
+	* tran: new 'formula' method allows simple selection or exclusion
+	of variables from the set to be 'tran'sformed.
+
+Version 0.6-14
+
+	* tran: new transformation and standardization methods for the power
+	and 4th root transformation, the log ratio transformation for
+	compositional data, plus row (sample) centring.
+
+Version 0.6-13
+
+	* predict.wa: Now handles WA with tolerance down-weighting for
+	bootstrap CV and benefits from the changes introduced in previous
+	version.
+
+Version 0.6-12
+
+	* deshrink, deshrinkPred: New utility functions for deshrinking WA
+	estimates. These replace the '*.deshrink' and 'deshrink.pred' internal
+	functions used to this end to date. This provides a more extensible
+	solution.
+
+Version 0.6-11
+
+	* tran: now converts input data to matrix using 'data.matrix' which
+	deals with factor variables appropriately.
+
+	* predict.wa, wa, WATpred: Now use faster C code for computing
+	predictions from WA models with tolerance down-weighting.
+
+Version 0.6-10
+
+	* predict.wa: Predictions with tolerance DW now works for CV = "LOO"
+
+	* wa.formula: Argument list updated to match wa.default.
+
+	* fixUpTol: New internal utility function the encapsulates code to
+	modify working tolerances within WA model fitting.
+
+	* w.tol: Internal function w.tol now uses a faster C version of the
+	code.
+
+Version 0.6-9 (Closed Sun 7 June 2009)
+
+	* predict.wa: Predictions without CV can now be made for WA models
+	fitted using tolerance DW.
+
+	* wa: Now returns the options for tweaking tolerances as part of
+	model object in component 'options.tol', which is a names list.
+
+	* Utility functions: WApred() and WATpred() internal functions for
+	predictions using WA or WA with tolerance DW.
+
 Version 0.6-8 (Closed Mon 5 May 2009)
 
-	* residLen: new function to compute squared residual length 
+	* residLen: new function to compute squared residual length
 	diagnostic for passive samples in a constrained ordination. Used as
 	a test of whether core samples are well fitted in a transfer function
 	model.
@@ -24,14 +137,14 @@ Version 0.6-8 (Closed Mon 5 May 2009)
 
 	Methods are available for 'mat' and 'predict.mat'.
 
-	* predict.mat: now returns the dissimilarity matrix between the 
+	* predict.mat: now returns the dissimilarity matrix between the
 	training set samples and samples in 'newdata'.
 
 	* getK: new method for 'predict.mat'.
 
 	* CITATION: updated as per request from Kurt Hornik and CRAN.
 
-Version 0.6-7 (Closed Mon 13 Apr 2009) 
+Version 0.6-7 (Closed Mon 13 Apr 2009)
 
 	* optima, tolerance: new methods to coerce objects of these classes
 	to data frames.
@@ -41,7 +154,7 @@ Version 0.6-7 (Closed Mon 13 Apr 2009)
 
 Version 0.6-6 (Released to CRAN: Wed 25th Feb 2009)
 
-	* optima, tolerance: New print methods for both functions. Returned 
+	* optima, tolerance: New print methods for both functions. Returned
 	objects now have additional attributes.
 
 	* join: new methods for 'head' and 'tail' to return the first/last

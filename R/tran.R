@@ -1,12 +1,17 @@
-`tran` <- function(x, method, a = 1, b = 0, base = exp(1),
+`tran` <- function(x, ...) {
+    UseMethod("tran")
+}
+
+`tran.default` <- function(x, method, a = 1, b = 0, p = 2, base = exp(1),
                    na.rm = FALSE, na.value = 0, ...) {
     wasDF <- is.data.frame(x)
     dim.nams <- dimnames(x)
-    x <- as.matrix(x)
-    METHOD <- c("sqrt", "cubert", "log", "reciprocal", "freq", "center",
-                "standardize", "range", "percent", "proportion", "pa",
-                "missing", "hellinger", "chi.square", "wisconsin",
-                "pcent2prop", "prop2pcent")
+    x <- data.matrix(x)
+    METHOD <- c("sqrt", "cubert", "rootroot", "log", "reciprocal", "freq",
+                "center", "standardize", "range", "percent", "proportion",
+                "pa","missing", "hellinger", "chi.square", "wisconsin",
+                "pcent2prop", "prop2pcent", "logRatio", "power",
+                "rowCenter")
     method <- match.arg(method, METHOD)
     if(method %in% c("freq", "standardize","range","pa","hellinger",
                      "chi.square","wisconsin")) {
@@ -18,7 +23,8 @@
     } else {
         x <- switch(method,
                     sqrt = sqrt(x),
-                    cubert = x^(1/3),
+                    cubert = sign(x) * exp(log(abs(x)) / 3), #x^(1/3),
+                    rootroot = sign(x) * exp(log(abs(x)) / 3), #x^(1/4),
                     log = {x <- sweep(x, 2, a, "*")
                            x <- sweep(x, 2, b, "+")
                            log(x, base = base)} ,
@@ -30,7 +36,13 @@
                     function(x) {x[is.na(x)] <- na.value
                                  x}),
                     pcent2prop = x / 100,
-                    prop2pcent = x * 100
+                    prop2pcent = x * 100,
+                    logRatio = {x <- sweep(x, 2, a, "*")
+                                x <- sweep(x, 2, b, "+")
+                                x <- log(x, base = base)
+                                x - rowMeans(x)},
+                    power = x^p,
+                    rowCenter = x - rowMeans(x)
                     )
     }
     if(wasDF)
@@ -38,4 +50,18 @@
     dimnames(x) <- dim.nams
     attr(x, "tran") <- method
     return(x)
+}
+
+`tran.formula` <- function(formula, data = NULL,
+                           subset = NULL,
+                           na.action = na.pass, ...) {
+    mf <- match.call()
+    mf[[1]] <- as.name("model.frame")
+    mt <- terms(formula, data = data, simplify = TRUE)
+    mf[[2]] <- formula(mt, data = data)
+    mf$na.action <- substitute(na.action)
+    dots <- list(...)
+    mf[[names(dots)]] <- NULL
+    mf <- eval(mf,parent.frame())
+    tran.default(mf, ...)
 }
