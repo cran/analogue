@@ -16,8 +16,10 @@
      prior = NULL,
      show.stats = TRUE,
      abline.col = "grey",
+     abline.lty = "dashed",
      inGroup.col = "red",
      outGroup.col = "blue",
+     lty = "solid",
      caption = c("ROC curve", "Dissimilarity profiles",
                  "TPF - FPF vs Dissimilarity",
                  "Likelihood ratios"),
@@ -42,12 +44,21 @@
   \item{abline.col}{character string or numeric value; the
     colour used to draw vertical lines at the optimal dissimilarity on
     the plots.}
+  \item{abline.lty}{Line type for indicator of optimal ROC dissimilarity
+    threshold. See \code{\link{par}} for the allowed line types.}
   \item{inGroup.col}{character string or numeric value; the colour used
     to draw the density curve for the dissimilarities between sites in
     the same group.}
   \item{outGroup.col}{character string or numeric value; the colour used
     to draw the density curve for the dissimilarities between sites not in
     the same group.}
+  \item{lty}{vector of at most length 2 (elements past the second in
+    longer vectors are ignored) line types. The first element of
+    \code{lty} will be used where a single line is drawn on a
+    plot. Where two lines are drawn (for analogue and non-analogue
+    cases), the first element pertains to the analogue group and the
+    second element to the non-analogue group. See \code{\link{par}} for
+    the allowed line types.}
   \item{caption}{vector of character strings, containing the captions to
     appear above each plot.}
   \item{legend}{character; position of legends drawn on plots. See
@@ -130,7 +141,6 @@
   One or more plots, drawn on the current device.
 }
 \references{
-  
   Brown, C.D., and Davis, H.T. (2006) Receiver operating characteristics
   curves and related decision measures: A tutorial. \emph{Chemometrics
     and Intelligent Laboratory Systems} \bold{80}, 24--38.
