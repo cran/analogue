@@ -6,16 +6,18 @@
 \alias{fitted.wa}
 \alias{residuals.wa}
 \alias{coef.wa}
+\alias{waFit}
 \title{Weighted averaging transfer functions}
 \description{
-Implements the weighted averaging transfer function
-methodology. Tolerance down-weighting and inverse and classicial
-deshrinking are supported.
+  Implements the weighted averaging transfer function
+  methodology. Tolerance down-weighting and inverse and classicial
+  deshrinking are supported.
 }
 \usage{
 wa(x, \dots)
 
-\method{wa}{default}(x, env, deshrink = c("inverse", "classical", "expanded", "none"),
+\method{wa}{default}(x, env,
+   deshrink = c("inverse", "classical", "expanded", "none"),
    tol.dw = FALSE, useN2 = TRUE,
    na.tol = c("min","mean","max"),
    small.tol = c("min","fraction","absolute"),
@@ -32,11 +34,14 @@ wa(x, \dots)
 \method{residuals}{wa}(object, \dots)
 
 \method{coef}{wa}(object, \dots)
+
+waFit(x, y, tol.dw, useN2, deshrink, na.tol, small.tol,
+      min.tol, f)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{The species training set data}
-  \item{env}{The response vector}
+  \item{env, y}{The response vector}
   \item{deshrink}{Which deshrinking method to use? One of
     \code{"inverse"} or \code{"classical"}, \code{"expanded"} or
     \code{"none"}}
@@ -106,6 +111,12 @@ wa(x, \dots)
     \item{\code{absolute} }{small tolerances are replaced by
       \code{min.tol}.}
   }
+
+  Function \code{waFit} is the workhorse implementing the actual WA
+  computations. It performs no checks on the input data and returns a
+  simple list containing the optima, tolernances, model tolerances,
+  fitted values, coefficients and the numbers of samples and
+  species. See Value below for details of each component.
 }
 \value{
   An object of class \code{"wa"}, a list with the following components:
@@ -143,12 +154,11 @@ wa(x, \dots)
 \author{Gavin L. Simpson and Jari Oksanen}
 \seealso{\code{\link{mat}} for an alternative transfer function method.}
 \examples{
-data(swapdiat)
-data(swappH)
-swapdiat <- swapdiat / 100
+data(ImbrieKipp)
+data(SumSST)
 
 ## fit the WA model
-mod <- wa(swappH ~., data = swapdiat)
+mod <- wa(SumSST ~., data = ImbrieKipp)
 mod
 
 ## extract the fitted values
@@ -166,20 +176,12 @@ plot(mod)
 par(mfrow = c(1,1))
 
 ## tolerance DW
-mod2 <- wa(swappH ~., data = swapdiat, tol.dw = TRUE)
-
-## tolerances
-with(mod2, tolerances)
-
-## Imbrie and Kipp
-data(ImbrieKipp)
-data(SumSST)
-ik.wa <- wa(SumSST ~ ., data = ImbrieKipp, tol.dw = TRUE,
-            min.tol = 2, small.tol = "min")
-ik.wa
+mod2 <- wa(SumSST ~ ., data = ImbrieKipp, tol.dw = TRUE,
+           min.tol = 2, small.tol = "min")
+mod2
 
 ## compare actual tolerances to working values
-with(ik.wa, rbind(tolerances, model.tol))
+with(mod2, rbind(tolerances, model.tol))
 }
 \keyword{methods}
 \keyword{models}

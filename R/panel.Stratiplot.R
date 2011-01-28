@@ -12,6 +12,10 @@
                                lty.smooth = plot.line$lty,
                                lwd.smooth = 2,
                                fill = plot.symbol$fill,
+                               zones = NULL,
+                               col.zones = plot.line$col,
+                               lty.zones = plot.line$lty,
+                               lwd.zones = plot.line$lwd,
                                ...) {
     if (all(is.na(x) | is.na(y)))
         return()
@@ -26,7 +30,7 @@
         if (missing(col.symbol))
             col.symbol <- col
     }
-    panel.refline(v = 0, col.line = ref.line, ...)
+    panel.refline(v = 0, col.line = ref.line$col, ...)
     if ("o" %in% type || "b" %in% type)
         type <- c(type, "p", "l")
     if ("g" %in% type)
@@ -37,13 +41,17 @@
     if("p" %in% type)
         panel.points(x = x, y = y, cex = cex, fill = fill,
                      col = col.symbol, pch = pch, ...)
-    if("h" %in% type)
-        panel.segments(x0 = 0, y0 = y, x1 = x, y1 = y,
-                       col = col.line, lty = lty, lwd = lwd, ...)
+    if ("h" %in% type) {
+        panel.lines(x = x, y = y, type = "H", col = col.line, lty = lty,
+                    lwd = lwd, ...)
+    }
     if("poly" %in% type)
         panel.polygon(x = c(0, x, 0), y = c(y[1], y, y[length(y)]),
                       border = col.poly, col = col.poly, ...)
     if("smooth" %in% type)
         panel.Loess(x, y, col = col.smooth, lwd = lwd.smooth,
                     lty = lty.smooth, ...)
+    if(!is.null(zones) && is.numeric(zones))
+        panel.abline(h = zones, col = col.zones, lwd = lwd.zones,
+                     lty = lty.zones, ...)
 }

@@ -37,18 +37,16 @@ plot.wa <- function(x, which = 1:2,
     }
     if (show[1]) {
         lims <- range(Est, Obs)
-        ylabel <- "Fitted values"
-        plot(Obs, Est, type = "n", asp = 1, xlim = lims,
-             ylim = lims, ylab = ylabel, xlab = "Observed", ...)
+        plot(Est, Obs, type = "n", asp = 1, xlim = lims,
+             ylim = lims, xlab = "Fitted values", ylab = "Observed", ...)
         abline(0, 1, col = "grey", ...)
-        panel(Obs, Est, ...)
+        panel(Est, Obs, ...)
         if (one.fig)
             title(sub = sub.caption, ...)
         mtext(caption[1], 3, 0.25)
     }
     if (show[2]) {
-        ylabel <- "Residuals"
-        plot(Obs, Resi, type = "n", ylab = ylabel,
+        plot(Obs, Resi, type = "n", ylab = "Residuals",
              xlab = "Observed", ...)
         abline(h = 0, col = "grey", ...)
         abline(h = mean(Resi), col = "blue", lty = "dashed")
@@ -57,8 +55,10 @@ plot.wa <- function(x, which = 1:2,
             bias <- aggregate(as.vector(Resi), list(group = groups),
                 mean)$x
             interv <- lapply(strsplit(sapply(levels(groups),
-                function(x) substr(x, 2, nchar(x) - 1)), ","),
-                as.numeric)
+                                             function(x) substr(x, 2,
+                                                                nchar(x) - 1),
+                                             USE.NAMES = FALSE), ","),
+                             as.numeric)
             interv <- matrix(unlist(interv), ncol = 2, byrow = TRUE)
             arrows(interv[, 1], bias, interv[, 2], bias,
                    length = ifelse(one.fig, 0.05, 0.01),
