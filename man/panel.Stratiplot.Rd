@@ -1,6 +1,6 @@
 \name{panel.Stratiplot}
 \alias{panel.Stratiplot}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{Panel function for stratigraphic diagrams}
 \description{
   A Lattice panel function for drawing individuals panels on
@@ -23,9 +23,13 @@ panel.Stratiplot(x, y,
                  lty.smooth = plot.line$lty,
                  lwd.smooth = 2,
                  fill = plot.symbol$fill,
+                 zones = NULL,
+                 col.zones = plot.line$col,
+                 lty.zones = plot.line$lty,
+                 lwd.zones = plot.line$lwd,
                  \dots)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{x, y}{variables defining the contents of the panel.}
   \item{type}{character vector consisting of one or more of the
@@ -53,7 +57,7 @@ panel.Stratiplot(x, y,
     For \code{"poly"}, a shaded polygon, or silhouette, is drawn for each
     panel.}
   \item{col, col.line, col.symbol, col.poly, col.refline,
-    col.smooth}{colour parameters. For all but \code{col.smooth},
+    col.smooth, col.zones}{colour parameters. For all but \code{col.smooth},
     default colours are obtained from \code{plot.symbol} and
     \code{plot.line} using
     \code{\link[lattice]{trellis.par.get}}. \code{col.refline} controls the
@@ -65,6 +69,10 @@ panel.Stratiplot(x, y,
     obtained from \code{plot.line} using
     \code{\link[lattice]{trellis.par.get}}.}
   \item{lwd.smooth}{The line width for the loess smoother.}
+  \item{zones}{numeric; vector of zone boundary positions on scale of
+    the depth/time (y-)axis.}
+  \item{lty.zones, lwd.zones}{line type and width for the zone
+    markers. The defaults are obtained from \code{plot.line}.}
   \item{\dots}{extra arguments passed on to the underlying panel
     functions; \code{\link[lattice]{panel.points}},
     \code{\link[lattice]{panel.lines}},
@@ -76,16 +84,19 @@ panel.Stratiplot(x, y,
   Creates stratigraphic scatter plots of \code{x} and \code{y}, with
   various modifications possible via the type argument.
 
+  Zones can be drawn on the panels by supplying the numeric vector of
+  zone boundaries as argument \code{zones}. The panel function will then
+  draw horizontal lines across the panels at the desired y-axis
+  locations. Note that the panel function does \strong{not} attempt to
+  identify the zone boundaries automatically; these must be determined
+  via a chronological (constrained) cluster analysis function or
+  similar.
+
   Note that all the arguments controlling the display can be supplied
   directly to a high-level call of the function \code{\link{Stratiplot}}.
 }
 \author{Gavin L. Simpson}
-%\note{ ~~further notes~~ 
-%
-% ~Make other sections like Warning with \section{Warning }{....} ~
-%}
+
 \seealso{\code{\link{Stratiplot}}, \code{\link{panel.Loess}},
     \code{\link[lattice]{panel.xyplot}}.}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{hplot}

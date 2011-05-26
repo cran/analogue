@@ -55,21 +55,28 @@
 \seealso{\code{\link{wa}}, \code{\link{predict.mat}},
     \code{\link{performance}}, \code{\link{reconPlot}}.}
 \examples{
-## continue the example from ?wa
-example(wa)
+\dontrun{
+## Imbrie and Kipp
+data(ImbrieKipp)
+data(SumSST)
+ik.wa <- wa(SumSST ~ ., data = ImbrieKipp, tol.dw = TRUE,
+            min.tol = 2, small.tol = "min")
+ik.wa
 
-## load the RLGH data
-data(rlgh)
-rlgh <- rlgh / 100
+## load V12.122 core data
+data(V12.122)
+V12.122 <- V12.122 / 100
 
-## Predict pH for the RLGH samples
-rlgh.pred <- predict(mod, rlgh, CV = "bootstrap", n.boot = 100)
+## predict summer sea-surface temperature for V12.122 core
+v12.pred <- predict(ik.wa, V12.122, CV = "bootstrap", n.boot = 100)
 
 ## draw the fitted reconstruction
-reconPlot(rlgh.pred, use.labels = TRUE, display = "bars")
+reconPlot(v12.pred, use.labels = TRUE, display = "bars")
 
 ## extract the model performance stats
-performance(rlgh.pred)
+performance(v12.pred)
+}
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

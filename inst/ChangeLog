@@ -1,9 +1,145 @@
 analogue Change Log
 
+Version 0.7-0
+
+	* timetrack: new function to passively project sediment core
+	samples within an ordination of training or reference set
+	samples. Both unconstrained and constrained ordinations are
+	supported using the Vegan package. 'fitted' and 'plot' methods
+	are available.
+
+	* prcurve: new function to fit principal curves to sediment
+	core samples. A 'plot' method is also provided. The function uses
+	functionality from the princurve package, which is now a
+	dependency.
+
+	Several support functions are also provided; 'smoothSpline' is
+	a wrapper to 'smooth.spline' for fitting splines to individual
+	species in order to fit the principal curve. 'initCurve'
+	implements several methods for initialising the principal curve.
+
+	* Stratiplot: if 'zones' are supplied, a legend on the right-hand
+	side of the diagram can be drawn by setting argument 'drawLegend'
+	to TRUE (the default). Currently, only simple blocks that
+	demarcate the zone boundaries are drawn and labelled using
+	argument 'zoneNames'.
+
+	First attempt to allow both relative (percentages or proportions)
+	and absolute variables, or mixtures thereof, in a single plot. The
+	user is free to specify which variables should be treated as relative
+	or absolute, and variables marked as absolute will be drawn with
+	fixed-width panels, the size of which can be controlled via argument
+	'absoluteSize' (default is 0.5 * largest panel width). Consider
+	this functionality unstable at the moment.
+
+	* residLen: was not 'join'-ing the training set and passive data
+	correctly and would fail if species were found in one but not the
+	other data set.
+
+	* tran: improvements to the underlying code.
+
+	* distance: resilience to NA in "gower", "alt.gower", "mixed".
+
+	* cma: added methods for 'mat' and 'predict.mat' objects. These
+	allow you to retrieve the k-closest analogues for training set
+	and prediction data respectively.
+
+	* dissimilarities: new method for 'mat' objects.
+
+	* datasets: package datasets have been resaved with optimal
+	compression determined via resaveRdaFiles(). This has reduced
+	the package tarball size considerably. As a result, however,
+	analogue now requires R version 2.10.0 or later.
+
+	* predict.wa: bug in bootstrap and k-fold CV methods when
+	tolerance down-weighting was used.
+
+	* fixUpTol: erroneous error criterion would cause CV of WA models
+	with tolerance down-weighting to stop with an error.
+
+	* waFit: new function that encapsulates the main WA computations.
+	This is currently used by wa() and with the intention of being
+	used in all functions that computed WA transfer function models.
+
+	* Examples: Streamlined some further examples to use Imbrie &
+	Kipp data set, and to not re-run the same code again. Improves
+	package check times by a second or two on my PC.
+
+Version 0.6-26
+
+	* abernethy: New data set containing the classic Abernethy Forest
+	data of Birks and Mathewes (1978)
+
+	* Stratiplot: Preserves the names component as far as is
+	possible, even to the extent of processing the names after the
+	manipulations arising from the formula interface.
+
+	Bug in padding of the y-axis now fixed; default is to add 1% of
+	the range y-axis to the y-axis limits specified.
+
+	Bug in computing length of variable labels when 'strip = FALSE'
+	now fixed.
+
+	* panel.Stratiplot: Add capability to draw zones on stratigraphic
+	plots via new argument 'zones' which takes the numeric levels of
+	the zone boundaries on the scale of the plot y-axis. How the
+	zone markers are drawn can be controlled via several graphical
+	parameters. See ?panel.Stratiplot.
+
+	* chooseTaxa: Explicitly preserves row and column names.
+
+	* DESCRIPTION: prematurely added princurve as a dependency in
+	previous version.
+
+Version 0.6-25
+
+	* chooseTaxa: new function to select species on basis of number
+	of occurrences and maximum abundance. Function is an S3 generic
+	with a default method.
+
+Version 0.6-24
+
+	* Dependencies: package now depends on package 'grid'.
+
+	* Stratiplot: gains ability to draw variable labels above the
+	plot panels so that the plots conform to common standards. If
+	you prefer the 'strips' of Lattice plots, set 'strip = TRUE'
+	to get the old behaviour.
+
+	Stratiplot was fixinging the min(ylim) value at 0 and contained
+	redundant calls to set the y-axis limits. The behaviour has been
+	rationalised and a new 'ylim' argument added. The default
+	behaviour uses the range of the y-data for 'ylim'.
+
+	* panel.Stratiplot: fix warning messages (from Grid) due to
+	inappropriate colour specification. Reference lines in
+	Stratiplot now plot correctly again.
+
+	* plot.roc: was resetting the plotting region at the end of
+	plotting even when there was no need to do so.
+
+	* residuals: Residuals were defined as \hat{x}_i - x_i to match
+	fitted vs. observed scatterplots. Definition of residuals in wa()
+	and related functions has been changed to the more common
+	definition of x_i - \hat{x}. Reported by Andreas Plank and Steve
+	Juggins.
+
+	* plot.wa: Following changed definition of residuals, plot.wa()
+	now plots observed values on the y-axis and fitted values on the
+	x-axis for 'which = 1'.
+
+	* summary.predict.mat: print method was incorrectly extracting
+	the model estimates for training set samples.
+
+	* predict.wa: fix minor bug with CV when tolerance DW was used.
+
+	* Package: reduced package check time in examples, by using
+	the Imbrie & Kipp data.
+
 Version 0.6-23
 
 	* tran: 'rootroot' transformation was same as 'cuberoot' from
-	vhanges made in r140. Now fixed.
+	changes made in r140. Now fixed.
 
 	* wa: 'formula' method was not passing tolerance-related arguments
 	to default method. As such, the newer code to handle small
