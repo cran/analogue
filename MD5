@@ -1,4 +1,4 @@
-9615dbd9255a45335f8e58bc8be5cafd *DESCRIPTION
+ab788897b5efe646446f6344e41eb0bc *DESCRIPTION
 35b1cc8b02a8a4ed4a5efa922f453bbd *NAMESPACE
 937b7da026dee8ad34925074b633b9dd *R/RMSEP.R
 da11b118fa0ea7c4b088531163e223f6 *R/RMSEP.bootstrap.wa.R
@@ -7,13 +7,13 @@ e9e984bc5d86ace8d9de39eb8e482b62 *R/Stratiplot.formula.R
 5c7054bee976832b6779313089da0630 *R/analog.R
 ec713a9c8881f7ba44957a83870ec886 *R/as.data.frame.optima.R
 ddb58720af78a32098550052420c88a5 *R/bayesF.R
-ef2471911b229eb2d113f957dc2b6d18 *R/bootstrap.R
+563872757ef204654da44b7d66240259 *R/bootstrap.R
 5640ea733c4eed51f69e08d4249f97c0 *R/bootstrap.wa.R
 6d7be88f839e1c89239de9caedf010d0 *R/ccaFit.R
 f86fbe1d1f9da7f7f8bb2f9f3cf706d4 *R/chooseTaxa.R
-5340be34c21c171c43ae4e1d586fe2fc *R/cma.R
+d4683c0609672598e7fe5864753b19b9 *R/cma.R
 82a55d2a754955405824086e9674d67c *R/coef.wa.R
-a8955fb126f6c54184d07f616919498a *R/crossval.R
+7ce90552cfebb03ac577bb78a59e9c3d *R/crossval.R
 3c7cef47f7cfe8c81589d7136101a658 *R/densityplot.residLen.R
 b17a93cb9c0980b942068d5410bc70bb *R/deshrink.R
 1d4f5c41a48cd07cff416c8664c44124 *R/deshrinkPred.R
@@ -33,7 +33,7 @@ f5922f8a0c7314073e0ef3dbde72d707 *R/fixUpTol.R
 93a064fcc47a106270bcf6053bf34ce5 *R/hist.residLen.R
 d5ca33a9d8c96c307feba4ad2dc4f497 *R/histogram.residLen.R
 e9e8efe2417696fefe98514e3be7feb5 *R/initCurve.R
-9f9fb1e2ae291051b9c3eec9e785f1fe *R/internal.R
+97042255dc898105f500163adb2524e6 *R/internal.R
 0619027bfaca437b934fee91b5c0ee79 *R/join.R
 898806ea4a410faa52ec91b386a85f01 *R/logitreg.R
 123a0dd99b1e26857221f00f637051db *R/logitreg.analog.R
@@ -63,7 +63,7 @@ c049411daf9084c24d363e590d51d62b *R/plot.prcurve.R
 c3a107f2949871cd77a1995c17f89b4d *R/plot.wa.R
 090944f2a39d4e1d86751db22acb49dd *R/prcurve.R
 25e99cf35fe14ce7761ef346fb84878b *R/predict.mat.R
-bd86d888af927462f06bb18fc69425d3 *R/predict.wa.R
+cf34e641ae6253d982efbbca6d34c1fb *R/predict.wa.R
 ee5635c70629b8c8924490a0c95993c3 *R/print.bootstrap.wa.R
 efbd65f412541618aff6cd97c29d88ff *R/print.performance.R
 861d8fa7f3cc7ca07f77229f9e699310 *R/print.predict.wa.R
@@ -114,14 +114,11 @@ f8adba6b5bcb2c2fe326ea7edc2e0bc0 *data/rlgh.rda
 4fd1f9091808d16d626130a032c5aa1f *data/swappH.rda
 971c1981864fdd8315c2d16d454a5c29 *inst/CITATION
 f79d1d62b682b4098a174ac4690cff65 *inst/COPYING
-e241df3b388981f84cf396065e5d282a *inst/ChangeLog
+0b58584afe06c3c6685f3d6fb85c6289 *inst/ChangeLog
 68b3dcd0f2a7a2d241a8dc75e7b01a7e *inst/THANKS
 455715019a4580ec4b6fd71ed58b976d *inst/TODO
-42f8a654a53515271920f03727a8d3ab *inst/doc/Z.cls
 3dfc70215cfeb5abcc180b492f2d1485 *inst/doc/analogue_methods.Rnw
-ba6dae1421e5383402d9618a14c00199 *inst/doc/analogue_methods.pdf
-68c616694a22837172b89b4bb6819fea *inst/doc/analogue_refs.bib
-92e903f33d4067a7fbc89fa4e7571c92 *inst/doc/jss.bst
+f4caa3bba9b296cd626148079544d660 *inst/doc/analogue_methods.pdf
 65ef1f95fadb59ab0071d8c8231e0f1e *man/ImbrieKipp.Rd
 d7be6c0215037ceead5700998534c20a *man/Pollen.Rd
 84a4fb73fbbf0c5bc1ab43be2359c614 *man/RMSEP.Rd
@@ -189,4 +186,7 @@ ee8ae78d5a5f94a490f00e8e2bbc2ae2 *man/wa.Rd
 427818772eabd3f092dc6007cd117b7b *src/distx.c
 b6aa6f7cb7c1f7f76cc80a848260f82c *src/distxy.c
 930979a7d88e255cb2ac4e0670d80f2f *src/wastats.c
-6ed3cb45fbd84f84d138b7181964a36a *tests/Examples/analogue-Ex.Rout.save
+690e532e0b50b1878be7272b95579caa *tests/Examples/analogue-Ex.Rout.save
+42f8a654a53515271920f03727a8d3ab *vignettes/Z.cls
+3dfc70215cfeb5abcc180b492f2d1485 *vignettes/analogue_methods.Rnw
+68c616694a22837172b89b4bb6819fea *vignettes/analogue_refs.bib

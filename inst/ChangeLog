@@ -1,5 +1,25 @@
 analogue Change Log
 
+Version 0.8-2
+
+	* Dependencies: analogue now requires R >= 2.15.0
+
+	* Replaced remaining instances of `.Internal`; now use
+	`.colSums` and `.rowSums` from R 2.15.0
+
+	* Deleted jss.bst from inst/doc
+
+	* Vignettes: these are now in vignettes not inst/docs
+
+Version 0.8-1
+
+	* cma: if cutoff meant that all analogues returned for all
+	sites, code would return an array instead of the usual list.
+	This is now fixed in all methods.
+
+	* Replaced instances of `.Internal(sample(....))` with
+	`sample.int(....)` at request of Brian Ripley.
+
 Version 0.8-0
 
 	* Updated Example test checks and packaged for release to CRAN
