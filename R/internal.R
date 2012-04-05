@@ -167,6 +167,7 @@ wmean <- function(spp, env) {
 ## w.avg - fast weighted mean function with no checks
 `w.avg` <- function(x, env) {
     opt <- ColSums(x * env) / ColSums(x)
+    ##opt <- .colSums(x * env) / .colSums(x)
     names(opt) <- colnames(x)
     opt
 }
@@ -211,21 +212,20 @@ wmean <- function(spp, env) {
     dn <- dim(x)
     p <- dn[2]
     dn <- dn[1]
-    .Internal(rowSums(x, dn, p, na.rm))
+    .rowSums(x, dn, p, na.rm)
 }
 
 `ColSums` <- function(x, na.rm = FALSE) {
     dn <- dim(x)
     n <- dn[1]
     dn <- dn[2]
-    .Internal(colSums(x, n, dn, na.rm))
+    .colSums(x, n, dn, na.rm)
 }
 
 ## deshrinking function given deshrinking coefs and a method
 ##`deshrink.pred` <- function(x, coef) {
 ##    coef[1] + x * coef[2]
 ##}
-
 
 ## w.tol --- computes weighted standard deviations AKA tolerances
 w.tol <- function(x, env, opt, useN2 = TRUE) {
