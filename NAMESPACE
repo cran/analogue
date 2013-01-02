@@ -17,13 +17,49 @@ importFrom(utils, head, tail)
 import(graphics)
 
 ## Exports
-export(analog, bayesF, bootstrap, chooseTaxa, cma, crossval, deshrink, dissim,
-       dissimilarities, distance, fuse, getK, gradientDist, join, logitreg,
-       mat, mcarlo, minDC, optima, panel.Loess, panel.Stratiplot, pcr,
-       performance, prcurve, ##randomWA,
-       reconPlot, residLen, RMSEP, roc,
-       smoothSpline, Stratiplot, stdError, timetrack, tran, varExpl, wa,
-       weightedCor, "setK<-", Hellinger, ChiSquare)
+export(analog,
+       bayesF,
+       bootstrap,
+       caterpillar,
+       caterpillarPlot,
+       chooseTaxa,
+       cma,
+       crossval,
+       deshrink,
+       dissim,
+       dissimilarities,
+       distance,
+       distance3,
+       fuse,
+       getK,
+       gradientDist,
+       join,
+       logitreg,
+       mat,
+       mcarlo,
+       minDC,
+       optima,
+       panel.Loess,
+       panel.Stratiplot,
+       pcr,
+       performance,
+       prcurve, ##randomWA,
+       reconPlot,
+       residLen,
+       RMSEP,
+       splitSample,
+       roc,
+       smoothSpline,
+       Stratiplot,
+       stdError,
+       timetrack,
+       tran,
+       varExpl,
+       wa,
+       weightedCor,
+       "setK<-",
+       Hellinger,
+       ChiSquare)
 
 ### S3 Methods
 ##
@@ -37,12 +73,14 @@ S3method(cma, analog)
 S3method(cma, default)
 S3method(cma, predict.mat)
 S3method(cma, mat)
+S3method(crossval, pcr)
 S3method(crossval, wa)
 S3method(densityplot, residLen)
 S3method(dissimilarities, analog)
 S3method(dissimilarities, mat)
 S3method(distance, default)
 S3method(distance, join)
+S3method(distance3, default)
 S3method(eigenvals, pcr)
 S3method(fuse, dist)
 S3method(fuse, matrix)
@@ -101,15 +139,21 @@ S3method(coef, pcr)
 S3method(coef, wa)
 S3method(fitted, pcr)
 S3method(fitted, bootstrap.mat)
+S3method(fitted, logitreg)
 S3method(fitted, mat)
 S3method(fitted, timetrack)
 S3method(fitted, wa)
+S3method(predict, logitreg)
 S3method(predict, mat)
+S3method(predict, pcr)
 S3method(predict, wa)
 S3method(residuals, bootstrap.mat)
 S3method(residuals, mat)
 S3method(residuals, pcr)
 ## plotting
+S3method(caterpillarPlot, default)
+S3method(caterpillarPlot, data.frame)
+S3method(caterpillarPlot, wa)
 S3method(plot, minDC)
 S3method(plot, bayesF)
 S3method(plot, cma)
@@ -150,12 +194,14 @@ S3method(print, minDC)
 S3method(print, optima)
 S3method(print, pcr)
 S3method(print, performance)
+S3method(print, prcurve)
 S3method(print, predict.mat)
 S3method(print, predict.wa)
 S3method(print, residLen)
 S3method(print, residuals.bootstrap.mat)
 S3method(print, residuals.mat)
 S3method(print, roc)
+S3method(print, stdError)
 S3method(print, summary.analog)
 S3method(print, summary.bootstrap.mat)
 S3method(print, summary.cma)
