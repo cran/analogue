@@ -2,10 +2,10 @@
 
 `wa.default` <-
     function(x, env,
-             deshrink = c("inverse", "classical", "expanded", "none"),
+             deshrink = c("inverse", "classical", "expanded", "none", "monotonic"),
              tol.dw = FALSE, useN2 = TRUE,
              na.tol = c("min","mean","max"),
-             small.tol = c("min","fraction","absolute"),
+             small.tol = c("min","mean","fraction","absolute"),
              min.tol = NULL, f = 0.1, ...)
 {
     ## x = species abundances (weights), env = response vector

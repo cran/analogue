@@ -1,5 +1,152 @@
 analogue Change Log
 
+Version 0.10-0
+
+	* Release: Version 0.9-11 plus a minor documentation fix
+	was released to CRAN 2 Jan 2013.
+
+Version 0.9-11
+
+	* Was loading compiled code both via the package namespace
+	and a .onAttach() call. The latter was removed. Reported by
+	Kurt Hornik.
+
+Version 0.9-10
+
+	* stdError: Several changes and enhancements:
+
+	Calculation assumed weights summed to 1. New formula as
+	described in Simpson (2012) is now used. (Reported by Steve
+	Juggins)
+
+	Now have a choice whether to use the weighted SD or not. For
+	predictions based on the mean of the k-closest analogues it
+	would be odd to then use a weighted SD to compute the standard
+	error.
+
+	Gained a print method.
+
+	* caterpillarPlot: can now be called by the shorter name
+	caterpillar().
+
+	* plot.logitreg: bug would cause plotting to fail if you plotted
+	a single model.
+
+Version 0.9-9
+
+	* prcurve: added a print method.
+
+	* Stratiplot: y-axis padded by 4% of range as per base graphics
+	default behaviour.
+
+	* plot.wa: don't rerun example(wa) just to plot.
+
+	* caterpillarPlot: tolerance ranges for taxa drawn with lwd = 2.
+
+Version 0.9-8
+
+	* panel.Stratiplot: `type = "h"` now drawn using `lwd = 3` and with
+	`lineend = "butt"`. The line width can be controled by new argument
+	`lwd.h`.
+
+Version 0.9-7
+
+	* Stratiplot: In 0.9-5 a change was made to stop stripping NAs
+	when using the formula interface. This means a way of dealing with
+	NAs in the default plotting method is required especially when
+	plotting using lines or poylgons, as Lattice will honour the NA
+	and draw lines and polygons with gaps.
+
+	Stratiplot.default gains argument `na.action` which defaults to
+	`"na.omit"`. Note this is different to the formula method where
+	we *want* NAs to propogate through to the default method for
+	plotting.
+
+	This change allows for datasets collected on different sediment
+	intervals from the same core to be combined in a single diagram.
+
+Version 0.9-6
+
+	* caterpillarPlot: now no longer draws a box round the plot.
+
+	Bug fixed so that the data.frame method correctly identies the
+	`env` argument to label the plot with.
+
+	Updated help file.
+
+Version 0.9-5
+
+	* Stratiplot: the formula interface was stripping rows with NAs.
+	This wasn't intended but was the result of not implementing all
+	of the standard non-standard evaluation idiom used by many of R's
+	modelling functions.
+
+	This is now fixed and the default for the `na.action` argument
+	has been changed to `"na.pass"`.
+
+	The default `Stratiplot()` method was working as expected.
+
+	* Vignette: typo fixed (reported by Marta Rufio).
+
+Version 0.9-4
+
+	* logitreg: the returned object has changed. The list of logistic
+	regression models is now returned as component `models`.
+
+	New methods `fitted()` and `predict()` provided for objects of
+	class "logitreg" compute the fitted probabilities for the
+	training set samples and for new (e.g. fossil) samples
+	respectively. The probabilities are in respect to the analogue-
+	ness of samples to the groups in the training set (e.g.
+	vegetation biomes in the case of pollen data).
+
+	These changes allow an analysis similar in spirit to that of
+	Gavin et al (2003, Quaternary Research 60; 356--367) in their
+	Figure 8. Here though logistic regression fits are used rather
+	than the ROC method they employ. Similar methods could be
+	provided for objects fitted by `roc()` but require a little more
+	thought about how to model the likelihood ratios derived from
+	the ROC curves.
+
+Version 0.9-3
+
+	* wa: deshrinking via a monotonic cubic regression spline
+	is now available via `deshrink = "monotonic"`. This uses
+	functions from the *mgcv* package of Simon Wood and as a
+	result, *analogue* now Depends on that package too. The
+	exact nature of the dependency may change before 0.10 is
+	released.
+
+	This idea goes back to ter Braak & Juggins (1993; Hydrobiologia
+	*269/270*, 485--502) and Marchetto (1994; Journal of
+	Paleolimnology *12*, 155--162), but the implementation here
+	uses monotonic constraints after Wood (1994; SIAM Journal on
+	Scientific Computing *15*(5), 1126--1133 and follows Steve
+	Juggins' implementation borrowing code from `?pcls` in *mgcv*.
+
+	* predict.wa: example was enclosed in \dontrun{} without
+	reason. This example is now run.
+
+Version 0.9-2
+
+	* wa: small tolerances can now be replaced by the mean
+	tolerance of the set of tolerances that are not small.
+
+	* splitSample: several bug fixes and sanity checks.
+
+Version 0.9-1
+
+	* splitSample: new function to sample a test set from across
+	an environmental gradient by breaking gradient into a series
+	of chunks and sampling approximately equally from within each
+	chunk.
+
+Version 0.9-0
+
+	* caterpillarPlot: new function that draws a caterpillar plot
+	of species WA optima and tolerances. Methods for data frames
+	and wa() fits are available alongside the default method.
+
 Version 0.8-2
 
 	* Dependencies: analogue now requires R >= 2.15.0
