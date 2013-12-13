@@ -11,9 +11,9 @@
 ##                                                                       ##
 ###########################################################################
 ## x = training data, y = fossil data
-distance <- function(x, ...) UseMethod("distance")
+oldDistance <- function(x, ...) UseMethod("oldDistance")
 
-distance.join <- function(x, ...)
+oldDistance.join <- function(x, ...)
   {
     if(!inherits(x, "join"))
       stop("This method should only be used on objects of class 'join'")
@@ -26,7 +26,7 @@ distance.join <- function(x, ...)
     }
   }
 
-distance.default <- function(x, y,
+oldDistance.default <- function(x, y,
                              method = c("euclidean", "SQeuclidean", "chord",
                                "SQchord", "bray", "chi.square", "SQchi.square",
                                "information", "chi.distance", "manhattan",
@@ -83,7 +83,14 @@ distance.default <- function(x, y,
       }
     kendall <- function(x, y, maxi)
       {
-        sum(maxi - pmin(x, y))
+          ## the sum in the else isn't right if x == y
+          ## then the dissimilarity should be 0
+          out <- if (isTRUE(all.equal(sum(x-y), 0))) {
+              0
+          } else {
+              sum(maxi - pmin(x, y))
+          }
+          out
       }
     gower <- function(x, y, maxi, mini)
       {
@@ -140,60 +147,50 @@ distance.default <- function(x, y,
                )
       }
     if(missing(method))
-      method <- "euclidean"
+        method <- "euclidean"
     method <- match.arg(method)
     y.miss <- FALSE
     if(missing(y)) {
-      y.miss <- TRUE
-      y <- x
+        y.miss <- TRUE
+        y <- x
     }
+    n.vars <- ncol(x)
     if(method == "mixed") {
-      ## sanity check: are same columns in x and y factors
-      facs.x <- sapply(as.data.frame(x), is.factor, USE.NAMES = FALSE)
-      facs.y <- sapply(as.data.frame(y), is.factor, USE.NAMES = FALSE)
-      if(sum(facs.x - facs.y) > 0)
-        stop("Different columns (species) are coded as factors in 'x' and 'y'")
-      ## sanity check: levels of factors also need to be the same
-      for(i in seq_along(facs.x)[facs.x]){
-        if(!identical(levels(x[,i]), levels(y[,i])))
-          stop("The levels of one or more factors in 'x' and 'y'\ndo not match.\nConsider using 'join(x, y)'. See '?join'")
-      }
+        ## are same columns in x and y factors
+        facs.x <- sapply(as.data.frame(x), is.factor, USE.NAMES = FALSE)
+        facs.y <- sapply(as.data.frame(y), is.factor, USE.NAMES = FALSE)
+        if(sum(facs.x - facs.y) > 0) {
+            stop("Different columns (species) are coded as factors in 'x' and 'y'")
+            ## levels of factors also need to be the same
+            for(i in seq_along(facs.x)[facs.x]){
+                if(!identical(levels(x[,i]), levels(y[,i])))
+                    stop("The levels of one or more factors in 'x' and 'y'\ndo not match.\nConsider using 'join(x, y)'. See '?join'")
+            }
+        }
+    } else {
+        ## we do this even if no y as it is harmless
+        facs.x <- facs.y <- rep(FALSE, n.vars)
     }
     x.names <- rownames(x)
     x <- data.matrix(x)
-    n.vars <- ncol(x)
+    y.names <- rownames(y)
+    y <- data.matrix(y)
     ## Do we want to remove NAs? Yes if gower, alt.gower and mixed,
     ## but fail for others
     NA.RM <- FALSE
     if(method %in% c("gower", "alt.gower", "mixed"))
-      NA.RM <- TRUE
-    #y.miss <- FALSE
-    if(missing(y)) {
-      #colsumx <- colSums(x, na.rm = NA.RM)
-      #if(any(colsumx <= 0)) {
-      #  x <- x[, colsumx > 0, drop = FALSE]
-      #  warning("some species contain no data and were removed from data matrix x\n")
-      #}
-      y.miss <- TRUE
-      y <- x
-      y.names <- x.names
-    } else {
-      #if(method == "mixed") {
-        ## sanity check: are same columns in x and y factors
-        #facs.y <- sapply(as.data.frame(y), is.factor)
-        #if(sum(facs.x - facs.y) > 0)
-        #  stop("Different columns (species) are coded as factors in 'x' and 'y'")
-        ## sanity check: levels of factors also need to be the same
-        #for(i in seq_along(facs.x)[facs.x]){
-        #  if(!identical(levels(x[,i]), levels(y[,i])))
-        #    stop("The levels of one or more factors in 'x' and 'y' do not match.\nConsider using 'join(x, y)'. See '?join'")
-        #}
-      #}
-      y.names <- rownames(y)
-      y <- data.matrix(y)
+        NA.RM <- TRUE
+    ## check if any empty species, drop them
+    colsumx <- colSums(x, na.rm = NA.RM)
+    colsumy <- colSums(y, na.rm = NA.RM)
+    ## NO - this causes problems if you merge data
+    if (any(DROP <- (colsumx <= 0 & colsumy <= 0) & !facs.x)) {
+        ##x <- x[, (colsumx > 0 | colsumy > 0) | facs.x, drop = FALSE]
+        ##y <- y[, (colsumx > 0 | colsumy > 0) | facs.x, drop = FALSE]
+        ##warning("Some species contain no data and were removed from data matrices.\n")
     }
     if(method == "chi.distance")
-      colsum <- colSums(join(as.data.frame(x),as.data.frame(y), split = FALSE))
+        colsum <- colSums(join(as.data.frame(x),as.data.frame(y), split = FALSE))
     if(method == "mixed") {
       ## sort out the weights used, eg the Kroneker's Deltas
       ## weights must be NULL or numeric vector of length == ncol(x)
@@ -225,7 +222,8 @@ distance.default <- function(x, y,
         } else {
             apply(y, 2, max, na.rm = NA.RM)
         }
-        maxi <- apply(rbind(maxX, maxY), 2, max, na.rm = NA.RM)
+        ##maxi <- apply(rbind(maxX, maxY), 2, max, na.rm = NA.RM)
+        maxi <- pmax(maxX, maxY)
         if(method %in% c("gower", "alt.gower", "mixed")) {
             ## need the mins of each variable
             ## need to account for a single site (matrix with 1 row)
@@ -286,6 +284,7 @@ distance.default <- function(x, y,
       rownames(res) <- x.names
     }
     attr(res, "method") <- method
+    attr(res, "type") <- if(y.miss) "symmetric" else "asymmetric"
     class(res) <- c("distance","matrix")
     return(res)
   }

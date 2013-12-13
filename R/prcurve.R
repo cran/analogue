@@ -40,6 +40,10 @@ prcurve <- function(X,
     ## data stats
     n <- NROW(X) ## number of observations
     m <- NCOL(X) ## number of variables
+
+    ## fit a PCA and store in result
+    ord <- rda(X)
+
     ## starting configuration
     config <- startConfig <- initCurve(X, method = method,
                                        rank = rank,
@@ -49,11 +53,24 @@ prcurve <- function(X,
     ## Vary degrees of freedom per variable?
     if(missing(complexity)) {
         complexity <- numeric(length = m)
-        for(j in seq_along(complexity)) {
-            complexity[j] <- smoother(config$lambda, X[, j],
-                                      choose = TRUE, ...)$complexity
+        if (trace){ ## set up progress bar
+            writeLines("\n   Determining initial DFs for each variable...")
+            pb <- txtProgressBar(max = m, style = 3)
         }
-        if(!vary) {
+        for(j in seq_along(complexity)) {
+            if(trace) { ## update progress
+                setTxtProgressBar(pb, j)
+            }
+            ## fit the mode & grab DF
+            complexity[j] <-
+                smoother(config$lambda, X[, j], choose = TRUE, ...)$complexity
+        }
+        if (trace) { ## finalise the progress bar
+            close(pb)
+            writeLines("\n")
+        }
+
+        if(!vary) { ## median complexity for all vars
             complexity <- rep(median(complexity), m)
         }
     } else {
@@ -70,22 +87,36 @@ prcurve <- function(X,
     ##
     iter <- 0L
     if(trace) {
-        writeLines(strwrap(tmp <- paste(rep("-", options("width")[[1]]),
-                                        collapse = "")))
-        writeLines(sprintf("Initial curve: d.sq: %.4f", config$dist))
+        ##writeLines(strwrap(tmp <- paste(rep("-", options("width")[[1]]),
+        ##                                collapse = "")))
+        writeLines("Fitting Principal Curve:\n")
+        writeLines(sprintf("Initial curve: d.sq: %.3f", config$dist))
     }
+
+    ## vary == FALSE needs to set some things for smoothers like GAM
+    ## which will select smoothness even if complexity stated
+    smooths <- c("smoothGAM")
+    if(!vary && (deparse(substitute(smoother)) %in% smooths)) {
+        CHOOSE <- TRUE
+    } else {
+        CHOOSE <- FALSE
+    }
+
     ##dist.raw <- sum(diag(var(X))) * (NROW(X) - 1)
     dist.old <- sum(diag(var(X)))
     s <- matrix(NA, nrow = n, ncol = m)
     converged <- (abs((dist.old - config$dist)/dist.old) <=
                   thresh)
     ## Start iterations ----------------------------------------------
+    ### - store fitted smoothers in list
+    smooths <- vector(mode = "list", length = m)
     while (!converged && iter < maxit) {
         iter <- iter + 1L
         for(j in seq_len(m)) {
-            s[, j] <- fitted(smoother(config$lambda, X[, j],
-                                      complexity = complexity[j],
-                                      choose = FALSE, ...))
+            smooths[[j]] <- smoother(config$lambda, X[, j],
+                                     complexity = complexity[j],
+                                     choose = CHOOSE, ...)
+            s[, j] <- fitted(smooths[[j]])
         }
         ##
         dist.old <- config$dist
@@ -100,12 +131,17 @@ prcurve <- function(X,
         ## Converged?
         converged <- (abs((dist.old - config$dist)/dist.old) <=
                       thresh)
-        if(plotit)
-            plot(config, X, sub = paste("Iteration:", iter))
+        if(plotit) {
+            ## plot the iteration -- need to add some components
+            ## because of changes to plot method
+            config$data <- X
+            config$ordination <- ord
+            plot(config, sub = paste("Iteration:", iter))
+        }
         if (trace)
             writeLines(sprintf(paste("Iteration %",
                                      max(3, nchar(maxit)),
-                                     "i: d.sq: %.4f", sep = ""),
+                                     "i: d.sq: %.3f", sep = ""),
                                iter, config$dist))
     }
     ## End iterations ------------------------------------------------
@@ -113,23 +149,35 @@ prcurve <- function(X,
     if(finalCV) {
         iter <- iter + 1L
         for(j in seq_len(n)) {
-            sFit <- smoother(config$lambda, X[, j],
-                             cv = TRUE, choose = TRUE, ...)
-            s[, j] <- if(sFit$complexity > maxComp) {
-                ## too complex, turn of CV and refit with max df allowed
-                fitted(smoother(config$lambda, X[, j], cv = FALSE,
-                                choose = FALSE,
-                                complexity = maxComp,
-                                ...))
-            } else {
-                fitted(sFit)
-            }
+          smooths[[j]] <- smoother(config$lambda, X[, j],
+                                   cv = TRUE, choose = TRUE, ...)
+          if(smooths[[j]]$complexity > maxComp) {
+            smooths[[j]] <- smoother(config$lambda, X[, j], cv = FALSE,
+                                     choose = FALSE,
+                                     complexity = maxComp,
+                                     ...)
+          }
+          s[, j] <- fitted(smooths[[j]])
+            ## sFit <- smoother(config$lambda, X[, j],
+            ##                  cv = TRUE, choose = TRUE, ...)
+            ## s[, j] <- if(sFit$complexity > maxComp) {
+            ##     ## too complex, turn of CV and refit with max df allowed
+            ##     fitted(smoother(config$lambda, X[, j], cv = FALSE,
+            ##                     choose = FALSE,
+            ##                     complexity = maxComp,
+            ##                     ...))
+            ## } else {
+            ##     fitted(sFit)
+            ## }
         }
-        config <- get.lam(X, s = config$s, stretch = stretch)
+        config <- get.lam(X, s = s, stretch = stretch)
         class(config) <- "prcurve"
         if(plotit) {
-            ## plot the iteration
-            plot(config, X)
+            ## plot the iteration -- need to add some components
+            ## because of changes to plot method
+            config$data <- X
+            config$ordination <- ord
+            plot(config)
         }
         if (trace)
             writeLines(sprintf(paste("Iteration %", max(3, nchar(maxit)),
@@ -137,15 +185,16 @@ prcurve <- function(X,
                                "CV", config$dist))
     }
     if(trace){
-        writeLines(strwrap(tmp))
+        cat("\n")
         if(converged) {
             writeLines(strwrap(paste("PC Converged in", iter, "iterations.")))
         } else {
             writeLines(strwrap(paste("PC did not converge after", iter,
                                      "iterations.")))
         }
-        writeLines(strwrap(tmp))
+        cat("\n")
     }
+    ## prepare objects for return
     names(config$tag) <- names(config$lambda) <-
         rownames(config$s) <- rownames(X)
     colnames(config$s) <- names(complexity) <- colnames(X)
@@ -154,9 +203,13 @@ prcurve <- function(X,
     config$totalDist <- startConfig$dist
     config$complexity <- complexity
     ## config$fitFUN <- fitFUN
+    config$smooths <- smooths
+    names(config$smooths) <- colnames(X)
     config$call <- match.call()
+    config$ordination <- ord
+    config$data <- X
     class(config) <- c("prcurve")
-    return(config)
+    config
 }
 
 `print.prcurve` <- function(x, digits = max(3, getOption("digits") - 3),

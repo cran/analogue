@@ -9,7 +9,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% almost as usual
-\author{Gavin L. Simpson\\Environmental Change Research Centre --- UCL}
+\author{Gavin L. Simpson\\Institute of Environmental Change and Society --- University of Regina}
 \title{Analogue Methods in Palaeoecology:\\ Using the \pkg{analogue} Package}
 
 %% for pretty printing and a nice hypersummary also set:
@@ -38,15 +38,15 @@
 %% The address of (at least) one author should be given
 %% in the following format:
 %\Address{
-%  Gavin L. Simpson\\
-%  Environmental Change Research Centre\\
-%  UCL Department of Geography\\
-%  Pearson Building\\
-%  Gower Street\\
-%  London, UK, WC1E 6BT\\
-%  E-mail: \email{gavin.simpson@ucl.ac.uk}\\
-%  URL: \url{http://www.homepages.ucl.ac.uk/~ucfagls/}
-%}
+  % Gavin L. Simpson\\
+  % Insitutute of Environmental Change and Society\\
+  % University of Regina\\
+  % 3737 Wascana Parkway\\
+  % Regina\\
+  % SK, S4S 0A2, Canada\\
+  % %%E-mail: \email{ucfagls\@gmail.com}\\
+  % URL: \url{http://www.fromthebottomoftheheap.net/}
+%} 
 %% It is also possible to add a telephone and fax number
 %% before the e-mail in the following format:
 %% Telephone: +43/1/31336-5053
@@ -118,7 +118,7 @@ Section \ref{using_analogue} contains a worked example providing an overview of 
 \section[Using analogue]{Using \pkg{analogue}}\label{using_analogue}
 This section contains a worked example of how to use the \pkg{analogue} package to fit MAT transfer function models and to perform analogue matching. The \pkg{analogue} package first has to be loaded before it can be used:
 
-<<>>=
+<<loadPackage>>=
 library("analogue")
 @
 
@@ -126,7 +126,7 @@ The version of \pkg{analogue} installed is printed if the package has been succe
 
 To illustrate \pkg{analogue}, the Surface Waters Acidification Project (SWAP) diatom:pH training set is used \citep{swapredbook}, along with diatom counts from a sediment core taken from the Round Loch of Glenhead, Galloway, Scotland \citep{604}. The data sets also need to be loaded before they can be used:
 \label{join}
-<<>>=
+<<loadData>>=
 data(swapdiat, swappH, rlgh, package = "analogue")
 @
 
@@ -141,7 +141,7 @@ MAT transfer functions are built using the generic function \code{mat}. The defa
 
 The data frame of diatom counts (\code{x}), must have the same columns (species) as the data frame of counts for the sediment core for which MAT reconstructions are required. To ensure that both data frames have the same set of columns, the \code{join} function is used to merge the two data sets.
 
-<<>>=
+<<joinData>>=
 dat <- join(swapdiat, rlgh, verbose = TRUE)
 @
 
@@ -151,14 +151,14 @@ An alternative to merging the two data sets would be to select only the intersec
 
 By convention, dissimilarity coefficients are defined for proportional data. As the data used in this example are percentages we need to convert them to proportions. We extract each of the merged data sets (the components of \code{dat}) back into the training set and the fossil set, converting the data into proportions as we do so.
 
-<<>>=
+<<convertToPercent>>=
 swapdiat <- dat$swapdiat / 100
 rlgh <- dat$rlgh / 100
 @
 
 The data are now ready for analysis. We will fit a MAT model to the SWAP training set using the squared chord distance (SCD) coefficient:
 
-<<>>=
+<<applyMat>>=
 swap.mat <- mat(swapdiat, swappH, method = "SQchord")
 @
 
@@ -172,7 +172,7 @@ The percentiles of the distribution of SCD values for the training set are displ
 
 A more detailed summary of the results may be displayed using the \code{summary} method:
 
-<<results=hide>>=
+<<summarySwapMat, results=hide>>=
 summary(swap.mat)
 @
 
@@ -190,7 +190,7 @@ par(opar)
 
 Before using this model to reconstruct pH for the RLGH core, the number of analogues, $k$, to use in the reconstructions must be determined. A simple way of choosing $k$ is to select $k$ from the model with lowest RMSEP. In the printed results shown above, the model with the lowest RMSEP was a model with $k = 10$ closest analogues for both the mean and weighted mean indices. We should check this number however, as the displayed lists were restricted to show only the $k = 1,\ldots,10$ closest analogues. Whenever $k$ is not specified, the functions in \pkg{analogue} automatically choose the model with lowest RMSEP. The simplest way to check this is to the use the \code{getK} extractor function:
 
-<<>>=
+<<printSwapMat>>=
 getK(swap.mat)
 @
 
@@ -210,7 +210,7 @@ This choice of $k$ is generally not strongly biased despite being determined \te
 
 This model can now be used to reconstruct past pH values for the RLGH core. The \code{predict} method of \code{mat} can be used for reconstructions:
 
-<<results=hide>>=
+<<rlghPred, results=hide>>=
 rlgh.mat <- predict(swap.mat, rlgh, k = 10)
 rlgh.mat
 @
@@ -233,7 +233,7 @@ The argument \code{use.labels = TRUE} instructs the function to take the names c
 
 If we are interested in how reliable our reconstructed values are, a useful descriptor is the minimum dissimilarity between a core sample and the training set samples (minDC). If there are no close modern analogues in the training set for certain fossil samples, we will have less faith in the MAT reconstructions for those fossil samples than for samples that do have close modern analogues. The \code{minDC} function can be used to extract the minimum dissimilarity for each fossil sample:
 
-<<>>=
+<<minDijRLGH>>=
 rlgh.mdc <- minDC(rlgh.mat)
 @
 
@@ -258,7 +258,7 @@ Analogue matching (AM) is a more general version of MAT and the two techniques a
 
 Returning to the RLGH example, in AM all we are interested in is identifying those samples from the modern training set that are close modern analogues for samples from the RLGH core. In particular, we define the reference condition or period for acidified lakes to be immediately prior to the onset of the industrial revolution, \emph{c.}~1800. We accept that this period is not the ``natural'' state of the RLGH as many UK surface waters have experienced several thousand years of human impact, but this reference condition is appropriate for assessing recovery from recent acidification resulting from the burning of fossil fuels for energy generation and industrial activities. We use \code{analog}, this time with the chord distance (CD) measure and select only those samples from the reference period of the RLGH (samples 25--37):
 
-<<>>=
+<<swapAnalogue>>=
 rlgh.ref <- rlgh[25:37, ]
 swap.ana <- analog(swapdiat, rlgh.ref, method = "chord")
 swap.ana
@@ -432,7 +432,7 @@ The workhorse function used by \code{plot.roc} to draw the posterior probability
 We briefly describe some of the other features of the \pkg{analogue} package.
 
 \subsection{Dissimilarity coefficients}\label{dissims}
-Analogue provides a wide range of dissimilarity coefficients via the \code{distance} function. A list of the coefficients provided is shown in Table \ref{dissim_tab}. All the dissimilarity coefficients are coded in pure \proglang{R} code. As such, \code{distance} will not be as quick as other similar functions available in \proglang{R}, such as \code{dist}, or \code{vegdist} in \pkg{vegan}, where the computations are done in compiled \proglang{C} code. Where there is overlap with coefficients available explicitly or indirectly (via transformation), in functions \code{dist} or \code{vegdist}, these faster functions are used by default, but only if no second argument \code{y} is supplied.
+Analogue provides a wide range of dissimilarity coefficients via the \code{distance} function. A list of the coefficients provided is shown in Table \ref{dissim_tab}. In early versions of \pkg{analogue}, all the dissimilarity coefficients were written in pure \proglang{R} code. As such, \code{distance} was not particulalry efficient compared to other similar functions available in \proglang{R}, such as \code{dist}, or \code{vegdist} in \pkg{vegan}. Starting with version 0.11-6 of \pkg{analogue} all dissimilarity coeficients are now computed using fast \proglang{C} functions modelled after \code{dist}, or \code{vegdist} in \pkg{vegan}. The first publicly-available version of \pkg{analogue} on CRAN employing the faster version of \code{distance} is version 0.12-0. The old behaviour is retained for compatibility under function \code{oldDistance}.
 
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
 \renewcommand{\arraystretch}{1.25}
@@ -642,11 +642,11 @@ Several of the standard \proglang{R} model utility functions have methods for \c
 \section{Final remarks and future development plans}\label{future_plans}
 The functionality of \proglang{R} package \pkg{analogue} has been demonstrated and explained using the SWAP diatom:pH data set and diatom counts from the RLGH sediment core. The SWAP dataset is a relatively large data set compared to those routinely produced in palaeoecological studies, and as such represents a real-world example of the type of data used in the field.
 
-\pkg{analogue} is still in the early stages of planned development. The main functionality for generating MAT transfer functions and reconstructions and for performing AM is already implemented, but several areas of development remain.
-
-As mentioned above, faster \proglang{C} versions of the dissimilarity calculations are planned to speed up the functions for use on large problems. Also, the package code has yet to receive any rigorous optimisation in terms of memory usage or computation time. Once the feature set has stabilised sufficiently, a code review will be performed to identify bottlenecks and to improve the implementation where possible.
+\pkg{analogue} is still under active development. The main functionality for generating MAT transfer functions and reconstructions and for performing AM is already implemented, but several areas of development remain.
 
 It will be noticeable that the functionality is more comprehensive for MAT transfer functions than for analogue matching. This is purely a function of legacy; MAT models have been used in palaeoecology for over 20 years, but analogue matching (in the sense presented in this paper) is a much newer topic and exactly how the results of AM are used in informing conservation policy is an area of ongoing research. As new developments are proposed, they will be added to future versions of \pkg{analogue}.
+
+Since this published version of this paper appeared, \pkg{analogue} has been extended in a number of areas. Notably, MAT has since been joined by weighted averaging and principal components regression transfer function methods. With principal components regression, the ability to apply ecologically-meaningful transformations \emph{sensu} \citet{legendre-gallagher} is a novel approach.
 
 \section*{Acknowledgements}
 Support, in part, for the development of this package was provided by the European Union Sixth Framework Programme integrated project Euro-limpacs (GOCE-CT-2003-505540). The author wishes to thank Viv Jones for permission to use the RLGH core data and to distribute these data with \pkg{analogue}. Two anonymous reviewers and the guest editors provided numerous comments and suggestions that have improved both the manuscript and the package.
