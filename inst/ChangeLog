@@ -1,5 +1,227 @@
 analogue Change Log
 
+Version 0.12-0
+
+	* Released to CRAN December 13th 2013
+
+Version 0.11-99
+
+	* Preparing for the 0.12-0 release.
+
+	* NEWS: analogue now has an `inst/NEWS.Rd` file highlight the major
+	changes in the upcoming 0.12-0 release.
+
+Version 0.11-6
+
+	* distance3: removed - redundant attempt to improve `distance()`.
+
+	* distance: `newDistance()` -> `distance()`
+	            `distance()`    -> `oldDistance()`
+
+	This implements the change suggested in 0.11-5. `distance()` is
+	now using the compiled C versions of the dissimilarity code.
+
+	* oldDistance: (was `distance()`) fixed a bug in the x-only case
+	where `method = "kendall"`.
+
+	* Vignette: Updated some details regarding C versions of
+	dissimilarity coefs.
+
+	* performance: a tweak to the print method to zap values that
+	are effectively 0. Only affects vectors of performance statistics
+	not data frames of stats.
+
+	* predict.pcr: Apply transformation function and perform
+	predictions for LOO, n k-fold, and bootstrap predictions
+
+	* crossval.pcr: leave-one-out CV was incorrectly averaging over
+	components. Now does bootstrap and n k-fold CV.
+
+Version 0.11-5
+
+	* newDistance: (yet another) new distance() replacement to
+	interface with fast C versions of the dissimilarity code. This
+	one *will* replace `distance()` in version 0.12-0, where upon it
+	will be renamed to `distance()` and the current `distance()` will
+	be renamed to `oldDistance()`.
+
+	* Unit tests: started adding unit tests using the **testthat**
+	package. Hence **analogue** now `Suggests: testthat`.
+
+Version 0.11-4
+
+	* logitreg: fitting is now possible using Firth's bias reduction
+	technique via the brglm package.
+
+	Changes to the labels in the output of the `summary` method.
+
+	* plot3d.prcurve: dynamic 3D plot of the data in PCA space with
+	the fitted principal curve superimposed.
+
+	* smoothGAM: new smooth function plugin for `prcurve`. Allows
+	fitting principal curves via individual GAM models using
+	`mgcv::gam` as the engine. The main advantage is that data sets
+	with non-Gaussian errors can now be handled more appropriately,
+	such as handling count data correctly.
+
+	`smoothGAM` is much slower than `smoothSpline` currently, although
+	there is potential for speeding this up via pre-computing some of
+	the GAM terms. As an example, the Abernethy Forest example in
+	`?prcurve` takes ~10 seconds on my 2-year old laptop.
+
+	* prcurve: improvements to the printed output during fitting (i.e.
+	with `trace = TRUE`) displays a progress bar during initial
+	estimates of smooth complexities. Residual variance printed to
+	fewer decimal places.
+
+	Now returns components `ordination` and `data`, the PCA ordination
+	(resulting from `rda()`) and the original data used to fit the
+	curve, respectively. This simplifies the `plot` and `lines`
+	methods for example.
+
+	* residuals.prcurve: new `residuals` method for principal curves
+	extracting or computing various types of residual for a fitted
+	curve.
+
+	* plot.prcurve, lines.prcurve: much improved following the
+	addition of new components in the object returned by `prcurve`.
+	No longer need to supply the original data used to fit the curve.
+
+	The scaling to use for the plot can now be specified via new
+	argument `scaling`. This makes the `lines` method more broadly
+	useful.
+
+	* chooseTaxa: would drop empty dimensions if conditions resulted
+	in just a single taxon being selected. Reported by Michael
+	Burstert.
+
+	The warning about `NA`s was also being issued even if
+	`na.rm = TRUE` was used. Now fixed.
+
+	* Streamlined some of the documentation to avoid runnning the same
+	code many times.
+
+	* plot.sppResponse: accepts a logical vector for argument `which`.
+
+	* wa: now warns if species with no information are removed from
+	the analysis, which proceeds as it always has.
+
+Version 0.11-3
+
+	* chooseTaxa: new argument `value` controls whether the data for
+	the selected species or a logical vector indicating which columns
+	(species) met the selection criteria.
+
+	New argument `na.rm = FALSE` to control whether or not `NA`s are
+	excluded from the calculation of abundance and occurrence. Suggested
+	by Michael Burstert.
+
+	* scores.prcurve: now preserves the rownames on the `lambda`
+	component.
+
+	* sppResponse: new generic function for species responses along
+	gradients. A method is provided for objects of class "prcurve"
+	is the only available method currently. A `plot()` method for
+	`sppResponse()` objects is also provided.
+
+	* rankDC: new function to compute the rank correlation between
+	gradient distances (e.g. environmental variables) and distances
+	in species composition. Has both base and Lattice graphics plot
+	methods (the latter via `dotplot()`).
+
+	* Stratiplot: new arguments `labelAt` and `labelRot` allow the
+	placement and rotation variable labels to be controlled, when not
+	using a strip.
+
+Version 0.11-2
+
+	* timetrack: plot method now allows plotting of "lc" or "wa"
+	site scores for the base ordination. The latter is the default
+	to maintain backwards compatability.
+
+	The `formula` argument was not well implemented; using it would
+	mean that `X`, the main species data, would not be transformed,
+	and you couldn't use direct variables as these would not be found.
+
+	Now `formula` takes a one-sided formula describing the constraints.
+	Variables will be looked up inside the object passed to `env`. As
+	such, `env` needs to be a data frame or an object accepted as the
+	`data` argument in `model.frame()`.
+
+	The `fitted` method has changed slightly. The `type` argument
+	has been renamed `which`.
+
+	* scores: new methods for objects of class "timetrack" and
+	class "prcurve".
+
+	* analog: gains a method for objects of class "distance".
+
+	* distance: gains a new attribute ('type') which contains an
+	indicator of whether the distance matrix is symmetric (computed
+	on a single matrix) or asymmetric (dissimilarities between samples
+	of two matrices).
+
+	* distanceX: experimental replacement for distance() which uses
+	fast C code for computing dissimilarities via a .Call interface
+	based on base::dist().
+
+	Currently only the single matrix code has an R interface and
+	`method = "mixed"` is not hooked up at the moment. It is intended
+	that the next version of analogue (0.12-x) will have this version
+	of the code replace the old mainly R-based distance().
+
+	* predict.wa: deshrinking step sometimes produced a 1 column
+	matrix, which would result in an error. This empty dimension is
+	now dropped.
+
+Version 0.11-1
+
+	* scores.prcurve: new function to extract "axis" scores for
+	samples on the fitted principal curve.
+
+	* lines.prcurve: new lower-level plotting function allows
+	a fitted principal curve to be added to an existing PCA
+	plot.
+
+	* prcurve, smoothSpline: `prcurve` now returns a component
+	`smooths`, a list containing the fitted smoothers, one per
+	variable. As a result `smoothSpline` now also returns the
+	fitted `smooth.spline` model.
+
+	* gradientDist: the "prcurve" method was ordering the samples
+	such that they were smooth. No need for the `order` argument
+	now either.
+
+	* Namespace: simplified the import from lattice. Added more
+	imports from grid as this package no-longer in Dependencies.
+
+	* Dependencies: grid moved to Imports:
+
+	* distx.c: Uninitialised variable use reported on MacOS X under
+	the clang compiler. Reported by Brian Ripley.
+
+	* Maintainer: Updated the maintainer email address.
+
+Version 0.11-0
+
+	* timetrack: fitted method gains argument `choices` with
+	default `1:2` for extracting the ordinary or passive
+	samples scores on `choices` axes. `plot` method can now draw
+	the passive samples as a line, points or both. The `plot`
+	method also gains an argument `order` that can be used to
+	reorder the passive samples into correct temporal ordering.
+
+	* Dependencies: MASS and mgcv moved from Depends: to Imports:
+	reflecting the relatively light use of functions from these
+	packages in analogue. The functions needed are imported in
+	analogue's NAMESPACE file.
+
+	* Tests: code in wa() generates slightly different results
+	under R 3.0.0 (to be). Differences are in the 8th or 9th
+	decimal place so irrelevant, but I was using the reference
+	output for the examples was checking to that level of precision.
+	For tests only, the Example in ?wa uses options(digits = 5).
+
 Version 0.10-0
 
 	* Release: Version 0.9-11 plus a minor documentation fix

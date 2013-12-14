@@ -237,6 +237,8 @@ double xx_chi_distance(double *x, int nr, int nc, int i1, int i2)
     
     count = 0;
     dist = 0.0;
+    nomin = 0.0;
+
     for (j=0; j<nc; j++) {
 	if (R_FINITE(x[i1]) && R_FINITE(x[i2])) {
 	    dev = x[i1] - x[i2];
@@ -315,7 +317,7 @@ double xx_alt_gower(double *x, int nr, int nc, int i1, int i2)
 
 /* Driver */
 
-static double (*distfun)(double*, int, int, int, int);
+static double (*xx_distfun)(double*, int, int, int, int);
 
 void xx_distance(double *x, int *nr, int *nc, double *d, 
 		 int *diag, int *method)
@@ -323,47 +325,48 @@ void xx_distance(double *x, int *nr, int *nc, double *d,
     int dc, i, j, ij;
     switch(*method) {
     case EUCLIDEAN:
-	distfun = xx_euclidean;
+	xx_distfun = xx_euclidean;
 	break;
     case SQEUCLIDEAN:
-	distfun = xx_sq_euclidean;
+	xx_distfun = xx_sq_euclidean;
 	break;
     case CHORD:
-	distfun = xx_chord;
+	xx_distfun = xx_chord;
 	break;
     case SQCHORD:
-	distfun = xx_sq_chord;
+	xx_distfun = xx_sq_chord;
 	break;
     case BRAY:
-	distfun = xx_bray;
+	xx_distfun = xx_bray;
 	break;
     case CHISQUARE:
-	distfun = xx_chi_square;
+	xx_distfun = xx_chi_square;
 	break;
     case SQCHISQUARE:
-	distfun = xx_sq_chi_square;
+	xx_distfun = xx_sq_chi_square;
 	break;
     case INFORMATION:
-	distfun = xx_information;
+	xx_distfun = xx_information;
 	break;
     case MANHATTAN:
-	distfun = xx_manhattan;
+	xx_distfun = xx_manhattan;
 	break;
     case GOWER:
-	distfun = xx_gower;
+	xx_distfun = xx_gower;
 	break;
     case ALTGOWER:
-	distfun = xx_alt_gower;
+	xx_distfun = xx_alt_gower;
 	break;
     default:
 	error("Unknown distance in the internal C function");
     }
     
     dc = (*diag) ? 0 : 1;
+
     ij = 0;
     for (j=0; j <= *nr; j++)
 	for (i=j+dc; i < *nr; i++) {
-	    d[ij++] = distfun(x, *nr, *nc, i, j);
+	    d[ij++] = xx_distfun(x, *nr, *nc, i, j);
 	}
 }
 
@@ -403,16 +406,17 @@ double xx_KENDALL(double *x, int nr, int nc, int i1, int i2,
     return dist;
 }
 
-void xx_kendall(double *x, int *nr, int *nc, double *d, 
-		double *maxi)
+void xx_kendall(double *x, int *nr, int *nc, double *d,
+		int *diag, double *maxi)
 {
-    int i, j, ij;
-    
+    int dc, i, j, ij;
+  
+    dc = (*diag) ? 0 : 1;
     ij = 0;
     for(j=0; j <= *nr; j++) {
-	for(i=0; i < *nr; i++) {
+        for(i=j+dc; i < *nr; i++) {
 	    d[ij++] = xx_KENDALL(x, *nr, *nc, i, j, maxi); 
-	}
+        }
     }
 }
 
@@ -449,9 +453,9 @@ double xx_CHISQ_DIST(double *x, int nr, int nc, int i1, int i2,
 }
 
 void xx_chisq_dist(double *x, int *nr, int *nc, double *d, 
-		   double *csum)
+		   int *diag, double *csum)
 {
-    int i, j, k, ij;
+    int dc,i, j, k, ij;
     double ccsum;
 
     ccsum = 0.0;
@@ -462,8 +466,10 @@ void xx_chisq_dist(double *x, int *nr, int *nc, double *d,
 	ccsum += csum[k];
     }
 
+    dc = (*diag) ? 0 : 1;
+
     for(j=0; j < *nr; j++) {
-	for(i=0; i < *nr; i++) {
+	for(i=j+dc; i < *nr; i++) {
 	    d[ij++] = xx_CHISQ_DIST(x, *nr, *nc, i, j, 
 				    csum, ccsum);
 	}
@@ -490,93 +496,100 @@ double xx_MIXED(double *x, int nr, int nc, int i1, int i2,
 		int *vtype, double *weights, double *R, 
 		double wsum)
 {
-    double dist, dev;
-    int count, j;
-    
-    count = 0;
-    dist = 0.0;
-    wsum = 0.0;
-
-    for (j=0; j<nc; j++) {
-	if (R_FINITE(x[i1]) && R_FINITE(x[i2])) {
-	    if(vtype[j] == 1) {
-		dev = (x[i1] == x[i2]) ? 1 : 0;
-		dist += dev * weights[j];
-	    }
-	    if(vtype[j] == 2) { // Asymmetric binary
-		    /*dev = (x[i1] == x[i2]) ? 1 : 0;
-		      dist += dev * weights[j]; */
-		    if((x[i1] != 0) || (x[i2] != 0)) {
-			    // both x1 and x2 not zero for this variables
-			    dev = (x[i1] == x[i2]) ? 1 : 0;
-			    dist += dev * weights[j];
-		    } else {
-			    /* set jth current weight to zero and do not
-			       increment dist as ignoring double zero
-			       We actually subtract the weight as it gets added
-			       later on.
-			    */
-			    wsum -= weights[j];
-		    }
-	    }
-	    if(vtype[j] == 3) { // Nominal
-		dev = (x[i1] == x[i2]) ? 1 : 0;
-		dist += dev * weights[j];
-	    }
-	    if(vtype[j] == 4) { // Ordinal
-		/* ordinal data currently handled as Nominal */
-		dev = (x[i1] == x[i2]) ? 1 : 0;
-		dist += dev * weights[j];
-		break;
-	    }
-	    if(vtype[j] == 5) {
-		dev = 1 - (fabs(x[i1] - x[i2]) / R[j]);
-		dist += dev * weights[j];
-	    }
-	    count++;
-	    // only summing weights for non-NA comparisons
-	    wsum += weights[j];
+  double dist, dev;
+  int count, j;
+  
+  count = 0;
+  dist = 0.0;
+  wsum = 0.0;
+  
+  for (j=0; j<nc; j++) {
+    if (R_FINITE(x[i1]) && R_FINITE(x[i2])) {
+      // Symmetric binary
+      if(vtype[j] == 1) {
+	dev = (x[i1] == x[i2]) ? 1 : 0;
+	dist += dev * weights[j];
+      }
+      // Asymmetric binary
+      if(vtype[j] == 2) {
+	if((x[i1] != 0) || (x[i2] != 0)) {
+	  // both x1 and x2 not zero for this variables
+	  dev = (x[i1] == x[i2]) ? 1 : 0;
+	  dist += dev * weights[j];
+	} else {
+	  /* set jth current weight to zero and do not
+	     increment dist as ignoring double zero
+	     We actually subtract the weight as it gets added
+	     later on.
+	  */
+	  wsum -= weights[j];
 	}
-	i1 += nr;
-	i2 += nr;
+      }
+      // Nominal
+      if(vtype[j] == 3) {
+	dev = (x[i1] == x[i2]) ? 1 : 0;
+	dist += dev * weights[j];
+      }
+      // Ordinal
+      if(vtype[j] == 4) {
+	/* ordinal data currently handled as Nominal */
+	dev = (x[i1] == x[i2]) ? 1 : 0;
+	dist += dev * weights[j];
+	break;
+      }
+      // Quantitative
+      if(vtype[j] == 5) {
+	dev = 1 - (fabs(x[i1] - x[i2]) / R[j]);
+	dist += dev * weights[j];
+      }
+      count++;
+      // only summing weights for non-NA comparisons
+      wsum += weights[j];
     }
-    if (count == 0) return NA_REAL;
-    return 1 - (dist / wsum);
+    i1 += nr;
+    i2 += nr;
+  }
+  if (count == 0) return NA_REAL;
+  return 1 - (dist / wsum);
 }
 
+/*
 double xx_calcTI(double *x, double *y, int nr1, int nr2, int nc, int i1, int i2)
 {
-    int k;
-    double ti;
+int k;
+double ti;
 
-    ti = 0.0;
+ti = 0.0;
 
-    for (k=0; k<nc; k++) {
-	ti += (x[i1] == y[i2]) ? 1.0 : 0.0;
-	i1 += nr1;
-	i2 += nr2;
-    }
-    return ti;
+for (k=0; k<nc; k++) {
+ti += (x[i1] == y[i2]) ? 1.0 : 0.0;
+i1 += nr1;
+i2 += nr2;
 }
+return ti;
+}
+*/
 
 void xx_mixed(double *x, int *nr, int *nc, double *d, 
-	      int *vtype, double *weights, double *R)
+	      int *diag, int *vtype, double *weights, double *R)
 {
-	int i, j, k, ij;
-	double wsum;
-	
-	wsum = 0.0;
-	
-	ij = 0;
-	
-	for(k=0; k <*nc; k++) {
-		wsum += weights[k];
+    int dc, i, j, k, ij;
+    double wsum;
+    
+    wsum = 0.0;
+    
+    ij = 0;
+    
+    for(k=0; k <*nc; k++) {
+        wsum += weights[k];
+    }
+
+    dc = (*diag) ? 0 : 1;
+
+    for(j=0; j < *nr; j++) {
+        for(i=j+dc; i < *nr; i++) {
+	  d[ij++] = xx_MIXED(x, *nr, *nc, i, j, vtype,
+			     weights, R, wsum);
 	}
-	
-	for(j=0; j < *nr; j++) {
-		for(i=0; i < *nr; i++) {
-			d[ij++] = xx_MIXED(x, *nr, *nc, i, j, vtype,
-					   weights, R, wsum);
-		}
-	}
+    }
 }
