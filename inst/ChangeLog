@@ -1,5 +1,91 @@
 analogue Change Log
 
+Version 0.13-6
+
+	* Plot3d: new name for the previous `plot3d.prcurve()` method.
+	Renamed to avoid having to export a method from the namespace,
+	which allows **rgl** to be relegated to Suggests.
+
+	* plot3d.prcurve: deprecated this S3 method and removed **rgl**
+	from the package dependencies. **rgl** is now in Suggests, which
+	means it is not needed to install the package. This seems to be
+	causing some problems for Mac OS users.
+
+	* evenSample: new function returns the number of samples per
+	gradient segment. Has a `plot()` method.
+
+	* Pollen, Biome, Location, Climate: data sets from the North
+	American Modern Pollen Database updated to version 1.7.3.
+
+	* Imports: lattice moved from Depends to Imports. analogue now
+	exports the generics densityplot, dotplot, and histogram imported
+	from the lattice namespace.
+
+Version 0.13-5
+
+	* n2: new utility function to compute Hill's N2 for sites
+	or species.
+
+	* optima: added bootstrap estimates of species WA optima.
+
+	* roc: fix a bug in the computation of AUC from the U statistic.
+
+Version 0.13-4 13 Feb 2014
+
+	* crossval.pcr: Fixed a number of bugs in the method for PCR
+	related to k-fold cross validation, which were causing errors.
+
+	Fix the verbose printing of the progress bar, which would reset
+	between repeats in k-fold CV.
+
+	* predict.pcr: would set argument `ncomp` incorrectly (in the
+	wrong form) if not supplied.
+
+	* performance.crossval: A new method for objects of class
+	`"crossval"`.
+
+	* ChiSquare: Wasn't returning the list it created including
+	transformation parameters.
+
+Version 0.13-3 Opened 11 Feb 2014
+
+	* timetrack: A number of additions added and improvements made:
+
+		o New `predict()` method allows additional passive points
+		  to be located in the timetrack space.
+
+		o New `points()` method to allow drawing of points for
+		  training or passive samples on an existing plot.
+
+		o The `plot()` method can now suppress plotting of all
+		  points, for a clean canvas with axes/labelling ready to
+		  accept additional plotting function calls.
+
+	These changes were made following a query by Andrew Medeiros.
+
+Version 0.13-2 Opened 1 Jan 2014
+
+	* prcurve: uses `dev.hold()` & `dev.flush()` to smooth graphics
+	flicker during fitting with `plotit = TRUE`,
+
+Version 0.13-1 Opened 24 December 2013
+
+	* plot3d.prcuve: was not using the `data` & `ordination` objects
+	stored within the fitted `prcurve` object.
+
+Version 0.13-0 Development branch opened 16 December 2013
+
+	* predict.pcr: internal function was calling `fitPCR()` via
+	`analogue:::fitPCR()`, which is not required nor was it intended.
+	Reported by Brian Ripley.
+
+	* predict.prcurve: new function to predict locations on the curve
+	for new observations on the same set of variables. Useful for
+	adding passive species.
+
+	* fitted.prcurve: new function to return the fitted locations on
+	the principal curve or the fitted values of the response.
+
 Version 0.12-0
 
 	* Released to CRAN December 13th 2013

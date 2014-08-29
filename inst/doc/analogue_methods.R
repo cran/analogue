@@ -38,7 +38,7 @@ swap.mat <- mat(swapdiat, swappH, method = "SQchord")
 
 
 ###################################################
-### code chunk number 7: analogue_methods.Rnw:167-168
+### code chunk number 7: analogue_methods.Rnw:134-135
 ###################################################
 swap.mat
 
@@ -64,7 +64,7 @@ getK(swap.mat)
 
 
 ###################################################
-### code chunk number 11: analogue_methods.Rnw:201-202
+### code chunk number 11: analogue_methods.Rnw:168-169
 ###################################################
 opar <- par(mfrow = c(2,2))
 plot(swap.mat)
@@ -85,7 +85,7 @@ reconPlot(rlgh.mat, use.labels = TRUE, ylab = "pH", xlab = "Depth (cm.)")
 
 
 ###################################################
-### code chunk number 14: analogue_methods.Rnw:226-227
+### code chunk number 14: analogue_methods.Rnw:193-194
 ###################################################
 reconPlot(rlgh.mat, use.labels = TRUE, ylab = "pH", xlab = "Depth (cm.)")
 
@@ -103,7 +103,7 @@ plot(rlgh.mdc, use.labels = TRUE, xlab = "Depth (cm.)")
 
 
 ###################################################
-### code chunk number 17: analogue_methods.Rnw:248-249
+### code chunk number 17: analogue_methods.Rnw:215-216
 ###################################################
 plot(rlgh.mdc, use.labels = TRUE, xlab = "Depth (cm.)")
 
@@ -124,7 +124,7 @@ swap.cma
 
 
 ###################################################
-### code chunk number 20: analogue_methods.Rnw:278-279
+### code chunk number 20: analogue_methods.Rnw:245-246
 ###################################################
 cma(swap.ana, cutoff = 0.5)
 
@@ -136,7 +136,7 @@ plot(swap.cma)
 
 
 ###################################################
-### code chunk number 22: analogue_methods.Rnw:293-294
+### code chunk number 22: analogue_methods.Rnw:260-261
 ###################################################
 plot(swap.cma)
 
@@ -148,7 +148,7 @@ plot(dissim(swap.ana))
 
 
 ###################################################
-### code chunk number 24: analogue_methods.Rnw:310-311
+### code chunk number 24: analogue_methods.Rnw:277-278
 ###################################################
 plot(dissim(swap.ana))
 
@@ -175,7 +175,7 @@ RMSEP(swap.boot, type = "standard")
 
 
 ###################################################
-### code chunk number 28: analogue_methods.Rnw:362-364
+### code chunk number 28: analogue_methods.Rnw:329-331
 ###################################################
 getK(swap.boot)
 setK(swap.mat) <- getK(swap.boot)
@@ -204,7 +204,7 @@ par(opar)
 
 
 ###################################################
-### code chunk number 32: analogue_methods.Rnw:403-404
+### code chunk number 32: analogue_methods.Rnw:370-371
 ###################################################
 opar <- par(mfrow = c(2,2))
 plot(swap.roc)
@@ -212,7 +212,7 @@ par(opar)
 
 
 ###################################################
-### code chunk number 33: analogue_methods.Rnw:472-474
+### code chunk number 33: analogue_methods.Rnw:439-441
 ###################################################
 dists1 <- distance(swapdiat, method = "bray")
 dists2 <- distance(swapdiat, rlgh, method = "bray")
@@ -228,14 +228,14 @@ reconPlot(rlgh.boot, use.labels = TRUE, ylab = "pH", xlab = "Depth (cm.)",
 
 
 ###################################################
-### code chunk number 35: analogue_methods.Rnw:501-503
+### code chunk number 35: analogue_methods.Rnw:468-470
 ###################################################
 reconPlot(rlgh.boot, use.labels = TRUE, ylab = "pH", xlab = "Depth (cm.)",
           display.error = "bars", predictions = "bootstrap")
 
 
 ###################################################
-### code chunk number 36: analogue_methods.Rnw:513-519
+### code chunk number 36: analogue_methods.Rnw:480-486
 ###################################################
 set.seed(1234)
 want <- sample(1:nrow(swapdiat), 67, replace = FALSE)
@@ -255,7 +255,7 @@ test.boot
 
 
 ###################################################
-### code chunk number 38: analogue_methods.Rnw:537-543
+### code chunk number 38: analogue_methods.Rnw:504-510
 ###################################################
 set.seed(9876)
 want <- sample(nrow(test), 40)
@@ -273,7 +273,7 @@ opti.boot
 
 
 ###################################################
-### code chunk number 40: analogue_methods.Rnw:556-559
+### code chunk number 40: analogue_methods.Rnw:523-526
 ###################################################
 use.k <- getK(opti.boot, prediction = TRUE, which = "model")
 test.boot <- bootstrap(train.mat, newdata = test, newenv = test.env, k = use.k, n.boot = 100)
@@ -298,7 +298,7 @@ plot(swap.mat, which = 1)
 
 
 ###################################################
-### code chunk number 43: analogue_methods.Rnw:596-597
+### code chunk number 43: analogue_methods.Rnw:563-564
 ###################################################
 plot(swap.mat, which = 1)
 
@@ -310,7 +310,7 @@ plot(swap.mat, which = 2)
 
 
 ###################################################
-### code chunk number 45: analogue_methods.Rnw:614-615
+### code chunk number 45: analogue_methods.Rnw:581-582
 ###################################################
 plot(swap.mat, which = 2)
 
@@ -322,7 +322,7 @@ screeplot(swap.boot)
 
 
 ###################################################
-### code chunk number 47: analogue_methods.Rnw:632-633
+### code chunk number 47: analogue_methods.Rnw:599-600
 ###################################################
 screeplot(swap.boot)
 

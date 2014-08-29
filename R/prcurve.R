@@ -23,7 +23,7 @@ prcurve <- function(X,
                     ## latent = FALSE,
                     ...) {
     ## X should be a matrix, attempt to coerce
-    if(!isTRUE(all.equal(class(X), "matrix")))
+    if(!isTRUE(inherits(X, "matrix")))
         X <- data.matrix(X)
     ## set/select default method for starting configuration
     if(missing(method))
@@ -134,9 +134,11 @@ prcurve <- function(X,
         if(plotit) {
             ## plot the iteration -- need to add some components
             ## because of changes to plot method
+            dev.hold()
             config$data <- X
             config$ordination <- ord
             plot(config, sub = paste("Iteration:", iter))
+            dev.flush()
         }
         if (trace)
             writeLines(sprintf(paste("Iteration %",
@@ -175,9 +177,11 @@ prcurve <- function(X,
         if(plotit) {
             ## plot the iteration -- need to add some components
             ## because of changes to plot method
+            dev.hold()
             config$data <- X
             config$ordination <- ord
             plot(config)
+            dev.flush()
         }
         if (trace)
             writeLines(sprintf(paste("Iteration %", max(3, nchar(maxit)),
@@ -208,6 +212,7 @@ prcurve <- function(X,
     config$call <- match.call()
     config$ordination <- ord
     config$data <- X
+    config$stretch <- stretch
     class(config) <- c("prcurve")
     config
 }

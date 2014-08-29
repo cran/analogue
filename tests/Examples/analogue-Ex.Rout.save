@@ -1,6 +1,6 @@
 
-R version 3.0.2 Patched (2013-09-26 r64005) -- "Frisbee Sailing"
-Copyright (C) 2013 The R Foundation for Statistical Computing
+R version 3.1.1 Patched (2014-07-11 r66127) -- "Sock it to Me"
+Copyright (C) 2014 The R Foundation for Statistical Computing
 Platform: x86_64-unknown-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -25,8 +25,7 @@ Loading required package: vegan
 Loading required package: permute
 Loading required package: lattice
 This is vegan 2.0-10
-Loading required package: rgl
-This is analogue 0.12-0
+This is analogue 0.14-0
 > 
 > base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
 > cleanEx()
@@ -870,7 +869,8 @@ Merged:      268  277
 > 
 > ## fit the ROC curve to the SWAP diatom data using the AM results
 > ## Generate a grouping for the SWAP lakes
-> clust <- hclust(as.dist(swap.ana$train), method = "ward")
+> METHOD <- if (getRversion() < "3.1.0") {"ward"} else {"ward.D"}
+> clust <- hclust(as.dist(swap.ana$train), method = METHOD)
 > grps <- cutree(clust, 12)
 > 
 > ## fit the ROC curve
@@ -883,7 +883,7 @@ Discrimination for all groups:
 
 Optimal Dissimilarity = 0.575 
 
-AUC = 0.998, p-value: < 2.22e-16
+AUC = 0.974, p-value: < 2.22e-16
 No. within: 167   No. outside: 1837 
 
 > 
@@ -1751,6 +1751,136 @@ Samples:
 > 
 > 
 > cleanEx()
+> nameEx("compare")
+> ### * compare
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: compare
+> ### Title: Compare proxies across two data sets
+> ### Aliases: compare compare.default
+> ### Keywords: methods utility multivariate
+> 
+> ### ** Examples
+> 
+> data(ImbrieKipp, V12.122, SumSST)
+> compare(ImbrieKipp, V12.122, env = SumSST, ordination = "rda",
++         method = "chord")
+     sumMissing sumPoorOpt closestSamp    residLen
+0       0.00000    0.00000    29.59716 0.010717787
+10      0.00000    0.00000    29.61441 0.009989434
+20      0.00000    0.00000    29.58298 0.010953126
+30      0.00000    0.00000    29.58222 0.010089393
+40      0.00000    0.00000    29.59011 0.009327773
+50      0.00000    0.00000    29.55510 0.012228059
+60      0.00000    0.00000    29.55327 0.012334105
+70      0.00000    0.00000    29.57941 0.009735344
+80      0.00000    0.00000    29.57753 0.010859718
+90      0.00000    0.00000    29.62131 0.007153104
+100     0.00000    0.00000    29.59295 0.009704870
+110     0.00000    0.00000    29.61307 0.008160655
+120     0.00000    0.00000    29.58028 0.010827828
+130     0.00000    0.00000    29.59806 0.008783710
+140     0.00000    0.00000    29.57575 0.010405838
+150     0.00000    0.00000    29.57993 0.009766353
+160     0.00000    0.00000    29.58973 0.008887931
+170     0.00000    0.00000    29.57477 0.011110512
+180     0.00000    0.00000    29.62846 0.007905512
+190     0.00000    0.00000    29.63626 0.008081606
+200     0.00000    0.00000    29.63644 0.007634544
+210     0.00000    0.00000    29.62998 0.008420406
+220     0.00505    0.00505    29.65149 0.007723118
+230     0.00474    0.00474    29.64031 0.008275553
+240     0.00000    0.00000    29.66013 0.007703899
+250     0.00524    0.00524    29.62841 0.007338231
+260     0.00000    0.00000    29.64737 0.007140425
+270     0.01852    0.01852    29.68784 0.005687661
+280     0.01724    0.01724    29.64892 0.006941941
+290     0.00518    0.00518    29.65070 0.007122685
+300     0.00000    0.00000    29.61796 0.007933554
+310     0.00495    0.00495    29.65344 0.005786560
+320     0.00000    0.00000    29.59382 0.009116835
+330     0.00000    0.00000    29.61592 0.006353057
+340     0.00000    0.00000    29.59328 0.008597536
+350     0.00000    0.00000    29.62601 0.007367289
+360     0.00000    0.00000    29.58535 0.010685638
+370     0.00000    0.00000    29.62245 0.008814375
+380     0.00422    0.00422    29.63741 0.008133057
+390     0.00000    0.00000    29.60813 0.008884824
+400     0.00467    0.00467    29.60691 0.007354769
+410     0.00000    0.00000    29.63388 0.009211841
+420     0.00000    0.00000    29.60942 0.009856581
+430     0.00966    0.00966    29.61615 0.009637343
+440     0.00649    0.00649    29.61936 0.008311455
+450     0.00741    0.00741    29.65269 0.007499648
+460     0.00000    0.00000    29.64589 0.007653134
+470     0.00000    0.00000    29.60071 0.008713360
+480     0.00000    0.00000    29.58647 0.009003201
+490     0.00000    0.00000    29.65092 0.007571722
+500     0.00000    0.00000    29.62015 0.009442010
+510     0.00000    0.00000    29.65456 0.006723777
+520     0.00000    0.00000    29.61925 0.007740763
+530     0.00800    0.00800    29.55988 0.011081269
+540     0.00543    0.00543    29.53572 0.012583966
+550     0.00000    0.00000    29.61118 0.006235741
+560     0.00000    0.00000    29.62794 0.006508411
+570     0.00000    0.00000    29.61558 0.006786947
+580     0.00000    0.00000    29.60942 0.007104210
+590     0.00000    0.00000    29.58392 0.010732812
+600     0.00000    0.00000    29.64794 0.006227589
+610     0.00000    0.00000    29.65351 0.006776688
+620     0.01478    0.01478    29.66524 0.005498646
+630     0.00671    0.00671    29.63843 0.006650115
+640     0.00000    0.00000    29.65057 0.006772370
+650     0.00719    0.00719    29.64611 0.006924435
+660     0.00000    0.00000    29.61538 0.007776705
+670     0.00617    0.00617    29.61486 0.008587976
+680     0.03015    0.03015    29.65654 0.007273772
+690     0.00000    0.00000    29.61081 0.010065633
+700     0.00000    0.00000    29.62900 0.007623946
+710     0.00000    0.00000    29.62772 0.008854370
+720     0.00000    0.00000    29.63361 0.007300729
+730     0.02174    0.02174    29.66599 0.006393351
+740     0.00535    0.00535    29.63834 0.006951244
+750     0.02532    0.02532    29.65012 0.006350255
+760     0.02050    0.02050    29.62643 0.007739255
+770     0.01190    0.01190    29.60128 0.010976789
+780     0.05362    0.05362    29.68196 0.007120291
+790     0.02602    0.02602    29.65471 0.008157727
+800     0.02090    0.02090    29.64507 0.007953222
+810     0.02756    0.02756    29.64670 0.006978752
+820     0.02106    0.02106    29.66631 0.004877637
+830     0.03572    0.03572    29.63650 0.006206497
+840     0.00957    0.00957    29.60969 0.007858339
+850     0.00858    0.00858    29.64550 0.006768174
+860     0.00308    0.00308    29.60779 0.008545812
+870     0.00658    0.00658    29.57878 0.011732939
+880     0.00000    0.00000    29.62335 0.007315723
+890     0.00338    0.00338    29.62378 0.005181313
+900     0.00000    0.00000    29.60686 0.007292905
+910     0.00000    0.00000    29.58209 0.008350816
+920     0.00348    0.00348    29.61948 0.007604988
+930     0.00508    0.00508    29.63927 0.007068426
+940     0.00985    0.00985    29.61894 0.008133211
+950     0.00735    0.00735    29.64179 0.007309983
+960     0.01210    0.01210    29.59823 0.009136771
+970     0.01493    0.01493    29.57890 0.009919157
+980     0.00000    0.00000    29.60641 0.008236236
+990     0.00000    0.00000    29.63809 0.006757469
+1000    0.00000    0.00000    29.63248 0.006815332
+1010    0.00000    0.00000    29.65252 0.005490630
+1020    0.00000    0.00000    29.63384 0.005174208
+1030    0.00000    0.00000    29.61341 0.006255757
+1040    0.00000    0.00000    29.60268 0.006851327
+1050    0.00000    0.00000    29.62339 0.006551518
+1060    0.00000    0.00000    29.65691 0.005359522
+1070    0.00000    0.00000    29.60088 0.006868555
+1080    0.00559    0.00559    29.64297 0.006542620
+1090    0.00000    0.00000    29.61947 0.006756146
+> 
+> 
+> 
+> cleanEx()
 > nameEx("crossval")
 > ### * crossval
 > 
@@ -1758,7 +1888,7 @@ Samples:
 > 
 > ### Name: crossval
 > ### Title: Cross-validation of palaeoecological transfer function models
-> ### Aliases: crossval crossval.wa print.crossval predWA predWAT
+> ### Aliases: crossval crossval.wa crossval.pcr print.crossval
 > ### Keywords: methods
 > 
 > ### ** Examples
@@ -1800,7 +1930,7 @@ Method: LOO
 1 0.90028 -0.013652 -4.5985 2.2179     NA NA NA
 > 
 > ## k-fold CV (k == 10)
-> cv.kfold <- crossval(mod, kfold = 10, folds = 1, method = "kfold")
+> cv.kfold <- crossval(mod, method = "kfold", kfold = 10, folds = 1)
 > cv.kfold
 	Model Cross-validation:
 
@@ -1814,7 +1944,7 @@ No. of folds: 1
 1 0.90107 0.0070881 -4.4826 2.2102     NA NA NA
 > 
 > ## n k-fold CV (k == 10, n = 10)
-> cv.nkfold <- crossval(mod, kfold = 10, folds = 10, method = "kfold")
+> cv.nkfold <- crossval(mod, method = "kfold", kfold = 10, folds = 10)
 > cv.nkfold
 	Model Cross-validation:
 
@@ -1827,43 +1957,86 @@ No. of folds: 10
       R2    avgBias maxBias  RMSEP RMSEP2      s1     s2
 1 0.9009 -0.0095555 -4.4787 2.2111 2.2203 0.20205 2.2111
 > 
-> ## bootstrap with 250 bootstrap samples
-> cv.boot <- crossval(mod, method = "bootstrap", nboot = 250)
+> ## bootstrap with 100 bootstrap samples
+> cv.boot <- crossval(mod, method = "bootstrap", nboot = 100)
 > cv.boot
 	Model Cross-validation:
 
-crossval(obj = mod, method = "bootstrap", nboot = 250)
+crossval(obj = mod, method = "bootstrap", nboot = 100)
 
 Method: bootstrap
-No. Bootstraps: 250
+No. Bootstraps: 100
 
        R2   avgBias maxBias  RMSEP RMSEP2      s1     s2
-1 0.90058 -0.024041 -4.6388 2.2154  2.268 0.48544 2.2154
+1 0.89898 -0.055311 -4.8169 2.2338  2.285 0.48114 2.2338
 > 
 > ## extract fitted values and residuals
 > fitted(cv.boot)
- [1]  4.059474  3.512224  4.043551  3.941855  8.396231  9.231595  2.978492
- [8] 14.638811 14.592184 17.022299 16.086831 19.009756 18.618335 18.704197
-[15] 17.529793 20.658284 19.957867 19.897079 18.675342 22.961249 22.410862
-[22] 20.754714 22.445923 22.070197 21.436109 23.397509 23.355480 22.821434
-[29] 24.245662 25.693952 25.521378 23.244859 23.639174 22.991198 24.522527
-[36] 25.382445 25.780077 26.326678 24.034737 25.479643 26.315235 25.836728
-[43] 26.758383 26.435854 26.134603 25.703454 25.866838 26.344534 26.814951
-[50] 26.766758 26.789727 26.010655 26.919888 26.799625 26.435941 26.024368
-[57] 26.619740 27.197733 26.772632 26.929916 26.818910
+ [1]  4.119975  3.530722  3.955451  3.910994  8.401368  9.354911  3.043464
+ [8] 14.816874 14.432710 17.077844 16.121631 19.108131 18.718219 18.861796
+[15] 17.557246 20.697800 19.956844 20.059232 18.657255 23.017531 22.492660
+[22] 20.847321 22.533473 22.076781 21.419312 23.500948 23.372827 22.890145
+[29] 24.292602 25.713317 25.518983 23.321790 23.724287 23.019422 24.571983
+[36] 25.420092 25.824666 26.335258 24.046304 25.480527 26.321834 25.839000
+[43] 26.764327 26.437182 26.169108 25.733600 25.853777 26.329405 26.829482
+[50] 26.703907 26.864403 26.001962 26.936604 26.820792 26.466440 26.039658
+[57] 26.606546 27.229268 26.761941 26.938834 26.823182
 > resid(cv.boot)
- [1] -2.05947366  1.48777625  1.45644862  3.05814525 -1.39623149  1.26840545
- [7]  8.02150788 -4.63881094 -1.59218406 -5.02229850 -2.08683146 -4.50975596
-[13] -3.61833535 -4.20419667 -1.52979314 -2.65828422  0.04213292 -1.89707920
-[19]  0.32465829 -4.46124928 -0.91086197  0.24528647 -1.44592277  1.92980296
-[25]  2.56389076 -0.39750884  0.64452012  0.17856633 -1.24566234 -1.69395229
-[31] -0.52137763  2.75514138  2.36082622  3.00880154  0.47747342  0.61755476
-[37]  0.21992320 -1.82667759  2.96526290  0.72035748 -1.31523506  0.66327194
-[43] -0.55838265 -0.43585425 -0.13460251  1.29654604  1.13316236  1.15546621
-[49]  0.18504888  0.23324186  0.21027334  0.98934542  0.08011151  2.20037549
-[55]  2.06405926  1.47563233  0.88025973  0.30226739  0.22736763  0.07008432
-[61]  1.18109032
+ [1] -2.11997495  1.46927850  1.54454899  3.08900569 -1.40136781  1.14508924
+ [7]  7.95653648 -4.81687383 -1.43270981 -5.07784438 -2.12163085 -4.60813083
+[13] -3.71821936 -4.36179569 -1.55724615 -2.69779985  0.04315646 -2.05923196
+[19]  0.34274541 -4.51753089 -0.99265995  0.15267941 -1.53347325  1.92321865
+[25]  2.58068841 -0.50094761  0.62717280  0.10985520 -1.29260222 -1.71331668
+[31] -0.51898266  2.67821000  2.27571284  2.98057772  0.42801653  0.57990829
+[37]  0.17533363 -1.83525832  2.95369601  0.71947278 -1.32183430  0.66099987
+[43] -0.56432691 -0.43718235 -0.16910755  1.26640047  1.14622329  1.17059537
+[49]  0.17051766  0.29609301  0.13559703  0.99803814  0.06339552  2.17920772
+[55]  2.03355996  1.46034159  0.89345394  0.27073180  0.23805907  0.06116570
+[61]  1.17681753
 > 
+> ## Principal Components Regression
+> mpcr <- pcr(SumSST ~., data = ImbrieKipp, ncomp = 10)
+> crossval(mpcr, method = "kfold", kfold = 10, folds = 2, ncomp = 10)
+	Model Cross-validation:
+
+crossval(obj = mpcr, method = "kfold", ncomp = 10, folds = 2, 
+    kfold = 10)
+
+Method: kfold
+k: 10
+No. of folds: 2
+
+   comp      R2     avgBias maxBias  RMSEP RMSEP2      s1     s2
+1     1 0.93417 -0.06594066 -6.7033 2.5117 2.5526 0.45522 2.5117
+2     2 0.95327 -0.01632488 -5.3460 2.1208 2.1249 0.13128 2.1208
+3     3 0.95785 -0.01158445 -4.3149 2.0167 2.0221 0.14725 2.0167
+4     4 0.95763 -0.00576925 -4.0229 2.0217 2.0291 0.17311 2.0217
+5     5 0.95892 -0.00368902 -5.6606 1.9916 2.0111 0.27917 1.9916
+6     6 0.96063 -0.03985927 -5.0776 1.9507 1.9667 0.25049 1.9507
+7     7 0.95873  0.01335811 -4.3962 1.9977 2.0207 0.30368 1.9977
+8     8 0.96168  0.00048673 -4.8165 1.9259 1.9503 0.30728 1.9259
+9     9 0.96222 -0.04508615 -4.9545 1.9123 1.9446 0.35286 1.9123
+10   10 0.96126  0.02659237 -5.0612 1.9352 1.9652 0.34239 1.9352
+> 
+> crossval(mpcr, method = "bootstrap", nboot = 100, ncomp = 10)
+	Model Cross-validation:
+
+crossval(obj = mpcr, method = "bootstrap", ncomp = 10, nboot = 100)
+
+Method: bootstrap
+No. Bootstraps: 100
+
+   comp      R2    avgBias maxBias  RMSEP RMSEP2      s1     s2
+1     1 0.94904 -0.1197866 -6.4528 2.3511 2.8135 1.54527 2.3511
+2     2 0.95217  0.0042596 -5.3885 2.1464 2.2058 0.50835 2.1464
+3     3 0.95592 -0.0117201 -4.4598 2.0620 2.1423 0.58099 2.0620
+4     4 0.95586 -0.0331085 -4.3257 2.0637 2.1703 0.67179 2.0637
+5     5 0.95808 -0.0216407 -5.0249 2.0125 2.1439 0.73892 2.0125
+6     6 0.95873 -0.0367555 -4.7715 1.9972 2.1434 0.77781 1.9972
+7     7 0.95944 -0.0249644 -4.5656 1.9804 2.1369 0.80265 1.9804
+8     8 0.96102 -0.0236016 -4.5126 1.9423 2.1109 0.82659 1.9423
+9     9 0.96102 -0.0279639 -4.6421 1.9414 2.1234 0.86014 1.9414
+10   10 0.96189 -0.0382749 -4.5822 1.9200 2.1119 0.87962 1.9200
 > 
 > 
 > 
@@ -1875,7 +2048,7 @@ No. Bootstraps: 250
 > 
 > ### Name: densityplot.residLen
 > ### Title: Lattice density plot for residual lengths
-> ### Aliases: densityplot.residLen
+> ### Aliases: densityplot.residLen densityplot
 > ### Keywords: hplot methods
 > 
 > ### ** Examples
@@ -2376,6 +2549,25 @@ attr(,"type")
 > 
 > 
 > cleanEx()
+> nameEx("evenlySampled")
+> ### * evenlySampled
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: evenSample
+> ### Title: Number of samples per gradient segments
+> ### Aliases: evenSample
+> ### Keywords: utilities
+> 
+> ### ** Examples
+> 
+> data(SumSST)
+> ev <- evenSample(SumSST) ## not an even sample...
+> plot(ev)
+> 
+> 
+> 
+> cleanEx()
 > nameEx("fuse")
 > ### * fuse
 > 
@@ -2576,7 +2768,7 @@ Passive:      1.004 1.50 1.87 2.17 2.55
 > 
 > ### Name: histogram.residLen
 > ### Title: Lattice histogram plot for residual lengths
-> ### Aliases: histogram.residLen
+> ### Aliases: histogram.residLen histogram
 > ### Keywords: hplot methods
 > 
 > ### ** Examples
@@ -3340,7 +3532,8 @@ Merged:      268  277
 > 
 > ## fit the ROC curve to the SWAP diatom data using the AM results
 > ## Generate a grouping for the SWAP lakes
-> clust <- hclust(as.dist(swap.ana$train), method = "ward")
+> METHOD <- if (getRversion() < "3.1.0") {"ward"} else {"ward.D"}
+> clust <- hclust(as.dist(swap.ana$train), method = METHOD)
 > grps <- cutree(clust, 6)
 > 
 > ## fit the logit models to the analog object
@@ -4087,6 +4280,31 @@ Dissimilarity: SQchord
 > 
 > 
 > cleanEx()
+> nameEx("n2")
+> ### * n2
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: n2
+> ### Title: Calculate Hill's N2 diversity measure
+> ### Aliases: n2 n2.default
+> ### Keywords: methods multivariate utilities
+> 
+> ### ** Examples
+> 
+> data(swapdiat)
+> sppN2 <- n2(swapdiat, "species")
+> head(sppN2)
+   AC001A    AC002A    AC004A    AC013A    AC014A    AC014B 
+ 8.248589 12.128209 10.997128 46.072440  3.025195  9.190233 
+> sampN2 <- n2(swapdiat, "sites")
+> head(sampN2)
+     1.21     10.21        11    113.21    115.11     12.11 
+15.501849 11.026197  6.702897 10.712509 11.370488 15.094376 
+> 
+> 
+> 
+> cleanEx()
 > nameEx("optima")
 > ### * optima
 > 
@@ -4195,6 +4413,18 @@ G.digit 3.108881
 Other   5.112464
 G.quin  4.268777
 G.hirsu 3.942135
+> 
+> ## bootstrap WA optima - 100 resamples too low for SD & pCI
+> bopt <- optima(ImbrieKipp, SumSST, boot = TRUE, nboot = 100)
+> head(bopt)
+          Optima  optBoot     optSD     2.5%    97.5%
+O.univ  24.33723 24.43556 0.6520349 23.16890 25.38180
+G.cglob 25.72608 25.73901 0.3693470 25.10997 26.39830
+G.ruber 26.06781 26.08493 0.2194281 25.65242 26.49674
+G.tenel 25.57479 25.51535 0.4521986 24.57122 26.27378
+G.saccu 26.18001 26.23577 0.2603136 25.67568 26.68661
+G.rubes 26.27479 26.23109 0.2738244 25.74904 26.72047
+> 
 > 
 > 
 > 
@@ -4444,7 +4674,7 @@ G.hirsu -0.19363169  0.7346868   0.44297993   0.4546855
 > ### Name: performance
 > ### Title: Transfer function model performance statistics
 > ### Aliases: performance print.performance performance.wa
-> ###   performance.predict.wa performance.bootstrap.wa
+> ###   performance.predict.wa performance.bootstrap.wa performance.crossval
 > ### Keywords: methods utilities
 > 
 > ### ** Examples
@@ -5205,10 +5435,10 @@ Passive:      1.004 1.50 1.87 2.17 2.55
 > 
 > flush(stderr()); flush(stdout())
 > 
-> ### Name: plot3d.prcurve
-> ### Title: Interactive 3D plof of a principal curve in principal coordinate
+> ### Name: Plot3d
+> ### Title: Interactive 3D plot of a principal curve in principal coordinate
 > ###   space
-> ### Aliases: plot3d.prcurve
+> ### Aliases: Plot3d
 > ### Keywords: dynamic graphics
 > 
 > ### ** Examples
@@ -5240,12 +5470,17 @@ PC Converged in 5 iterations.
 
 > 
 > ## 3D plot of data with curve superimposed
-> plot3d(aber.pc, abernethy2)
+> ## plot3d.prcurve(aber.pc) # now deprecated, instead use
+> Plot3d(aber.pc)
+Loading required package: rgl
 > 
 > 
 > 
 > 
 > cleanEx()
+
+detaching ‘package:rgl’
+
 > nameEx("prcurve")
 > ### * prcurve
 > 
@@ -5285,6 +5520,10 @@ Iteration   5: d.sq: 5137.944
 PC Converged in 5 iterations.
 
 > 
+> ## Extract fitted values
+> fit <- fitted(aber.pc) ## locations on curve
+> abun <- fitted(aber.pc, type = "smooths") ## fitted response
+> 
 > ## Fit the principal curve using varying complexity of smoothers
 > ## for each species
 > aber.pc2 <- prcurve(abernethy2, method = "ca", trace = TRUE,
@@ -5306,6 +5545,10 @@ Iteration   6: d.sq: 4369.944
 
 PC Converged in 6 iterations.
 
+> 
+> ## Predict new locations
+> take <- abernethy2[1:10, ]
+> pred <- predict(aber.pc2, take)
 > 
 > ## Not run: 
 > ##D ## Fit principal curve using a GAM - currently slow ~10secs
@@ -5550,7 +5793,7 @@ Performance:
 > ### Name: rankDC
 > ### Title: Rank correlation between environmental and species
 > ###   dissimilarities.
-> ### Aliases: rankDC print.rankDC plot.rankDC dotplot.rankDC
+> ### Aliases: rankDC print.rankDC plot.rankDC dotplot.rankDC dotplot
 > ### Keywords: hplot methods utilities multivariate
 > 
 > ### ** Examples
@@ -6209,7 +6452,8 @@ Merged:      268  277
 > 
 > ## fit the ROC curve to the SWAP diatom data using the AM results
 > ## Generate a grouping for the SWAP lakes
-> clust <- hclust(as.dist(swap.ana$train), method = "ward")
+> METHOD <- if (getRversion() < "3.1.0") {"ward"} else {"ward.D"}
+> clust <- hclust(as.dist(swap.ana$train), method = METHOD)
 > grps <- cutree(clust, 12)
 > 
 > ## fit the ROC curve
@@ -6222,7 +6466,7 @@ Discrimination for all groups:
 
 Optimal Dissimilarity = 0.575 
 
-AUC = 0.998, p-value: < 2.22e-16
+AUC = 0.974, p-value: < 2.22e-16
 No. within: 167   No. outside: 1837 
 
 > 
@@ -6815,8 +7059,8 @@ Merged:      171   30
 > 
 > ### Name: timetrack
 > ### Title: Timetracks of change in species composition
-> ### Aliases: timetrack print.timetrack plot.timetrack fitted.timetrack
-> ###   scores.timetrack
+> ### Aliases: timetrack print.timetrack plot.timetrack points.timetrack
+> ###   fitted.timetrack scores.timetrack predict.timetrack
 > ### Keywords: methods hplot
 > 
 > ### ** Examples
@@ -6905,6 +7149,22 @@ Eigenvalues for unconstrained axes:
 113.21 -0.0008560853  0.071167503
 115.11  0.0907404572 -0.015968707
 12.11   0.1220684180 -0.237747308
+> 
+> ## predict locations in timetrack for new observations
+> take <- rlgh[1:50, ]
+> take <- take[ , colSums(take) > 0]
+> mod3 <- predict(mod, newdata = take)
+> class(mod3) ## returns a timetrack object
+[1] "timetrack"
+> take <- rlgh[-(1:50), ]
+> take <- take[ , colSums(take) > 0]
+> mod4 <- predict(mod, newdata = take)
+> 
+> ## build a plot up from base parts
+> plot(mod, type = "n", ptype = "n")
+> points(mod, which = "ordination", col = "grey", pch = 19, cex = 0.7)
+> points(mod3, which = "passive", col = "red")
+> points(mod4, which = "passive", col = "blue")
 > 
 > 
 > 
@@ -7239,7 +7499,7 @@ Correlation         : 0.437 (p = < 2.22e-16)
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  22.357 0.334 23.687 0.003 0.003 
+Time elapsed:  26.133 0.195 26.597 0 0.005 
 > grDevices::dev.off()
 null device 
           1 

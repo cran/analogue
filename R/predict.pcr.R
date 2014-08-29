@@ -1,4 +1,4 @@
-`predict.pcr` <- function(object, newdata, ncomp = seq_along(object$ncomp),
+`predict.pcr` <- function(object, newdata, ncomp = object$ncomp,
                           CV = c("none", "LOO", "bootstrap", "kfold"),
                           verbose = FALSE, nboot = 100, kfold = 10,
                           folds = 5, ...) {
@@ -170,7 +170,7 @@ Resetting to max possible.")
     X <- sweep(X, 2, Xbar, "-")
     Y <- Y[take] - ybar
     ## fit model to subset
-    FIT <- analogue:::fitPCR(X = X, Y = Y, ncomp = ncomp, n = N, m = M)
+    FIT <- fitPCR(X = X, Y = Y, ncomp = ncomp, n = N, m = M)
     for(j in comps) {
         B0 <- ybar - Xbar %*% FIT$B[, j]
         parray[ , j] <- Xnew %*% FIT$B[, j] + rep(B0, Nnew)

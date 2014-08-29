@@ -41,12 +41,12 @@
     y <- y - yMean
 
     ## How many components?
-    ncomp <- if(missing(ncomp)) {
-        min(Nx - 1, Mx)
+    if(missing(ncomp)) {
+        ncomp <- min(Nx - 1, Mx)
     } else {
         if(ncomp < 1 || ncomp > (newcomp <- min(Nx - 1, Mx))) {
             warning("Invalid 'ncomp'. Resetting to max possible.")
-            newcomp
+            ncomp <- newcomp
         }
     }
 
@@ -74,11 +74,6 @@
     ## get and fix up the call
     .call <- match.call()
     .call[[1]] <- as.name("pcr")
-    ## if(fun.supplied) {
-    ##     ## fix-up the name of the transformation function used,
-    ##     ## needed when formula method called...
-    ##     .call[[which(names(.call) == "tranFun")]] <- as.name(deparse(substitute(tranFun)))
-    ## }
 
     ## return object
     Obj <- list(fitted.values = fitted.values,
@@ -129,11 +124,6 @@
     Obj$terms <- mt
     if(model)
         Obj$model <- mf
-    ##.call <- match.call()
-    ##.call[[1]] <- as.name("pcr")
-    ## fix-up the name of the transformation function used,
-    ## needed when formula method called...
-    ##.call[[which(names(.call) == "tranFun")]] <- as.name(deparse(substitute(tranFun)))
     Obj$call <- .call
     Obj
 }
@@ -147,9 +137,10 @@
     if(apply) {
         ## apply pre-computed meta-parameters to transform
         ## test samples to match training samples
-        ##parms <- attr(x, "parms")
-        res <- list(data = with(parms, sqrt(gsum) * x/outer(rsum, sqrt(csum))),
-                    parms = parms)
+        ## take only variables in x for which we have parms
+        ## match on attr(parms, "variables")
+        data <- sqrt(parms$gsum) * x / outer(parms$rsum, sqrt(parms$csum))
+        res <- list(data = data, parms = parms)
     } else {
         ## perform transformation and preserve the meta-parameters
         if (any(x < 0, na.rm = TRUE)) {
@@ -161,10 +152,12 @@
         gsum <- sum(x, na.rm = TRUE)
         rsum <- pmax(k, rowSums(x, na.rm = TRUE))
         csum <- colSums(x, na.rm = TRUE)
+        parms <- list(gsum = gsum, rsum = rsum, csum = csum)
+        attr(parms, "variables") <- colnames(x)
         res <- list(data = sqrt(gsum) * x/outer(rsum, sqrt(csum)),
-                    parms = list(gsum = gsum, rsum = rsum, csum = csum))
+                    parms = parms)
     }
-    x
+    res ##return
 }
 
 `print.pcr` <- function(x, digits = min(getOption("digits"), 4), ...) {

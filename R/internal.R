@@ -5,23 +5,19 @@
 ##                                                                       ##
 ###########################################################################
 
-###########################################################################
-##                                                                       ##
-## cumWmean - calculates the cumulative weighted mean of y               ##
-##                                                                       ##
-## Created       : 27-May-2006                                           ##
-## Author        : Gavin Simpson                                         ##
-## Version       : 0.1                                                   ##
-## Last modified : 27-May-2006                                           ##
-##                                                                       ##
-## ARGUMENTS:                                                            ##
-## weights           - the weights to use                                ##
-## y                 - the vector of values to calculate weighted mean   ##
-##                     of                                                ##
-## drop              - drop spurious zero distance                       ##
-##                                                                       ##
-###########################################################################
-cumWmean <- function(weights, y, drop = TRUE, kmax) {
+##' @title Cumulative weighted mean for a vector of distances
+##'
+##' @param weights numeric vector of weights
+##' @param y numeric vector to calculate the weighted mean of
+##' @param drop logical; drop spurious zero distance
+##' @param kmax numeric; upper limit on number of analogues to include
+##'
+##' @return a numeric vector of length \code{kmax}.
+##'
+##' @author Gavin L. Simpson
+`cumWmean` <- function(weights, y, drop = TRUE, kmax) {
+    ## as weights are the distances, I could probably combine
+    ## mean and weighted mean versions of this function?
     if(missing(kmax))
         kmax <- length(y)
     ##if (length(weights) != length(y))
@@ -38,35 +34,18 @@ cumWmean <- function(weights, y, drop = TRUE, kmax) {
     K <- seq_len(kmax)
     cumsum(weights[K] * env[K]) / cumsum(weights[K])
 }
-###########################################################################
-##                                                                       ##
-## cummean - calculates the cumulative mean of y                         ##
-##                                                                       ##
-## Created       : 27-May-2006                                           ##
-## Author        : Gavin Simpson                                         ##
-## Version       : 0.1                                                   ##
-## Last modified : 27-May-2006                                           ##
-##                                                                       ##
-## ARGUMENTS:                                                            ##
-## dis               - the distances to sort by                          ##
-## y                 - the vector of values to calculate mean of         ##
-## drop              - drop spurious zero distance                       ##
-##                                                                       ##
-###########################################################################
-#cummean <- function(dis, y, drop = TRUE)
-#  {
-#    nas <- is.na(dis)
-#    ord <- order(dis[!nas])
-#    if(drop) {
-#      dis <- dis[!nas][ord][-1]
-#      y <- y[!nas][ord][-1]
-#    } else {
-#      dis <- dis[!nas][ord]
-#      y <- y[!nas][ord]
-#    }
-#    cumsum(y) / 1:length(dis)
-#  }
-cummean <- function(dis, y, drop = TRUE, kmax) {
+
+##' @title Cumulative mean for a vector of distances
+##'
+##' @param dis the distances to sort by
+##' @param y the vector of values to calculate mean of
+##' @param drop logical; drop spurious zero distance
+##' @param kmax numeric; upper limit on number of analogues to include
+##'
+##' @return a numeric vector of length \code{kmax}.
+##'
+##' @author Gavin L. Simpson
+`cummean` <- function(dis, y, drop = TRUE, kmax) {
     if(missing(kmax))
         kmax <- length(y)
     nas <- is.na(dis)
@@ -78,101 +57,102 @@ cummean <- function(dis, y, drop = TRUE, kmax) {
         len <- len - 1
     }
     K <- seq_len(kmax)
-    ##cumsum(y) / 1:len
     cumsum(y[K]) / K
 }
-###########################################################################
-##                                                                       ##
-## minDij - returns the non-zero minimum distance                        ##
-##                                                                       ##
-## Created       : 27-May-2006                                           ##
-## Author        : Gavin Simpson                                         ##
-## Version       : 0.1                                                   ##
-## Last modified : 27-May-2006                                           ##
-##                                                                       ##
-## ARGUMENTS:                                                            ##
-## x                 - the vector of distances for which the non-zero    ##
-##                     minimum is required                               ##
-##                                                                       ##
-###########################################################################
-minDij <- function(x, drop = TRUE)
-  {
+
+##' @title Return the non-zero minimum of a vector of distances
+##'
+##' @param x the vector of distances for which the non-zero minimum is
+##' required
+##' @param drop logical; should the trivial (zero) distance of site
+##' with itself be dropped?
+##'
+##' @return The minimum, non-zero distance, a vector of length 1.
+##'
+##' @author Gavin L. Simpson
+`minDij` <- function(x, drop = TRUE) {
     ord <- order(x)
     if(drop)
-      x[ord][2] # we don't want the first zero distance
+        x[ord][2] # we don't want the first zero distance
     else
-      x[ord][1]
-  }
-###########################################################################
-##                                                                       ##
-## maxBias - returns the maximum bias statistic of mat residuals         ##
-##                                                                       ##
-## Created       : 27-May-2006                                           ##
-## Author        : Gavin Simpson                                         ##
-## Version       : 0.1                                                   ##
-## Last modified : 27-May-2006                                           ##
-##                                                                       ##
-## ARGUMENTS:                                                            ##
-## error             - model residuals                                   ##
-## y                 - the vector original observed env data             ##
-## n                 - number of sections to break env gradient into     ##
-##                                                                       ##
-###########################################################################
-##maxBias <- function(error, y, n = 10)
-##  {
-##    groups <- cut(y, breaks = n, labels = 1:n)
-##    bias <- aggregate(error, list(group = groups), mean)$x
-##    bias[which.max(abs(bias))]
-##  }
-maxBias <- function(error, y, n = 10)
-  {
+        x[ord][1]
+}
+
+##' @title The maximum bias statistic of transfer function residuals
+##'
+##' @param error numeric vector of model residuals
+##' @param y numeric vector of observed environmental data
+##' @param n numeric; number of sections to cut environmental gradient into
+##'
+##' @return A numeric vector of length \code{n} containing the value of
+##' the largest residual in each of the \code{n} setions of the gradient.
+##'
+##' @author Gavin L. Simpson
+`maxBias` <- function(error, y, n = 10) {
     groups <- cut.default(y, breaks = n, labels = 1:n)
     bias <- tapply(error, groups, mean)
     bias[which.max(abs(bias))]
-  }
-###########################################################################
-##                                                                       ##
-## .simpleCap - simple capitalisation function from ?toupper             ##
-##                                                                       ##
-## Created       : 16-Feb-2007                                           ##
-## Author        : Gavin Simpson                                         ##
-## Version       : 0.1                                                   ##
-## Last modified : 16-Feb-2007                                           ##
-##                                                                       ##
-## ARGUMENTS:                                                            ##
-## x - string to be capitalised                                          ##
-##                                                                       ##
-###########################################################################
-.simpleCap <- function(x) {
-  s <- strsplit(x, " ")[[1]]
-  paste(toupper(substring(s, 1,1)), substring(s, 2), sep="", collapse=" ")
-}
-###########################################################################
-##                                                                       ##
-## wmean - simple, quick version of weighted.mean                        ##
-##                                                                       ##
-## Created       : 16-Feb-2007                                           ##
-## Author        : Gavin Simpson                                         ##
-## Version       : 0.1                                                   ##
-## Last modified : 16-Feb-2007                                           ##
-##                                                                       ##
-## ARGUMENTS:                                                            ##
-## x - string to be capitalised                                          ##
-##                                                                       ##
-###########################################################################
-wmean <- function(spp, env) {
-  sum(env * spp)/sum(spp)
 }
 
-## w.avg - fast weighted mean function with no checks
+##' @title Simple capitalisation function from ?toupper
+##'
+##' @param x string to be capitalised
+##'
+##' @return The capitalise string
+##'
+##' @author Gavin L. Simpson
+`.simpleCap` <- function(x) {
+  s <- strsplit(x, " ")[[1]]
+  paste(toupper(substring(s, 1,1)), substring(s, 2), sep = "",
+        collapse = " ")
+}
+
+##' @title Simple, quicker version of weighted.mean
+##'
+##' @param spp vector of species abundances; the weights.
+##' @param env vector of gradient values.
+##'
+##' @description \code{wmean()} is for a vector of species abundances
+##' only.
+##'
+##' @return The weighted mean of \code{env}.
+##'
+##' @author Gavin L. Simpson
+`wmean` <- function(spp, env) {
+  sum(env * spp) / sum(spp)
+}
+
+##' @title Fast weighted mean function with no checks in column sums
+##'
+##' @param x numeric matrix; weights, the species abundances say.
+##' @param env numeric; vector of gradient values.
+##'
+##' @description \code{w.avg()} is for a matrix of species abundances.
+##'
+##' @return Numeric vector of length \code{ncol(x)} containing the
+##' weighted means of the gradient values for eah column of \code{x}.
+##'
+##' @author Gavin L. Simpson
 `w.avg` <- function(x, env) {
     opt <- ColSums(x * env) / ColSums(x)
-    ##opt <- .colSums(x * env) / .colSums(x)
     names(opt) <- colnames(x)
     opt
 }
 
-## fast rowSums and colSums functiosn without the checking
+##' @title Fast rowSums() without any checks.
+##'
+##' @description Drop in replacement for \code{\link{rowSums}} but
+##' without any of the sanity checks of that function. Used when these
+##' checks have already be done up front, such as during repeated
+##' bootstrap estimation
+##'
+##' @param x matrix.
+##' @param na.rm logical; should missing values be removed from the
+##' calculation?
+##'
+##' @return numeric vector containing the sums of the rows.
+##'
+##' @author Gavin L. Simpson
 `RowSums` <- function(x, na.rm = FALSE) {
     dn <- dim(x)
     p <- dn[2]
@@ -180,6 +160,20 @@ wmean <- function(spp, env) {
     .rowSums(x, dn, p, na.rm)
 }
 
+##' @title Fast colSums() without any checks.
+##'
+##' @description Drop in replacement for \code{\link{colSums}} but
+##' without any of the sanity checks of that function. Used when these
+##' checks have already be done up front, such as during repeated
+##' bootstrap estimation
+##'
+##' @param x matrix.
+##' @param na.rm logical; should missing values be removed from the
+##' calculation?
+##'
+##' @return numeric vector containing the sums of the columns.
+##'
+##' @author Gavin L. Simpson
 `ColSums` <- function(x, na.rm = FALSE) {
     dn <- dim(x)
     n <- dn[1]
@@ -187,34 +181,50 @@ wmean <- function(spp, env) {
     .colSums(x, n, dn, na.rm)
 }
 
-## deshrinking function given deshrinking coefs and a method
-##`deshrink.pred` <- function(x, coef) {
-##    coef[1] + x * coef[2]
-##}
-
-## w.tol --- computes weighted standard deviations AKA tolerances
-w.tol <- function(x, env, opt, useN2 = TRUE) {
-    ## x   = species abundances
-    ## env = vector of response var
-    ## opt = weighted average optima
-    ##tol <- sqrt(ColSums(x * outer(env, opt, "-")^2) / ColSums(x))
+##' @title Computes weighted standard deviations AKA tolerances
+##' @param x matrix of species abundances.
+##' @param env vector of gradient values.
+##' @param opt vector of weighted average optima for the proxies
+##' (columns) of \code{x}.
+##' @param useN2 logical; should the tolerance be scaled by its N2
+##' value in the data set.
+##'
+##' @return A numeric vector of species tolerance values.
+##'
+##' @author Gavin Simpson
+`w.tol` <- function(x, env, opt, useN2 = TRUE) {
     nr <- NROW(x)
     nc <- NCOL(x)
-    tol <- .C("WTOL", x = as.double(env), w = as.double(x),
+    tol <- .C("WTOL",
+              x = as.double(env),
+              w = as.double(x),
               opt = as.double(opt),
-              nr = as.integer(nr), nc = as.integer(nc),
-              stat = double(nc), NAOK = FALSE,
-              PACKAGE="analogue")$stat
+              nr = as.integer(nr),
+              nc = as.integer(nc),
+              stat = double(nc),
+              NAOK = FALSE,
+              PACKAGE = "analogue")$stat
     if(useN2)
         tol <- tol / sqrt(1 - (1 / sppN2(x)))
     names(tol) <- colnames(x)
     tol
 }
 
+##' @title Quickly compute Hill's N2 for species
+##'
+##' @description A fast-ish version of Hill's N2 for species using
+##' \code{\link{.colSums}}.
+##'
+##' @param x matrix of species abundances.
+##'
+##' @return A vector of N2 values, one per species. Species missing
+##' from a set of samples will have an infinite N2.
+##'
+##' @section Warning; must only be called once the data have been
+##' checked as this calls out to C code via \code{\link{.colSums}}.
+##'
+##' @author Gavin L. Simpson
 `sppN2` <- function(x) {
-    ## quickly compute Hill's N2 for species
-    ## x = species abundances
-    ## ONLY call within an existing function
     tot <- ColSums(x)
     x <- sweep(x, 2, tot, "/")
     x <- x^2

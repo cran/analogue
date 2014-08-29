@@ -4,16 +4,34 @@ useDynLib(analogue)
 ## Imports
 ##
 ## vegan
-importFrom(vegan, pasteCall, eigenvals, tolerance, scores, ordirgl)
+importFrom(vegan,
+           pasteCall, eigenvals, tolerance, scores, ordirgl,
+           cca, rda, vegdist, wisconsin, decostand)
 ## mgcv
-importFrom(mgcv, gam, s, smoothCon, mono.con, pcls, Predict.matrix)
+importFrom(mgcv,
+           gam, s, smoothCon, mono.con, pcls, Predict.matrix)
 ## MASS
 importFrom(MASS, dose.p)
 ## lattice
 ##   -- need here *only* those funs that we define S3 methods for
 ##      not the functions from lattice we use as they are covered
 ##      by Depends: lattice in DESCRIPTION
-importFrom(lattice, densityplot, dotplot, histogram)
+importFrom(lattice,
+           densityplot,
+           dotplot,
+           histogram,
+           xyplot,
+           current.panel.limits,
+           panel.axis,
+           which.packet,
+           axis.default,
+           trellis.par.get,
+           panel.refline,
+           panel.grid,
+           panel.lines,
+           panel.points,
+           panel.polygon,
+           panel.abline)
 ## stats
 import(stats)
 ## utils
@@ -37,62 +55,76 @@ importFrom(brglm,
            brglm,
            brglm.control)
 ## rgl
-importFrom(rgl,
-           plot3d,
-           lines3d,
-           decorate3d)
+## importFrom(rgl,
+##            plot3d,
+##            lines3d,
+##            decorate3d)
+
 ## princurve
 importFrom(princurve,
            get.lam)
 
 ## Exports
-export(analog,
-       bayesF,
-       bootstrap,
-       caterpillar,
-       caterpillarPlot,
-       chooseTaxa,
-       cma,
-       crossval,
-       deshrink,
-       dissim,
-       dissimilarities,
-       distance, oldDistance, ## oldDistance is the original R-only code
-       #distance3,
-       #distanceX,
-       fuse,
-       getK,
-       gradientDist,
-       join,
-       logitreg,
-       mat,
-       mcarlo,
-       minDC,
-       optima,
-       panel.Loess,
-       panel.Stratiplot,
-       pcr,
-       performance,
-       prcurve, ##randomWA,
-       reconPlot,
-       residLen,
-       RMSEP,
-       splitSample,
-       rankDC,
-       roc,
-       smoothSpline,
-       smoothGAM,
-       sppResponse,
-       Stratiplot,
-       stdError,
-       timetrack,
-       tran,
-       varExpl,
-       wa,
-       weightedCor,
-       "setK<-",
-       Hellinger,
-       ChiSquare)
+export(
+    ## export generics imported from lattice
+    densityplot,
+    dotplot,
+    histogram,
+
+    ## export analogue functions
+    analog,
+    bayesF,
+    bootstrap,
+    caterpillar,
+    caterpillarPlot,
+    chooseTaxa,
+    cma,
+    compare,
+    crossval,
+    deshrink,
+    dissim,
+    dissimilarities,
+    distance, oldDistance, ## oldDistance is the original R-only code
+                                        #distance3,
+                                        #distanceX,
+    evenSample,
+    fuse,
+    getK,
+    gradientDist,
+    join,
+    logitreg,
+    mat,
+    mcarlo,
+    minDC,
+    n2,
+    optima,
+    panel.Loess,
+    panel.Stratiplot,
+    pcr,
+    performance,
+    plot3d.prcurve,
+    Plot3d,
+    prcurve, ##randomWA,
+    reconPlot,
+    residLen,
+    RMSEP,
+    splitSample,
+    rankDC,
+    roc,
+    smoothSpline,
+    smoothGAM,
+    sppResponse,
+    Stratiplot,
+    stdError,
+    timetrack,
+    tran,
+    varExpl,
+    wa,
+    weightedCor,
+    "setK<-",
+    Hellinger,
+    ChiSquare
+    )
 
 ### S3 Methods
 ##
@@ -107,6 +139,7 @@ S3method(cma, analog)
 S3method(cma, default)
 S3method(cma, predict.mat)
 S3method(cma, mat)
+S3method(compare, default)
 S3method(crossval, pcr)
 S3method(crossval, wa)
 S3method(densityplot, residLen)
@@ -141,10 +174,12 @@ S3method(minDC, default)
 S3method(minDC, predict.mat)
 S3method(minDC, analog)
 S3method(minDC, wa)
+S3method(n2, default)
 S3method(optima, default)
 S3method(pcr, default)
 S3method(pcr, formula)
 S3method(performance, bootstrap.wa)
+S3method(performance, crossval)
 S3method(performance, predict.wa)
 S3method(performance, pcr)
 S3method(performance, wa)
@@ -177,6 +212,7 @@ S3method(weightedCor, default)
 S3method(coef, pcr)
 S3method(coef, wa)
 S3method(fitted, pcr)
+S3method(fitted, prcurve)
 S3method(fitted, bootstrap.mat)
 S3method(fitted, logitreg)
 S3method(fitted, mat)
@@ -185,6 +221,8 @@ S3method(fitted, wa)
 S3method(predict, logitreg)
 S3method(predict, mat)
 S3method(predict, pcr)
+S3method(predict, prcurve)
+S3method(predict, timetrack)
 S3method(predict, wa)
 S3method(residuals, bootstrap.mat)
 S3method(residuals, mat)
@@ -199,6 +237,7 @@ S3method(plot, minDC)
 S3method(plot, bayesF)
 S3method(plot, cma)
 S3method(plot, dissimilarities)
+S3method(plot, evenSample)
 S3method(plot, gradientDist)
 S3method(lines, gradientDist)
 S3method(points, gradientDist)
@@ -212,9 +251,10 @@ S3method(plot, residLen)
 S3method(plot, roc)
 S3method(plot, sppResponse)
 S3method(plot, timetrack)
+S3method(points, timetrack)
 S3method(plot, wa)
 S3method(plot, weightedCor)
-S3method(plot3d, prcurve)
+##S3method(plot3d, prcurve)
 S3method(reconPlot, default)
 S3method(reconPlot, predict.mat)
 S3method(reconPlot, predict.wa)
@@ -230,6 +270,7 @@ S3method(print, bootstrap.mat)
 S3method(print, bootstrap.wa)
 S3method(print, cma)
 S3method(print, crossval)
+S3method(print, evenSample)
 S3method(print, fitted.bootstrap.mat)
 S3method(print, fitted.mat)
 S3method(print, logitreg)
