@@ -15,8 +15,14 @@
                 "center", "standardize", "range", "percent", "proportion",
                 "pa","missing", "hellinger", "chi.square", "wisconsin",
                 "pcent2prop", "prop2pcent", "logRatio", "power",
-                "rowCenter")
+                "rowCentre", "colCentre", "rowCenter", "colCenter",
+                "log1p", "expm1")
     method <- match.arg(method, METHOD)
+    ## account for non-British spelling
+    american <- c("rowCenter", "colCenter")
+    if (any(ind <-  american == method)) {
+        method <- american[ind]
+    }
     if(method %in% c("freq", "standardize","range","pa","hellinger",
                      "chi.square","wisconsin")) {
         if(isTRUE(all.equal(method, "wisconsin")))
@@ -44,7 +50,10 @@
                                 x <- log(x, base = base)
                                 x - rowMeans(x)},
                     power = x^p,
-                    rowCenter = x - rowMeans(x)
+                    rowCentre = x - rowMeans(x),
+                    colCentre = x - colMeans(x),
+                    log1p = log1p(x),
+                    expm1 = expm1(x)
                     )
     }
     if(wasDF)

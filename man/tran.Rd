@@ -54,14 +54,19 @@
   \itemize{
     \item \code{sqrt}: take the square roots of the observed values.
     \item \code{cubert}: take the cube root of the observed values.
-    \item \code{rootroot}: take the fourthe root of the observed
-    values. This is also known as the root root transformation (Field et
-    al 1982).
+    \item \code{rootroot}: take the fourth root of the observed
+     values. This is also known as the root root transformation (Field
+     et al 1982).
     \item \code{log}: take the logarithms of the observed values. The
     tansformation applied can be modified by constants \code{a} and
     \code{b} and the \code{base} of the logarithms. The transformation
     applied is \eqn{x^* = \log_{\mathrm{base}}(ax + b)}{x* =
       log[base](ax + b).}
+    \item \code{log1p}: computes \eqn{log(1 + x)} accurately also for
+     \eqn{|x| << 1} via \code{\link{log1p}}. Note the arguments \code{a}
+     and \code{b} have no effect in this method.
+    \item \code{expm1}: computes \eqn{exp(x) - 1)} accurately for
+     \eqn{|x| << 1} via \code{\link{expm1}}.
     \item \code{reciprocal}: returns the multiplicative inverse or
     reciprocal, \eqn{1/x}, of the observed values.
     \item \code{freq}: divide by column (variable, species)  maximum and
@@ -97,9 +102,12 @@
     Aitchison's Log Ratio Analysis (LRA), a means of dealing with closed
     compositional data such as common in palaeoecology (Aitchison, 1983).
     \item \code{power}: applies a power tranformation.
-    \item \code{rowCenter}: Centres \code{x} by rows through the
-    subtraction of the corresponding row mean from the observations in
-    the row.
+    \item \code{rowCentre}, \code{rowCenter}: Centres \code{x} by rows
+     through the subtraction of the corresponding row mean from the
+     observations in the row.
+    \item \code{colCentre} \code{colCenter}: Centres \code{x} by columns
+     through the subtraction of the corresponding column mean from the
+     observations in the row.
   }
 }
 \value{

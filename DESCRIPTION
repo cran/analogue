@@ -1,11 +1,11 @@
 Package: analogue
 Type: Package
 Title: Analogue and weighted averaging methods for palaeoecology
-Version: 0.14-0
-Date: 28 Aug 2014
-Depends: R (>= 2.15.0), vegan (>= 1.17-12)
+Version: 0.16-0
+Date: 18 Nov 2014
+Depends: R (>= 2.15.0), vegan (>= 2.2-0)
 Imports: mgcv, MASS, stats, graphics, grid, brglm, princurve, lattice
-Suggests: rgl, testthat
+Suggests: testthat
 Authors@R: c(person(given = c("Gavin", "L."), family = "Simpson",
                     role = c("aut", "cre"),
                     email = "ucfagls@gmail.com"),
@@ -20,8 +20,8 @@ Description: Fits Modern Analogue Technique and Weighted Averaging transfer
 License: GPL-2
 ByteCompile: true
 URL: https://github.com/gavinsimpson/analogue
-Packaged: 2014-08-29 04:26:13 UTC; gavin
+Packaged: 2014-11-18 23:17:41.474 UTC; gavin
 Author: Gavin L. Simpson [aut, cre],
   Jari Oksanen [aut]
 Repository: CRAN
-Date/Publication: 2014-08-29 07:28:26
+Date/Publication: 2014-11-19 02:09:22
