@@ -1,10 +1,10 @@
 # analogue
 
-## Build status
+#### Released version
+[![CRAN version](http://www.r-pkg.org/badges/version/analogue)](http://cran.rstudio.com/web/packages/analogue/index.html) [![](http://cranlogs.r-pkg.org/badges/grand-total/analogue)](http://cran.rstudio.com/web/packages/analogue/index.html)
 
-Linux       | Windows
-------------|------------
-[![Build Status](https://travis-ci.org/gavinsimpson/analogue.svg?branch=master)](https://travis-ci.org/gavinsimpson/analogue) | [![Build status](https://ci.appveyor.com/api/projects/status/hc8dbxrim2nj3c1i/branch/master)](https://ci.appveyor.com/project/gavinsimpson/analogue/branch/master)
+#### Build status
+[![Build Status](https://travis-ci.org/gavinsimpson/analogue.svg?branch=master)](https://travis-ci.org/gavinsimpson/analogue)  [![Build status](https://ci.appveyor.com/api/projects/status/hc8dbxrim2nj3c1i/branch/master)](https://ci.appveyor.com/project/gavinsimpson/analogue/branch/master)
 
 ## What is analogue?
 **analogue** is an R package for use with palaeoecological data. Originally, **analogue** was intended as an R implementation of analogue methods such as analogue matching, <acronym title="Receiver Operator Characteristic">ROC</acronym> curves, and <acronym title="Modern Analogue Technique">MAT</acronym> transfer function models, and the computation of dissimilarity coefficients. Since then the scope of the package has grown to include a number of other methods applicable to data routinely encountered in palaeoecology and palaeolimnology.
@@ -31,7 +31,7 @@ Linux       | Windows
 Bug reports and feature requests should be filed as [issues](https://github.com/gavinsimpson/analogue/issues).
 
 ## Licence
-analogue is released under the [GNU General Public Licence Version 2](http://www.gnu.org/licenses/gpl-2.0.html).
+analogue is released under the [GNU General Public Licence Version 2](http://www.r-project.org/Licenses/GPL-2).
 
 ## Links
 

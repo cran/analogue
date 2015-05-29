@@ -1,8 +1,7 @@
 ## Test `analogue` using the `testthat` package
 
 ## Setup
-library(testthat)
-library(analogue)
+library("testthat")
 
-## Runs the tests in inst/tests
-test_package("analogue")
+## Runs the tests in tests/testthat
+test_check("analogue")
