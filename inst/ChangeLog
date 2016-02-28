@@ -1,5 +1,30 @@
 analogue Change Log
 
+	See the git commit log for a full Changelog:
+	https://github.com/gavinsimpson/analogue/commits/master
+
+	From 0.17-0 this Changelog is provided for archival
+	purposes only. See the git log and file `NEWS` from now on
+	for changes to the package.
+
+Version 0.17-0
+
+	* Released to CRAN.
+
+Version 0.16-4
+
+	* Specifically import all non-base functions into the package
+	NAMESPACE.
+
+Version 0.16-3
+
+	* Update reference material containing new version of analogue
+
+Version 0.16-2
+
+	* Incorrect link to GPL
+	Reported by Brian Ripley
+
 Version 0.16-1
 
 	* Fix testthat usage.
