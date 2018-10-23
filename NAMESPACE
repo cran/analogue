@@ -9,7 +9,7 @@ importFrom("vegan",
            "cca", "rda", "vegdist", "wisconsin", "decostand")
 ## mgcv
 importFrom("mgcv",
-           "gam", "s", "smoothCon", "mono.con", "pcls", "Predict.matrix")
+           "gam", "s", "smoothCon", "mono.con", "pcls", "Predict.matrix", "gam.control")
 ## MASS
 importFrom("MASS",
            "dose.p")
@@ -66,6 +66,7 @@ importFrom("stats",
            "rnorm",
            "runif",
            "sd",
+           "setNames",
            "smooth.spline",
            "terms",
            "var",
@@ -135,7 +136,7 @@ importFrom("brglm",
 
 ## princurve
 importFrom("princurve",
-           "get.lam")
+           "project_to_curve")
 
 ## Exports
 export(

@@ -104,7 +104,7 @@ initCurve(X, method = c("ca", "pca", "random", "user"), rank = FALSE,
   Gavin L. Simpson
 }
 \note{
-  The fitting function uses function \code{\link[princurve]{get.lam}} in
+  The fitting function uses function \code{\link[princurve]{project_to_curve}} in
     package \pkg{princurve} to find the projection of the data on to the
     fitted curve. 
 }
@@ -142,8 +142,8 @@ pred <- predict(aber.pc2, take)
 
 \dontrun{
 ## Fit principal curve using a GAM - currently slow ~10secs
-aber.pc3 <- prcurve(abernethy2, method = "ca", trace = TRUE,
-                    vary = TRUE, smoother = smoothGAM, bs = "cr")
+aber.pc3 <- prcurve(abernethy2 / 100, method = "ca", trace = TRUE,
+                    vary = TRUE, smoother = smoothGAM, bs = "cr", family = mgcv::betar())
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

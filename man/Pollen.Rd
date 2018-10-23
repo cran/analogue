@@ -6,9 +6,11 @@
 \docType{data}
 \title{North American Modern Pollen Database}
 \description{
-  A database of model pollen samples from a network of sites from North
+  A database of modern pollen samples from a network of sites from North
   America and Greenland, compiled by Whitmore et al. (2005). Associated
-  climatic and vegetation data are also record.
+  climatic and vegetation data are also record. The version of the NAMPD
+  included here is latest version 1-7.3 (February 2013), as of January
+  2016.
 }
 \usage{
 data(Pollen)
@@ -20,11 +22,13 @@ data(Biome)
 data(Location)
 }
 \format{
-  For \code{Pollen}, a data frame of 4833 samples and 134 pollen taxa.
+  For \code{Pollen}, a data frame of 4833 samples and 135 columns (the
+  unique identifier and 134 pollen taxa).
   
   For \code{Biome}, a data frame of 4833 samples on, currently, a single
-  variable:
+  vegetation variable (plus the unique identifier):
   \describe{
+    \item{\code{ID2}}{Unique, sequential number assigned by NAMPD.}
     \item{\code{Fedorova}}{Factor; Vegetation type (Biome) See Whitmore
       et al. (2005), Figs 3 & 4. Reclassified biomes from Fedorova et al
       (1994).}
@@ -33,6 +37,7 @@ data(Location)
   For \code{Location}, a data frame of the latitude and longitude
   locational data for 4833 samples.
   \describe{
+    \item{\code{ID2}}{Unique, sequential number assigned by NAMPD.}
     \item{\code{Latitude}}{Latitude of the sampling location in decimal
       degrees.}
     \item{\code{Longitude}}{Longitude of the sampling location in decimal
@@ -42,6 +47,7 @@ data(Location)
   For \code{Climate}, a data frame with 4833 observations on the
   following 32 variables.
   \describe{
+    \item{\code{ID2}}{Unique, sequential number assigned by NAMPD.}
     \item{\code{t[jan:dec]}}{numeric vectors; Mean monthly temperatures
       for the indicated month. Degrees C.}
     \item{\code{p[jan:dec]}}{numeric vectors; Mean total monthly
@@ -88,7 +94,7 @@ data(Location)
 
   \url{http://www.lpc.uottawa.ca/data/modern/index.html}
 
-  \url{http://www.geography.wisc.edu/faculty/williams/web/data.htm}
+  \url{https://williamspaleolab.github.io/datavis/}
 }
 \references{
   Whitmore, J., Gajewski, K., Sawada, M., Williams, J.W., Shuman, B.,
