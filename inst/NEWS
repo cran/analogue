@@ -1,5 +1,13 @@
 # analogue News
 
+## Version 1.17-3
+
+ * Fix keywords in `weightedCor()`.
+
+## Version 1.17-2
+
+ * `V12.122` The data were stored as proportions but treated as percentages in examples. To better match the `ImbrieKipp` training set, `V12.122` was converted to percentages. Reported by Richard Telford #22.
+
 ## Version 1.17-1
 
  * `prcurve` modified to use package **princurve** version >= 2.0.2.
