@@ -1,4 +1,4 @@
-69526921240e5741cae888a9bc97d6ec *DESCRIPTION
+e9038ba47ab8d2e936b99a4899536f32 *DESCRIPTION
 276ec67bd89133b635f19da4a2aaebb5 *NAMESPACE
 937b7da026dee8ad34925074b633b9dd *R/RMSEP.R
 da11b118fa0ea7c4b088531163e223f6 *R/RMSEP.bootstrap.wa.R
@@ -50,7 +50,7 @@ e9e8efe2417696fefe98514e3be7feb5 *R/initCurve.R
 f7d0a56db9484007c311b07be4cfbd38 *R/lines.prcurve.R
 b475b4d81fc54420a2dd5e1d0a629a3a *R/logitreg.R
 9eb438cc4644079b3cabcdd6e0443809 *R/logitreg.analog.R
-bf7dceda93439874a64302cc02cd035b *R/mat.R
+a78b81bd14093e0f44df12c53c6e4585 *R/mat.R
 8868c63b702a51e6f6564728ffd3a5f2 *R/mcarlo.R
 dc730444700ee64a06c97a0b4dbe3ee8 *R/minDC.R
 ae305b64f3b326c7fbac3a77acc8b748 *R/minDC.wa.R
@@ -135,7 +135,7 @@ e92125adc95e5ab7a0735c8a983cd4bb *R/varExpl.R
 001cd2667c63813a9af81887e30b541c *R/weightedCor.R
 1299fb1e2a5871651c483b1b34782f9f *R/zzz.R
 a6cafc89190c800b983db47fa866ee0a *README.md
-184f3024523e5d599a15ed13923ebb0d *build/vignette.rds
+f0e1a2e756d6d615df140e87ef437e8c *build/vignette.rds
 f2e31d81984c36081a7a8318e1908c95 *data/Biome.rda
 eb505946ba4a0ef93ded4999287799eb *data/Climate.rda
 61f70751e0bafa1894d54f91a503f0ac *data/ImbrieKipp.rda
@@ -158,17 +158,17 @@ fd863cc3eba6444fe8231d80fb27a23e *inst/ONEWS.Rd
 f5f5397640e21818b86af9941f5dad56 *inst/TODO
 45b1f2f71c14b029b260d9d0fd1b0cb7 *inst/doc/analogue_methods.R
 534ee3a8521704f721e6f1be2979017c *inst/doc/analogue_methods.Rnw
-47c203937fa038ef6e2a62e32002449c *inst/doc/analogue_methods.pdf
+86df3375d2457baf8c6f0829c7b7e777 *inst/doc/analogue_methods.pdf
 65ef1f95fadb59ab0071d8c8231e0f1e *man/ImbrieKipp.Rd
 cc2d4dd617b753c8153911fc7f352283 *man/Pollen.Rd
-84a4fb73fbbf0c5bc1ab43be2359c614 *man/RMSEP.Rd
+f490612013d7cb7813a7cba08abbebdf *man/RMSEP.Rd
 88f90827291a9995429e5363e773c493 *man/Stratiplot.Rd
 192bd9341031043fc4f5564be26c215f *man/abernethy.Rd
 cde1abb0742f6df068253e232139aa2e *man/analog.Rd
 665ae11e35060adaebe247e4aefa0ad1 *man/analogue-internal.Rd
 e7da239fa7910c36bfbd1d243895e399 *man/analogue-package.Rd
 81270cef9c18561fe76cd9fe97a9b860 *man/bayesF.Rd
-6ee4207dfe38e43e215f2a0254b97032 *man/bootstrap.Rd
+a6c54b501e55220e7e47589707f1219a *man/bootstrap.Rd
 7248bf3fb5056b5702a8ad9acb37c333 *man/bootstrap.wa.Rd
 1389a34336b91bdd990b735292b9185e *man/bootstrapObject.Rd
 1f51010857d678d2eb443751c204b5fd *man/caterpillarPlot.Rd
@@ -234,7 +234,7 @@ c3838a675567294ee566020222ed92c4 *man/summary.mat.Rd
 2bdfe971f4eea4bd1691b4dfd73bd802 *man/summary.predict.mat.Rd
 b0a98457aa2284e7f3f232e46c99c086 *man/swapdiat.Rd
 731d914f66a3d3335ac039490a92c4d0 *man/swappH.Rd
-49534828c3e2af98f9eb931662d3ce50 *man/timetrack.Rd
+8e3149077af3961c1f83eab68f2794d1 *man/timetrack.Rd
 4e534707f3edec58ce484937b0b8ecf2 *man/tran.Rd
 ec8858568fe539526eacb308d0840a7b *man/varExpl.Rd
 7806015e439e5c5f444ea716c69ba391 *man/wa.Rd
@@ -243,7 +243,7 @@ c6324e4629b59ad25fd1e960a4c63136 *man/weightedCor.Rd
 f4c4a03ebea519f9dfce33fb52e3681d *src/distxy.c
 799fbb145fe7a5ee1e8b5d0bbb754371 *src/init.c
 930979a7d88e255cb2ac4e0670d80f2f *src/wastats.c
-9fbf35814d56aebe61232098a0afad67 *tests/Examples/analogue-Ex.Rout.save
+91ed6589ed8bc1b4a8d8ba271fd9cc3f *tests/Examples/analogue-Ex.Rout.save
 34895a43c8f6c787063a9a2e95a1007c *tests/test-all.R
 e72ff287b0dc9f185237e6202cb42dc1 *tests/testthat/test-analog.R
 7ea1efb47388c05cb8e9ea9fad674bd0 *tests/testthat/test-new-distance.R
