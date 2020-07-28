@@ -1,41 +1,27 @@
-###########################################################################
-##                                                                       ##
-## cma           - extracts and formats close modern analogues           ##
-##                                                                       ##
-## Created       : 27-May-2006                                           ##
-## Author        : Gavin Simpson                                         ##
-## Version       : 0.1                                                   ##
-## Last modified : 27-May-2006                                           ##
-##                                                                       ##
-## ARGUMENTS:                                                            ##
-## object        - object for method dispatch. Only class 'analog'.      ##
-## cutoff        - numeric. Critical value determining level above which ##
-##                 samples are defined as close modern analogues         ##
-##                                                                       ##
-###########################################################################
-cma <- function(object, ...) UseMethod("cma")
+cma <- function(object, ...) {
+    UseMethod("cma")
+}
 
-cma.default <- function(object, ...)
-  {
+cma.default <- function(object, ...) {
     stop("No default method for \"cma\"")
-  }
+}
 
-cma.analog <- function(object, cutoff, prob = c(0.01, 0.025, 0.05), ...)
-  {
-    if (!inherits(object, "analog"))
-      stop("Use only with \"analog\" objects")
-    if(missing(cutoff)) {
-      if(is.null(object$train))
-        stop("If 'cutoff' is not provided, 'object' must contain\ncomponent \"train\"")
-      else
-        cutoff <- quantile(dissim(object), probs = 0.025)
-    } else {
-      if (!is.numeric(cutoff))
-        stop("Argument \"cutoff\" must be numeric")
+cma.analog <- function(object, cutoff, prob = c(0.01, 0.025, 0.05), ...) {
+    if (!inherits(object, "analog")) {
+        stop("Use only with \"analog\" objects")
     }
-    #if(!any(apply(object$analogs, 2, function(x) any(x <= cutoff))))
-    #  stop(paste("No analogues as close or closer than \"cutoff = ",
-    #             cutoff, "\":\n\tChoose a more suitable value", sep = ""))
+    if(missing(cutoff)) {
+        if(is.null(object$train))
+            stop("If 'cutoff' is not provided, 'object' must contain\ncomponent \"train\"")
+        else
+            cutoff <- quantile(dissim(object), probs = 0.025)
+    } else {
+        if (!is.numeric(cutoff))
+            stop("Argument \"cutoff\" must be numeric")
+    }
+    ##if(!any(apply(object$analogs, 2, function(x) any(x <= cutoff))))
+    ##  stop(paste("No analogues as close or closer than \"cutoff = ",
+    ##             cutoff, "\":\n\tChoose a more suitable value", sep = ""))
     n.samp <- ncol(object$analogs)
     nams <- colnames(object$analogs)
     ## don't want apply() as that may simplify if all samples have
@@ -46,8 +32,9 @@ cma.analog <- function(object, cutoff, prob = c(0.01, 0.025, 0.05), ...)
         close[[i]] <- sortByCutoff(object$analogs[, i], cutoff)
     }
     names(close) <- colnames(object$analogs)
-    if(length(close) == 0)
-      close <- vector(mode = "list", length = length(nams))
+    if(identical(length(close), 0L)) {
+        close <- vector(mode = "list", length = length(nams))
+    }
     each.analogs <- sapply(close, length, USE.NAMES = FALSE)
     names(each.analogs) <- names(close) <- nams
     .call <- match.call()
@@ -64,14 +51,16 @@ cma.analog <- function(object, cutoff, prob = c(0.01, 0.025, 0.05), ...)
 ## First attempt at this method - we want k to select the k closest analogues
 ## but also allow cutoff for later when mat will work with a threshold
 `cma.mat` <- function(object, k, cutoff, prob = c(0.01, 0.025, 0.05), ...) {
-    if (!inherits(object, "mat"))
+    if (!inherits(object, "mat")) {
         stop("Use only with \"mat\" objects")
+    }
     n.samp <- ncol(object$Dij)
     nams <- colnames(object$Dij)
     K <- !missing(k)
     CUT <- !missing(cutoff)
-    if(K && CUT)
+    if(K && CUT) {
         stop("Only one of \"k\" and \"cutoff\" may be used, not both.")
+    }
     if(!K && !CUT) {
         k <- getK(object)
         cutoff <- NULL
@@ -98,7 +87,7 @@ cma.analog <- function(object, cutoff, prob = c(0.01, 0.025, 0.05), ...)
         k <- NULL
         names(each.analogs) <- names(close) <- nams
     }
-    if(length(close) == 0) {
+    if(identical(length(close), 0L)) {
         close <- vector(mode = "list", length = length(nams))
         names(each.analogs) <- names(close) <- nams
     }
@@ -117,14 +106,16 @@ cma.analog <- function(object, cutoff, prob = c(0.01, 0.025, 0.05), ...)
 ## but also allow cutoff for later when mat will work with a threshold
 `cma.predict.mat` <- function(object, k, cutoff, prob = c(0.01, 0.025, 0.05),
                               ...) {
-    if (!inherits(object, "predict.mat"))
+    if (!inherits(object, "predict.mat")) {
         stop("Use only with \"predict.mat\" objects")
+    }
     n.samp <- ncol(object$Dij)
     nams <- colnames(object$Dij)
     K <- !missing(k)
     CUT <- !missing(cutoff)
-    if(K && CUT)
+    if(K && CUT) {
         stop("Only one of \"k\" and \"cutoff\" may be used, not both.")
+    }
     if(!K && !CUT) {
         k <- getK(object)
         cutoff <- NULL
@@ -151,7 +142,7 @@ cma.analog <- function(object, cutoff, prob = c(0.01, 0.025, 0.05), ...)
         k <- NULL
         names(each.analogs) <- names(close) <- nams
     }
-    if(length(close) == 0) {
+    if(identical(length(close), 0L)) {
         close <- vector(mode = "list", length = length(nams))
         names(each.analogs) <- names(close) <- nams
     }
