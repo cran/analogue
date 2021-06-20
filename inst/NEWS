@@ -1,5 +1,9 @@
 # analogue News
 
+## Version 0.17-6
+
+ * Fixes for CRAN related to digits in printed output.
+
 ## Version 0.17-5
 
  * Fixes for CRAN
@@ -26,7 +30,7 @@
  
  * The `Climate` data set had incorrectly-named columns and was missing some variables. The NAMPD is now updated to version 1.7-3 and the name and missing data issues have been fixed. Reported by Simon Goring in Issue #17.
 
-## Version 0.17-0
+## Version 1.17-0
 
 * `Stratiplot()` now draws a plot on the current device and returns a `"trellis"` object *invisibly*. This fixes #13 and prevents a blank page being drawn in devices such as `pdf()`.
 

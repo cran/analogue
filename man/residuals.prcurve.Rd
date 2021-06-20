@@ -104,7 +104,6 @@
   dim(res)
   head(res[, 1:5])		# just show a few species residuals
   \dontshow{options(od)}
-
 }
 
 \keyword{ methods }

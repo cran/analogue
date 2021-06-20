@@ -10,7 +10,7 @@
 \concept{similarity}
 %- Also NEED an '\alias' for EACH other topic documented here.
 
-\title{Flexibly calculate dissimilarity or distance measures }
+\title{Flexibly calculate dissimilarity or distance measures}
 
 \description{
   Flexibly calculates distance or dissimilarity measures between a
@@ -24,7 +24,7 @@
 distance(x, \dots)
 
 \method{distance}{default}(x, y, method = "euclidean", weights = NULL,
-         R = NULL, dist = FALSE, \dots)
+         R = NULL, dist = FALSE, double.zero = FALSE, \dots)
 
 \method{distance}{join}(x, \dots)
 
@@ -51,6 +51,12 @@ oldDistance(x, \dots)
   \item{R}{numeric; vector of ranges for each descriptor.}
   \item{dist}{logical; should the dissimilarity matrix be returned as
     an object of class \code{"dist"}? Ignored if \code{y} is supplied.}
+  \item{double.zero}{logical; if \code{FALSE}, the default, double
+    zeroes are not counted in the distance calculation. If \code{TRUE},
+    absences of a variable in both samples counts as a similarity
+    between the two samples. Currently this only affects methods
+    \code{"mixed"} and \code{"metric.mixed"} forms of Gower's general
+    coefficient.}
   \item{fast}{logical; should fast versions of the dissimilarities be
     calculated? See details below.}
   \item{\dots}{arguments passed to other methods}
@@ -126,6 +132,11 @@ oldDistance(x, \dots)
     \eqn{s_{jki}}{s[jki]} is the similarity \cr
     \tab between samples \eqn{j} and \eqn{k} for descriptor (variable)
     \eqn{i}.
+    \cr
+    \code{metric.mixed}
+    \tab as for \code{mixed} but with ordinal variables converted to
+    ranks and handled as quantitative variables in Gower's mixed
+    coefficient.
   }
 
   Argument \code{fast} determines whether fast C versions of some of the
@@ -166,7 +177,7 @@ oldDistance(x, \dots)
   you would need to merge the two sets of samples, calculate the full
   dissimilarity matrix and then subset it to achieve similar results.
 }
-\section{warning}{
+\section{Warning}{
   For \code{method = "mixed"} it is essential that a factor in \code{x}
   and \code{y} have the same levels in the two data frames. Previous
   versions of analogue would work even if this was not the case, which
@@ -200,14 +211,20 @@ oldDistance(x, \dots)
   Overpeck, J.T., Webb III, T. and Prentice I.C. (1985) Quantitative
   interpretation of fossil pollen spectra: dissimilarity coefficients and
   the method of modern analogues. \emph{Quaternary Research} \strong{23},
-  87--108. 
+  87--108.
+
+  Podani, J. (1999) Extending Gower's General Coefficient of Similarity
+  to Ordinal Characters. \emph{Taxon} \strong{48}, 331--340).
   
   Prentice, I.C. (1980) Multidimensional scaling as a research tool in
   Quaternary palynology: a review of theory and methods. \emph{Review of
     Palaeobiology and Palynology} \strong{31}, 71--104.
  
 }
-\author{Gavin L. Simpson }
+\author{Gavin L. Simpson and Jari Oksanen (improvements leading to
+  method \code{"metric.mixed"} and proper handling of ordinal data via
+  Podani's (1999) modification of Gower's general coefficient in method
+  \code{"mixed"}).}
 \seealso{\code{\link[vegan]{vegdist}} in package \pkg{vegan},
   \code{\link[cluster]{daisy}} in package \pkg{cluster}, and
   \code{\link[stats]{dist}} provide comparable functionality for the
@@ -239,21 +256,33 @@ str(dists)
 ## calculate Gower's general coefficient for mixed data
 ## first, make a couple of variables factors
 
-fossil[,4] <- factor(sample(rep(1:4, length = 10), 10))
-train[,4] <- factor(sample(rep(1:4, length = 20), 20))
-## now fit the mixed coefficient
-test3 <- distance(train, fossil, "mixed")
+## fossil[,4] <- factor(sample(rep(1:4, length = 10), 10))
+## train[,4] <- factor(sample(rep(1:4, length = 20), 20))
+## ## now fit the mixed coefficient
+## test3 <- distance(train, fossil, "mixed")
 
-## Example from page 260 of Legendre & Legendre (1998)
+## ## Example from page 260 of Legendre & Legendre (1998)
 x1 <- t(c(2,2,NA,2,2,4,2,6))
 x2 <- t(c(1,3,3,1,2,2,2,5))
 Rj <- c(1,4,2,4,1,3,2,5) # supplied ranges
 
-1 - distance(x1, x2, method = "mixed", R = Rj)
+## 1 - distance(x1, x2, method = "mixed", R = Rj)
 
 ## note this gives ~0.66 as Legendre & Legendre describe the
 ## coefficient as a similarity coefficient. Hence here we do
-## 1 - Dij here to get the same answer. 
+## 1 - Dij here to get the same answer.
+
+## Tortula example from Podani (1999)
+data(tortula)
+Dij <- distance(tortula[, -1], method = "mixed") # col 1 includes Taxon ID
+
+## Only one ordered factor
+data(mite.env, package = "vegan")
+Dij <- distance(mite.env, method = "mixed")
+
+## Some variables are constant
+data(BCI.env, package = "vegan")
+Dij <- distance(BCI.env, method = "mixed")
 }
-\keyword{multivariate}% at least one, from doc/KEYWORDS
+\keyword{multivariate}
 \keyword{methods}

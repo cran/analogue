@@ -1,3 +1,4 @@
+
 ## Stratigraphic plots using lattice
 `Stratiplot` <- function(x, ...)
     UseMethod("Stratiplot")

@@ -10,11 +10,11 @@
         } else {
             fitted.values <- predict(x$model, newx)
         }
-        observed <- x[c("lambda","x")]
-        names(fitted.values) <- names(observed) <- c("gradient","response")
-        list(observed = observed, fitted.values = fitted.values)
-    }
-    out <- lapply(x$smooths, Pred, n = n)
-    class(out) <- "sppResponse"
-    out
+    observed <- x[c("lambda","x")]
+    names(fitted.values) <- names(observed) <- c("gradient","response")
+    list(observed = observed, fitted.values = fitted.values)
+  }
+  out <- lapply(x$smooths, Pred, n = n)
+  class(out) <- "sppResponse"
+  out
 }

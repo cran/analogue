@@ -184,11 +184,11 @@ oldDistance.default <- function(x, y,
     colsumx <- colSums(x, na.rm = NA.RM)
     colsumy <- colSums(y, na.rm = NA.RM)
     ## NO - this causes problems if you merge data
-    ##if (any(DROP <- (colsumx <= 0 & colsumy <= 0) & !facs.x)) {
-    ##    ##x <- x[, (colsumx > 0 | colsumy > 0) | facs.x, drop = FALSE]
-    ##    ##y <- y[, (colsumx > 0 | colsumy > 0) | facs.x, drop = FALSE]
-    ##    ##warning("Some species contain no data and were removed from data matrices.\n")
-    ##}
+    ## if (any(DROP <- (colsumx <= 0 & colsumy <= 0) & !facs.x)) {
+    ##     ##x <- x[, (colsumx > 0 | colsumy > 0) | facs.x, drop = FALSE]
+    ##     ##y <- y[, (colsumx > 0 | colsumy > 0) | facs.x, drop = FALSE]
+    ##     ##warning("Some species contain no data and were removed from data matrices.\n")
+    ## }
     if(method == "chi.distance")
         colsum <- colSums(join(as.data.frame(x),as.data.frame(y), split = FALSE))
     if(method == "mixed") {

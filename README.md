@@ -4,6 +4,7 @@
 [![CRAN version](https://www.r-pkg.org/badges/version/analogue)](https://cran.r-project.org/package=analogue) [![](https://cranlogs.r-pkg.org/badges/grand-total/analogue)](https://cran.r-project.org/package=analogue)
 
 #### Build status
+
 | Linux | Windows | Codecov |
 | ----- | ------- | ------- |
 | [![Build Status](https://travis-ci.org/gavinsimpson/analogue.svg?branch=master)](https://travis-ci.org/gavinsimpson/analogue) | [![Build status](https://ci.appveyor.com/api/projects/status/hc8dbxrim2nj3c1i/branch/master)](https://ci.appveyor.com/project/gavinsimpson/analogue/branch/master) |  [![codecov](https://codecov.io/gh/gavinsimpson/analogue/branch/master/graph/badge.svg)](https://codecov.io/gh/gavinsimpson/analogue) |

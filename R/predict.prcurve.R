@@ -19,6 +19,6 @@
     p <- project_to_curve(data.matrix(newdata), s = object$s,
                           stretch = object$stretch)
     out <- p$s
-    attr(out, "tag") <- p$tag
+    attr(out, "tag") <- p$ord
     out
 }

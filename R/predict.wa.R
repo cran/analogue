@@ -146,7 +146,7 @@
             nc.want <- length(want)
             ind <- as.integer(rep(1:nfold, length = n.train))
             for(i in as.integer(seq_len(n.boot))) {
-                if(verbose && ((i %% 100) == 0L)) {
+                if(verbose && ((i %% 100) == 0)) {
                     cat(paste("n-fold sample", i, "\n"))
                     flush.console()
                 }

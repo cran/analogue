@@ -7,21 +7,20 @@ cma.default <- function(object, ...) {
 }
 
 cma.analog <- function(object, cutoff, prob = c(0.01, 0.025, 0.05), ...) {
-    if (!inherits(object, "analog")) {
-        stop("Use only with \"analog\" objects")
-    }
+    if (!inherits(object, "analog"))
+      stop("Use only with \"analog\" objects")
     if(missing(cutoff)) {
-        if(is.null(object$train))
-            stop("If 'cutoff' is not provided, 'object' must contain\ncomponent \"train\"")
-        else
-            cutoff <- quantile(dissim(object), probs = 0.025)
+      if(is.null(object$train))
+        stop("If 'cutoff' is not provided, 'object' must contain\ncomponent \"train\"")
+      else
+        cutoff <- quantile(dissim(object), probs = 0.025)
     } else {
-        if (!is.numeric(cutoff))
-            stop("Argument \"cutoff\" must be numeric")
+      if (!is.numeric(cutoff))
+        stop("Argument \"cutoff\" must be numeric")
     }
-    ##if(!any(apply(object$analogs, 2, function(x) any(x <= cutoff))))
-    ##  stop(paste("No analogues as close or closer than \"cutoff = ",
-    ##             cutoff, "\":\n\tChoose a more suitable value", sep = ""))
+    #if(!any(apply(object$analogs, 2, function(x) any(x <= cutoff))))
+    #  stop(paste("No analogues as close or closer than \"cutoff = ",
+    #             cutoff, "\":\n\tChoose a more suitable value", sep = ""))
     n.samp <- ncol(object$analogs)
     nams <- colnames(object$analogs)
     ## don't want apply() as that may simplify if all samples have
@@ -51,9 +50,8 @@ cma.analog <- function(object, cutoff, prob = c(0.01, 0.025, 0.05), ...) {
 ## First attempt at this method - we want k to select the k closest analogues
 ## but also allow cutoff for later when mat will work with a threshold
 `cma.mat` <- function(object, k, cutoff, prob = c(0.01, 0.025, 0.05), ...) {
-    if (!inherits(object, "mat")) {
+    if (!inherits(object, "mat"))
         stop("Use only with \"mat\" objects")
-    }
     n.samp <- ncol(object$Dij)
     nams <- colnames(object$Dij)
     K <- !missing(k)
@@ -106,9 +104,8 @@ cma.analog <- function(object, cutoff, prob = c(0.01, 0.025, 0.05), ...) {
 ## but also allow cutoff for later when mat will work with a threshold
 `cma.predict.mat` <- function(object, k, cutoff, prob = c(0.01, 0.025, 0.05),
                               ...) {
-    if (!inherits(object, "predict.mat")) {
+    if (!inherits(object, "predict.mat"))
         stop("Use only with \"predict.mat\" objects")
-    }
     n.samp <- ncol(object$Dij)
     nams <- colnames(object$Dij)
     K <- !missing(k)
@@ -157,7 +154,7 @@ cma.analog <- function(object, cutoff, prob = c(0.01, 0.025, 0.05), ...) {
               class = "cma")
 }
 
-print.cma <- function(x, digits = min(3, getOption("digits") - 4), ...) {
+print.cma <- function(x, digits = 3, ...) {
     method <- x$method
     .call <- deparse(x$call)
     cat("\n")

@@ -82,11 +82,11 @@
         ind <- as.integer(rep(seq_len(nfold), length = N)) ## k-fold group indicator
         nc <- seq_len(ncomp)
         ## this is the n in n k-fold CV, allowing n repeated k-folds
-        for(i in as.integer(seq_len(folds))) {
+        for(i in seq_len(folds)) {
             ## do a k-fold CV
             pind <- ind[sample.int(N, N, replace = FALSE)]
             ## the main k-fold CV loop
-            for(k in seq_len(nfold)) {
+            for(k in as.integer(seq_len(nfold))) {
                 if(verbose) {
                     setTxtProgressBar(pb, ii)
                     ii <- ii + 1
