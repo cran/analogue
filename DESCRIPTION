@@ -1,8 +1,8 @@
 Package: analogue
 Type: Package
 Title: Analogue and Weighted Averaging Methods for Palaeoecology
-Version: 0.18.0
-Date: 2025-04-04
+Version: 0.18.1
+Date: 2025-06-25
 Depends: R (>= 3.5.0), vegan (>= 2.2-0)
 Imports: mgcv, MASS, stats, graphics, grid, brglm, princurve (>=
         2.0.2), lattice
@@ -10,9 +10,9 @@ Suggests: testthat
 Authors@R: c(person(given = c("Gavin", "L."), family = "Simpson",
                     role = c("aut", "cre"),
                     email = "ucfagls@gmail.com",
-		    comment = c(ORCID = "0000-0002-9084-8413"))
-           , person(given = "Jari", family = "Oksanen",  role = "aut")
-           , person(given = "Martin", family = "Maechler", role = "ctb")
+		                comment = c(ORCID = "0000-0002-9084-8413")),
+            person(given = "Jari", family = "Oksanen",  role = "aut"),
+            person(given = "Martin", family = "Maechler", role = "ctb")
 		    )
 Maintainer: Gavin L. Simpson <ucfagls@gmail.com>
 BugReports: https://github.com/gavinsimpson/analogue/issues
@@ -23,9 +23,10 @@ Description: Fits Modern Analogue Technique and Weighted Averaging transfer
 License: GPL-2
 ByteCompile: true
 URL: https://github.com/gavinsimpson/analogue
-Packaged: 2025-04-04 10:42:50 UTC; au690221
-Author: Gavin L. Simpson [aut, cre] (<https://orcid.org/0000-0002-9084-8413>),
+Packaged: 2025-06-25 13:26:46 UTC; gavin
+Author: Gavin L. Simpson [aut, cre] (ORCID:
+    <https://orcid.org/0000-0002-9084-8413>),
   Jari Oksanen [aut],
   Martin Maechler [ctb]
 Repository: CRAN
-Date/Publication: 2025-04-04 11:20:02 UTC
+Date/Publication: 2025-06-25 14:00:07 UTC
